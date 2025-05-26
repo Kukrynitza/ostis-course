@@ -54,6 +54,14 @@ export const SwitchMode = () => {
       >
         {activePage === routes.LIBRARY ? <LibraryPageButtonFocus /> : <LibraryPageButton />}
       </Link>
+
+      <Link
+        to={routes.ASK_AI}
+        className={styles.switchModeButton}
+        onClick={() => handlePageClick(routes.LIBRARY)}
+      >
+        {activePage === routes.LIBRARY ? <AskAiPageButtonFocus /> : <AskAiPageButton />}
+      </Link>
     </div>
   );
 };

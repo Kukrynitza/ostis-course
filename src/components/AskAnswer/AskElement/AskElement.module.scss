@@ -1,0 +1,25 @@
+@import '~@assets/styles/variables/colors.scss';
+@import '~@assets/styles/services.scss';
+@import '~@assets/styles/mixins.scss';
+
+.elementWrapper {
+  margin: 3em 5em;
+}
+
+.elementQuery {
+  margin: 0 0em 2em 1em;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  color: $dull-grey;
+}
+
+.elementAnswer {
+  padding: 1em;
+  display: flex;
+  gap: 10px;
+  border-radius: 10px;
+  background-color: $light-grey;
+}

@@ -1,0 +1,49 @@
+@import '~@assets/styles/variables/colors.scss';
+
+.inputWrapper {
+  display: flex;
+}
+
+.dialogInput {
+  width: 957px;
+  height: 58px;
+  border-radius: 10px;
+  border: 2px solid #ebebeb;
+  background: #fff;
+  padding-left: 29px;
+  outline: none;
+
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 23px;
+  color: $dark-grey;
+
+  &:hover,
+  &_focused {
+    border: 2px solid $grey-blue;
+  }
+
+  &::placeholder {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 23px;
+    color: $dull-grey;
+  }
+
+  &_disabled {
+    color: $silver;
+  }
+}
+
+.dialogBoxButton {
+  background: #fff;
+  border: none;
+}
+
+.dialogBoxButton:active {
+  color: gray;
+}

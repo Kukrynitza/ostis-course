@@ -1,0 +1,21 @@
+@import '~@assets/styles/variables/colors.scss';
+@import '~@assets/styles/services.scss';
+@import '~@assets/styles/mixins.scss';
+
+.pageWrapper {
+  margin: 2em 5em;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.history {
+  overflow-y: scroll;
+}
+
+.inputQueryBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1em;
+}
