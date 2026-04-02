@@ -1,0 +1,27 @@
+part_menu_of_logical_inference_specification
+    <- concept_reusable_component_specification;;
+
+part_menu_of_logical_inference_specification = [*
+-> rrel_key_sc_element : part_menu_of_logical_inference
+(*
+    <- concept_reusable_component;;
+    <- concept_atomic_reusable_component;;
+    <- concept_independent_reusable_component;;
+    <- concept_reusable_ui_component;;
+    <- concept_reusable_dynamically_installed_component;;
+    <- concept_reusable_source_code_component;;
+
+    => nrel_authors: ... (* -> Sadovsky;; *);;
+    => nrel_note: [Компонент содержит семантическую окрестность логического вывода.] (* <- lang_en;; *);;
+    //Menu of logical inference part specification contains sematnic neighborhood of logical inference.
+    => nrel_explanation: [Компонент предоставляет компонент пользовательского интерфейса.] (*<- lang_en;; *);;
+    //Component provides a user interface component.
+
+    => nrel_main_idtf: [Menu. Agent of logical inference](* <- lang_en;; *);;
+    => nrel_main_idtf: [Меню. Агент логического вывода](* <- lang_ru;; *);;
+    => nrel_component_dependencies: ... (* <- empty_set;; *);;
+
+    => nrel_component_address: [https://github.com/MksmOrlov/ostis-kb-lib/tree/main/part_menu/menu_of_logical_inference] (* <- concept_github_url;; *);;
+    => nrel_installation_method: ... (* <- concept_component_dynamically_installed_method;; *);;
+*);;
+*];;

@@ -1,0 +1,27 @@
+lr_about_relation_specification
+    <- concept_reusable_component_specification;;
+
+lr_about_relation_specification = [*
+-> rrel_key_sc_element : lr_order_relation
+(*
+    <- concept_reusable_component;;
+    <- concept_atomic_reusable_component;;
+    <- concept_independent_reusable_component;;
+    <- concept_reusable_kb_component;;
+    <- concept_reusable_dynamically_installed_component;;
+    <- concept_reusable_source_code_component;;
+
+    => nrel_authors: ... (* -> Petrochuk;; *);;
+    => nrel_note: [Компонент содержит логическую формулу для определения транзитивного отношения.] (* <- lang_ru;; *);;
+    //Logic rule about a relation specification contains a logical formula about a transitive relation.
+    => nrel_explanation: [Компонент предоставляет логическую формулу.] (*<- lang_ru;; *);;
+    //Component provides a logical formula.
+
+    => nrel_main_idtf: [Logical formula about symmetric relation](* <- lang_en;; *);;
+    => nrel_main_idtf: [Логическая формула о симметричном отношении](* <- lang_ru;; *);;
+    => nrel_component_dependencies: ... (* <- empty_set;; *);;
+
+    => nrel_component_address: [https://github.com/MksmOrlov/ostis-kb-lib/tree/main/part_lr/lr_about_relation] (* <- concept_github_url;; *);;
+    => nrel_installation_method: ... (* <- concept_component_dynamically_installed_method;; *);;
+*);;
+*];;

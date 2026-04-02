@@ -1,0 +1,27 @@
+part_polygons_specification
+    <- concept_reusable_component_specification;;
+
+part_polygons_specification = [*
+-> rrel_key_sc_element : subject_domain_of_polygons
+(*
+    <- concept_reusable_component;;
+    <- concept_atomic_reusable_component;;
+    <- concept_independent_reusable_component;;
+    <- concept_reusable_kb_component;;
+    <- concept_reusable_dynamically_installed_component;;
+    <- concept_reusable_source_code_component;;
+
+    => nrel_authors: ... (* -> Shunkevich;; *);;
+    => nrel_note: [Компонент содержит предметную область многоугольников.] (* <- lang_ru;; *);;
+    //Logic rule about a relation specification provides a subject domain of polygons.
+    => nrel_explanation: [Компонент предоставляет понятия и отношения предметной области многоугольников.] (*<- lang_ru;; *);;
+    //Component provides concepts and relations of polygons subject domain.
+
+    => nrel_main_idtf: [Subject domain of polygons](* <- lang_en;; *);;
+    => nrel_main_idtf: [Предметная область многоугольников](* <- lang_ru;; *);;
+    => nrel_component_dependencies: ... (* <- empty_set;; *);;
+
+    => nrel_component_address: [https://github.com/MksmOrlov/ostis-kb-lib/tree/main/part_figure/sd_polygons] (* <- concept_github_url;; *);;
+    => nrel_installation_method: ... (* <- concept_component_dynamically_installed_method;; *);;
+*);;
+*];;

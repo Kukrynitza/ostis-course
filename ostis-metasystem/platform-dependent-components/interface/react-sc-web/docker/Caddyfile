@@ -1,0 +1,8 @@
+:3000 {
+  root * /sc-web/build
+  file_server
+  handle_errors {
+    rewrite * /index.html
+    file_server
+  }
+}

@@ -1,0 +1,7 @@
+.option {
+  border-bottom: 1px solid var(--color-light-grey);
+}
+
+.option:last-child {
+  border-bottom: none;
+}

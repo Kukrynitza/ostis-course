@@ -1,0 +1,10 @@
+docker
+.dockerignore
+build
+docs
+.git*
+LICENSE
+node_modules
+.prettierrc
+README.md
+scripts

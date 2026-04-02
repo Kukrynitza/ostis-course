@@ -1,0 +1,27 @@
+part_agent_of_finding_intersection_of_sets_specification
+    <- concept_reusable_component_specification;;
+
+part_agent_of_finding_intersection_of_sets_specification = [*
+-> rrel_key_sc_element : proc_of_finding_intersection_of_two_sets
+(*
+    <- concept_reusable_component;;
+    <- concept_atomic_reusable_component;;
+    <- concept_independent_reusable_component;;
+    <- concept_reusable_ps_component;;
+    <- concept_reusable_dynamically_installed_component;;
+    <- concept_reusable_source_code_component;;
+
+    => nrel_authors: ... (* -> Zotov;; *);;
+    => nrel_note: [Компонент содержит агентную программу поиска пересечения множеств.] (* <- lang_ru;; *);;
+    //Agent specification contains an agent procedure that finds an intersection of sets specification.
+    => nrel_explanation: [Компонент предоставляет агент поиска пересечения между множествами.] (*<- lang_ru;; *);;
+    //Component provides an agent that finds an intersection of sets specification
+
+    => nrel_main_idtf: [Agent of finding intersection of sets](* <- lang_en;; *);;
+    => nrel_main_idtf: [Агент поиска пересечения множества](* <- lang_ru;; *);;
+    => nrel_component_dependencies: ... (* <- empty_set;; *);;
+
+    => nrel_component_address: [https://github.com/MksmOrlov/ostis-kb-lib/tree/main/part_agents/agent_of_finding_intersection_of_sets] (* <- concept_github_url;; *);;
+    => nrel_installation_method: ... (* <- concept_component_dynamically_installed_method;; *);;
+*);;
+*];;

@@ -1,0 +1,46 @@
+html,
+body,
+#content {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#content {
+  display: flex;
+  flex-direction: column;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-white);
+  color: var(--color-dark-grey);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+  font-family: 'Roboto', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  word-break: break-word;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

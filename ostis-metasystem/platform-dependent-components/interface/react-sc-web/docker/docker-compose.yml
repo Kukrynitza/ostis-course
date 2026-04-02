@@ -1,0 +1,21 @@
+services:
+  caddy:
+    image: react-sc-web:latest
+    container_name: react-sc-web
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+      args:
+        - "SC_URL=${SC_URL:-ws://localhost:8090/ws_json}"
+        - "API_URL=${API_URL:-http://localhost:8000}"
+    restart: unless-stopped
+    ports:
+      - '${PORT:-3000}:3000'
+    volumes:
+      - caddy-config:/config
+      - caddy-data:/data
+      - ./Caddyfile:/etc/caddy/Caddyfile
+
+volumes:
+  caddy-config:
+  caddy-data:

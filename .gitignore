@@ -1,0 +1,61 @@
+# === Dependencies ===
+**/node_modules/
+**/.venv/
+**/__pycache__/
+*.pyc
+
+# === Build output ===
+**/build/
+**/dist/
+cmake-build-*/
+
+# === Environment ===
+**/.env
+!**/.env.example
+
+# === Logs and databases ===
+*.log
+**/logs/
+*.db
+sc-server.log
+
+# === Secrets ===
+**/secret.txt
+
+# === Binary knowledge base (regenerate via components init/install) ===
+ostis-metasystem/kb.bin/
+
+# === Compiled sc-machine binaries (included in git) ===
+# ostis-metasystem/install/ — НЕ игнорируется
+
+# === Other install directories ===
+platform-dependent-components/problem-solver/install/
+
+# === IDE ===
+.idea/
+.vscode/
+
+# === OS ===
+.DS_Store
+Thumbs.db
+
+# === Backup ===
+*.bak
+*~
+
+# === LaTeX artifacts ===
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.run.xml
+
+# === Git internals ===
+.git/
+.gitmodules
+
+# === Misc ===
+*.swp
+*.swo

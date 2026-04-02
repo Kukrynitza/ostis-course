@@ -1,0 +1,27 @@
+part_methods_tools_specification
+    <- concept_reusable_component_specification;;
+
+part_methods_tools_specification = [*
+-> rrel_key_sc_element : part_methods_tools
+(*
+    <- concept_reusable_component;;
+    <- concept_atomic_reusable_component;;
+    <- concept_independent_reusable_component;;
+    <- concept_reusable_kb_component;;
+    <- concept_reusable_dynamically_installed_component;;
+    <- concept_reusable_source_code_component;;
+
+    => nrel_authors: ... (* -> Zotov;; *);;
+    => nrel_note: [Компонент содержит предметную область библиотеки компонентов.] (* <- lang_ru;; *);;
+    //Methods tools part specification contains subject domains of biblio component and knowledge base component
+    => nrel_explanation: [Компонент предоставляет понятия и отношения предметной области библиотеки компонентов.] (*<- lang_ru;; *);;
+    //Component provides description of knowledge development tools.
+
+    => nrel_main_idtf: [part_methods_tools specification](* <- lang_en;; *);;
+    => nrel_main_idtf: [Раздел. Методы и средства проектирования и.к.с.](* <- lang_ru;; *);;
+    => nrel_component_dependencies: ... (* <- empty_set;; *);;
+
+    => nrel_component_address: [https://github.com/MksmOrlov/ostis-kb-lib/tree/main/part_methods_tools] (* <- concept_github_url;; *);;
+    => nrel_installation_method: ... (* <- concept_component_dynamically_installed_method;; *);;
+*);;
+*];;

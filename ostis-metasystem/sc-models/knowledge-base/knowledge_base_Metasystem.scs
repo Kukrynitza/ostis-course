@@ -1,0 +1,41 @@
+knowledge_base_Metasystem
+=> nrel_main_idtf:
+	[База знаний Метасистемы OSTIS]
+	(* <- lang_ru;; *);
+	[Knowledge base of OSTIS Metasystem]
+	(* <- lang_en;; *);
+<- not_enough_formed_structure;
+=> nrel_section_decomposition: <
+	ostis_standard;
+	history_current_state_and_prospects_of_the_OSTIS_Metasystem_development;
+	knowledge_base_of_the_OSTIS_Metasystem_Library;
+	OSTIS_Metasystem_Corporate_knowledge_base;
+	section_faq_ostis_metasystem
+>;;
+
+history_current_state_and_prospects_of_the_OSTIS_Metasystem_development
+=> nrel_main_idtf:
+	[История, текущее состояние и перспективы развития Метасистемы OSTIS]
+	(* <- lang_ru;; *);
+	[The history, current state and prospects of the OSTIS Metasystem development]
+	(* <- lang_en;; *);
+<- not_enough_formed_structure;;
+
+knowledge_base_of_the_OSTIS_Metasystem_Library
+=> nrel_main_idtf:
+	[База знаний Библиотеки Метасистемы OSTIS]
+	(* <- lang_ru;; *);
+	[Knowledge base of the OSTIS Metasystem Library]
+	(* <- lang_en;; *);
+=> nrel_inclusion:
+	concept_reusable_component;;
+
+OSTIS_Metasystem_Corporate_knowledge_base
+=> nrel_main_idtf:
+	[Корпоративная база знаний Метасистемы OSTIS]
+	(* <- lang_ru;; *);
+	[OSTIS Metasystem Corporate Knowledge Base]
+	(* <- lang_en;; *);
+<- not_enough_formed_structure;
+-> ostis_discrete_mathematics;
+-> ostis_geometry;;

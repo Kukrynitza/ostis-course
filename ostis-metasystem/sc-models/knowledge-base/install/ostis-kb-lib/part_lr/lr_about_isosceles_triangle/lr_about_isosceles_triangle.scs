@@ -1,0 +1,27 @@
+@if1 = [* 
+	_triangle
+	_<- concept_triangle;
+	_=> nrel_median: _x;;
+*];;
+
+@if2 = [* 
+	_triangle
+	_<- concept_triangle;
+	_=> nrel_height: _x;;
+*];;
+
+@then = [* 
+	_triangle
+	_<- isosceles_triangle;;
+*];;
+
+lr_about_isosceles_triangle
+-> @if1;
+-> @if2;
+<- nrel_conjaction;
+=> nrel_implication: @then;;
+
+atomic_logical_formula
+-> @if1;
+-> @if2;
+-> @then;;
