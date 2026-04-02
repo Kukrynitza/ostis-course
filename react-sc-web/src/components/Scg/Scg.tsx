@@ -27,6 +27,7 @@ interface IProps {
 }
 
 const SPINER_COLOR = '#5896C0';
+const EXPORT_TIMEOUT = 10000;
 
 const downloadFile = (dataUrl: string, filename: string) => {
   const a = document.createElement('a');
@@ -37,15 +38,61 @@ const downloadFile = (dataUrl: string, filename: string) => {
   document.body.removeChild(a);
 };
 
+const svgToPng = (svgString: string): Promise<Blob | null> => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(svgBlob);
+
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        URL.revokeObjectURL(url);
+        resolve(null);
+        return;
+      }
+      ctx.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+      canvas.toBlob(
+        (blob) => resolve(blob),
+        'image/png',
+      );
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(null);
+    };
+
+    img.src = url;
+  });
+};
+
+const downloadBlob = (blob: Blob, filename: string) => {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+
 export const Scg: FC<IProps> = ({ action, className, show = false }) => {
   const [isReady, setIsReady] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [exportMode, setExportMode] = useState<'png' | 'svg' | null>(null);
   const [isConfirmDeletePopupShown, showConfirmDeletePopup, hideConfirmDeletePopup] =
     useBooleanState(false);
   const [isConfirmClearScenePopupShown, showConfirmClearScenePopup, hideConfirmClearScenePopup] =
     useBooleanState(false);
   const ref = useRef<HTMLIFrameElement>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lang = useLanguage();
   const dispatch = useDispatch();
   const scNavigation = useScNavigation();
@@ -61,17 +108,33 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
     [dispatch, scNavigation],
   );
 
-  const handleExport = useCallback((type: 'exportPng' | 'exportSvg') => {
-    if (!ref.current?.contentWindow) return;
-    setIsExporting(true);
-    ref.current.contentWindow.postMessage({ type }, '*');
+  const clearExportTimeout = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
   }, []);
+
+  const handleExport = useCallback(
+    (mode: 'png' | 'svg') => {
+      if (!ref.current?.contentWindow) return;
+      setIsExporting(true);
+      setExportMode(mode);
+      ref.current.contentWindow.postMessage({ type: 'exportSvg' }, '*');
+      timeoutRef.current = setTimeout(() => {
+        setIsExporting(false);
+        setExportMode(null);
+        addError(translate({ ru: 'Ошибка экспорта', en: 'Export error' }));
+      }, EXPORT_TIMEOUT);
+    },
+    [addError, translate],
+  );
 
   useEffect(() => {
     const iframe = ref.current;
     if (!iframe) return;
 
-    const handleMessage = (event: MessageEvent<IWindowEventData>) => {
+    const handleMessage = async (event: MessageEvent<IWindowEventData>) => {
       switch (event.data?.type) {
         case EWindowEvents.onInitializationFinished:
           setIsReady(true);
@@ -86,25 +149,49 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
         case EWindowEvents.commandExecuted:
           onCommandExecuted(event.data);
           break;
-        case EWindowEvents.exportPngResult: {
+        case EWindowEvents.exportSvgResult: {
+          clearExportTimeout();
+          const svgData = (event.data as unknown as Record<string, unknown>)['data'] as string;
+          if (!svgData) {
+            setIsExporting(false);
+            setExportMode(null);
+            return;
+          }
+          if (exportMode === 'png') {
+            const pngBlob = await svgToPng(svgData);
+            if (pngBlob) {
+              downloadBlob(pngBlob, 'scg.png');
+            } else {
+              addError(translate({ ru: 'Ошибка конвертации PNG', en: 'PNG conversion error' }));
+            }
+          } else {
+            downloadFile(
+              'data:text/plain;charset=utf-8,' + encodeURIComponent(svgData),
+              'scg.svg',
+            );
+          }
           setIsExporting(false);
-          const pngData = (event.data as unknown as Record<string, unknown>)['data'] as string;
-          if (pngData) downloadFile(pngData, 'scg.png');
+          setExportMode(null);
           break;
         }
-        case EWindowEvents.exportPngError:
-          setIsExporting(false);
-          addError(translate({ ru: 'Ошибка экспорта PNG', en: 'PNG export error' }));
-          break;
-        case EWindowEvents.exportSvgResult: {
-          setIsExporting(false);
-          const svgData = (event.data as unknown as Record<string, unknown>)['data'] as string;
-          if (svgData)
+          if (exportMode === 'png') {
+            try {
+              const pngData = await svgToPng(svgData);
+              downloadFile(pngData, 'scg.png');
+            } catch {
+              addError(translate({ ru: 'Ошибка конвертации PNG', en: 'PNG conversion error' }));
+            }
+          } else {
             downloadFile('data:text/plain;charset=utf-8,' + encodeURIComponent(svgData), 'scg.svg');
+          }
+          setIsExporting(false);
+          setExportMode(null);
           break;
         }
         case EWindowEvents.exportSvgError:
+          clearExportTimeout();
           setIsExporting(false);
+          setExportMode(null);
           addError(translate({ ru: 'Ошибка экспорта SVG', en: 'SVG export error' }));
           break;
       }
@@ -114,6 +201,7 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
 
     return () => {
       window.removeEventListener('message', handleMessage);
+      clearExportTimeout();
     };
   }, [
     action,
@@ -122,6 +210,8 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
     showConfirmClearScenePopup,
     addError,
     translate,
+    exportMode,
+    clearExportTimeout,
   ]);
 
   useEffect(() => {
@@ -176,10 +266,10 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
         {isLoading && <StyledSpinner appearance={SPINER_COLOR} />}
         {show && isReady && action && (
           <ExportBar>
-            <ExportButton disabled={isExporting} onClick={() => handleExport('exportPng')}>
+            <ExportButton disabled={isExporting} onClick={() => handleExport('png')}>
               {isExporting ? '...' : 'PNG'}
             </ExportButton>
-            <ExportButton disabled={isExporting} onClick={() => handleExport('exportSvg')}>
+            <ExportButton disabled={isExporting} onClick={() => handleExport('svg')}>
               {isExporting ? '...' : 'SVG'}
             </ExportButton>
           </ExportBar>

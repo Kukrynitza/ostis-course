@@ -4,12 +4,12 @@ import { Spinner } from 'ostis-ui-lib';
 export const Wrap = styled.div<{ show?: boolean }>`
   position: absolute;
   height: calc(100vh - 80px - 36px);
+  width: 100%;
 
-  display: flex;
+  display: ${(props) => (props.show ? 'flex' : 'none')};
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  display: ${(props) => (props.show ? 'block' : 'none')};
 `;
 
 export const StyledSpinner = styled(Spinner)`
@@ -21,10 +21,11 @@ export const StyledSpinner = styled(Spinner)`
 `;
 
 export const Frame = styled.iframe`
+  flex: 1;
   width: 100%;
-  height: 100%;
 
   margin: -7px;
+  margin-top: 0;
 
   border: 0;
 `;
@@ -43,12 +44,10 @@ export const Popup = styled.div<{ isClear?: boolean }>`
 `;
 
 export const ExportBar = styled.div`
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 10;
   display: flex;
   gap: 4px;
+  padding: 8px;
+  z-index: 10;
 `;
 
 export const ExportButton = styled.button`
@@ -60,7 +59,9 @@ export const ExportButton = styled.button`
   border-radius: 4px;
   background: transparent;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 
   &:hover {
     background: var(--color-decomposition-hover);
