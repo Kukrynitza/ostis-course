@@ -17,7 +17,10 @@ export const Button = ({
   ...restProps
 }: IButton) => {
   return (
-    <button className={classNames(styles.button, styles[`button_${appearance}`], className)} {...restProps}>
+    <button
+      className={classNames(styles.button, styles[`button_${appearance}`], className)}
+      {...restProps}
+    >
       {children}
     </button>
   );

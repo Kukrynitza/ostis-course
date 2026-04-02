@@ -19,7 +19,7 @@ module.exports = {
     new ESLintPlugin({
       emitError: true,
       emitWarning: true,
-      failOnError: false,
+      failOnError: true,
       extensions: ['.ts', '.tsx', '.js'],
     }),
   ],
@@ -27,11 +27,10 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        loader: 'esbuild-loader',
+        loader: 'ts-loader',
         exclude: [/node_modules/, /\.d\.ts$/],
         options: {
-          loader: 'tsx',
-          target: 'es2015',
+          transpileOnly: true,
         },
       },
       {

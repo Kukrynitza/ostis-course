@@ -1,6 +1,6 @@
-import { TLanguage, useLanguage } from 'ostis-ui-lib';
 import { useMemo } from 'react';
 import * as yup from 'yup';
+import { TLanguage, useLanguage } from 'ostis-ui-lib';
 
 type TFuncProps = (lang: TLanguage) => yup.AnyObjectSchema;
 type TProps = yup.AnyObjectSchema | TFuncProps;

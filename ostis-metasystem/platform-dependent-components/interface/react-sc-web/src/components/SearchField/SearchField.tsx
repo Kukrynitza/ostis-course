@@ -1,10 +1,10 @@
-import { useTranslate, Select, Option } from 'ostis-ui-lib';
 import { ChangeEvent, FC, useCallback, useMemo, useState } from 'react';
 import { client } from '@api';
 import { searchAddrById } from '@api/sc/search/search';
 import SearchIcon from '@assets/images/Search.svg';
 import { useScNavigation } from '@hooks/useScNavigation';
 import { debounce } from '@utils';
+import { useTranslate, Select, Option } from 'ostis-ui-lib';
 
 import styles from './SearchField.module.css';
 

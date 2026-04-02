@@ -1,12 +1,10 @@
 :root {
-  /* Whites & beige */
   --color-white: #ffffff;
   --color-beige: #fafafa;
   --color-smoky-white: #f8f8f8;
   --color-light-grey: #f6f6f6;
   --color-decomposition-hover: #f1f1f1;
 
-  /* Greys */
   --color-beige-grey: #a2a2a2;
   --color-dull-grey: #737373;
   --color-dark-grey: #323232;
@@ -14,26 +12,22 @@
   --color-silver: #c0c0c0;
   --color-soft-grey: #ececec;
 
-  /* Blues */
   --color-navy-blue: #5896c0;
   --color-dark-blue: #7ec0ee;
   --color-grey-blue: #d7e6eb;
 
-  /* Borders */
   --color-border-blue: #f3f7f8;
   --color-border-white: #ebebeb;
   --color-border-disabled: #eeeeee;
   --color-border-grey: #ededed;
   --color-popup-border: #f2f2f2;
 
-  /* States */
   --color-red: #d81616;
   --color-error-message: #f14747;
   --color-error-notification: #f6cab1;
   --color-warning-notification: #feffe2;
   --color-success-notification: #eeffe8;
 
-  /* Component-specific */
   --color-icon-hover: #7e7256;
   --color-button-disabled: #c0c0c0;
   --color-button-hover-bg: #4980a5;
@@ -59,14 +53,12 @@
 }
 
 :root[data-theme="dark"] {
-  /* Whites & beige → dark backgrounds */
   --color-white: #1e1e1e;
   --color-beige: #252526;
   --color-smoky-white: #2d2d2d;
   --color-light-grey: #333333;
   --color-decomposition-hover: #3c3c3c;
 
-  /* Greys → light text */
   --color-beige-grey: #aaaaaa;
   --color-dull-grey: #aaaaaa;
   --color-dark-grey: #e0e0e0;
@@ -74,26 +66,22 @@
   --color-silver: #888888;
   --color-soft-grey: #3c3c3c;
 
-  /* Blues → darker for contrast */
   --color-navy-blue: #3f7fa8;
   --color-dark-blue: #5f9ac1;
   --color-grey-blue: #354555;
 
-  /* Borders */
   --color-border-blue: #363636;
   --color-border-white: #404040;
   --color-border-disabled: #404040;
   --color-border-grey: #404040;
   --color-popup-border: #404040;
 
-  /* States (keep readable on dark) */
   --color-red: #ff6b6b;
   --color-error-message: #ff6b6b;
   --color-error-notification: #4a3020;
   --color-warning-notification: #3a3a20;
   --color-success-notification: #203a20;
 
-  /* Component-specific */
   --color-icon-hover: #c0b090;
   --color-button-disabled: #555555;
   --color-button-hover-bg: #6aa5d0;

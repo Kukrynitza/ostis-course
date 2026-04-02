@@ -1,8 +1,8 @@
 import classNames from 'classnames';
-import { Dropdown, DropdownOption, useBooleanState, useClickOutside } from 'ostis-ui-lib';
 import { ReactNode, RefObject, useEffect, useRef, useState } from 'react';
 import ChevronDown from '@assets/images/chevronDown.svg';
 import { Button } from '@components/Button';
+import { Dropdown, DropdownOption, useBooleanState, useClickOutside } from 'ostis-ui-lib';
 
 import styles from './MultipleButton.module.css';
 

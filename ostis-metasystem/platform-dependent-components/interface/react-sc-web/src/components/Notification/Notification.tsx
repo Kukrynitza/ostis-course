@@ -1,11 +1,11 @@
 import classNames from 'classnames';
-import { TLanguage, TTexts, useLanguage } from 'ostis-ui-lib';
 import { ReactNode } from 'react';
 
 import CloseIcon from '@assets/images/close.svg';
 import ErrorIcon from '@assets/images/errorIcon.svg';
 import SuccessIcon from '@assets/images/successIcon.svg';
 import WarningIcon from '@assets/images/warningIcon.svg';
+import { TLanguage, TTexts, useLanguage } from 'ostis-ui-lib';
 import styles from './Notification.module.css';
 
 const getTargetText = (text: TNotificationText, lang: TLanguage): string | ReactNode => {

@@ -43,26 +43,36 @@ export const Popup = styled.div<{ isClear?: boolean }>`
 `;
 
 export const ExportBar = styled.div`
+  position: absolute;
   top: 8px;
   right: 8px;
   z-index: 10;
   display: flex;
   gap: 4px;
-  margin-bottom: 30px;
 `;
 
 export const ExportButton = styled.button`
-  padding: 4px 10px;
-  font-size: 12px;
-  border: 1px solid #ccc;
+  padding: 4px 8px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-silver);
+  border: none;
   border-radius: 4px;
-  background: white;
+  background: transparent;
   cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+
   &:hover {
-    background: #f0f0f0;
+    background: var(--color-decomposition-hover);
+    color: var(--color-navy-blue);
   }
+
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    &:hover {
+      background: transparent;
+      color: var(--color-silver);
+    }
   }
 `;

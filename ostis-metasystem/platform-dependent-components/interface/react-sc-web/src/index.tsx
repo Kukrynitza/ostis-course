@@ -1,10 +1,3 @@
-import {
-  LanguageProvider,
-  ClientProvider,
-  ScUtilsProvider,
-  TLanguage,
-  ToastProvider,
-} from 'ostis-ui-lib';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
@@ -13,6 +6,13 @@ import { ThemeProvider as ScThemeProvider } from 'styled-components';
 import { App } from '@components/App';
 import { store } from '@store/index';
 import { ThemeProvider, useThemeContext } from '@themes/index';
+import {
+  LanguageProvider,
+  ClientProvider,
+  ScUtilsProvider,
+  TLanguage,
+  ToastProvider,
+} from 'ostis-ui-lib';
 
 import './assets/styles/index.css';
 import { client } from './api';

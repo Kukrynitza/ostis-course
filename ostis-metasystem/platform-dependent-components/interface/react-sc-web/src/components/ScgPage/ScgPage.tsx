@@ -1,8 +1,8 @@
 import classNames from 'classnames';
-import { useTranslate } from 'ostis-ui-lib';
 import { useLocation } from 'react-router';
 import ErrorBoundary from '@components/ErrorBoundary/ErrorBoundary';
 import { Scg } from '@components/Scg';
+import { useTranslate } from 'ostis-ui-lib';
 
 import styles from './ScgPage.module.css';
 

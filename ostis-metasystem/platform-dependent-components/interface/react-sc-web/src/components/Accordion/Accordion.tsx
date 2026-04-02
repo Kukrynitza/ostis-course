@@ -1,8 +1,8 @@
 import classNames from 'classnames';
-import { Expandable, useBooleanState } from 'ostis-ui-lib';
 import { FC, ReactNode } from 'react';
 import ChevronDown from '@assets/images/chevronDown.svg';
 import { IconButton } from '@components/IconButton';
+import { Expandable, useBooleanState } from 'ostis-ui-lib';
 
 import styles from './Accordion.module.css';
 
@@ -54,7 +54,11 @@ export const Accordion: FC<IProps> = ({
         <div className={styles.leftContent} onClick={onHeaderClick}>
           {leftIcon && <div className={styles.icon}>{leftIcon}</div>}
           {header}
-          <div className={classNames(styles.chevronDownWrapper, { [styles.chevronDownWrapper_expanded]: expanded })}>
+          <div
+            className={classNames(styles.chevronDownWrapper, {
+              [styles.chevronDownWrapper_expanded]: expanded,
+            })}
+          >
             <ChevronDown width="24" height="24" />
           </div>
         </div>
@@ -65,7 +69,11 @@ export const Accordion: FC<IProps> = ({
         )}
       </div>
       <Expandable expanded={expanded}>
-        <div className={classNames(styles.contentWrapper, { [styles.contentWrapper_expanded]: expanded })}>
+        <div
+          className={classNames(styles.contentWrapper, {
+            [styles.contentWrapper_expanded]: expanded,
+          })}
+        >
           {children}
         </div>
       </Expandable>

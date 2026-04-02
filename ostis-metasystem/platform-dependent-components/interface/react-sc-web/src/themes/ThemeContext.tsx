@@ -1,7 +1,7 @@
 import { createContext, FC, ReactNode, useContext, useEffect, useState } from 'react';
+import { useMedia } from '@hooks/useMedia';
 import { defaultLightTheme } from 'ostis-ui-lib';
 import { defaultDarkTheme } from './defaultDarkTheme';
-import { useMedia } from '@hooks/useMedia';
 
 export type TTheme = 'light' | 'dark' | 'system';
 
@@ -27,9 +27,7 @@ export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
     return (localStorage.getItem('theme') as TTheme) || 'system';
   });
 
-  const resolved = theme === 'system'
-    ? (isSystemDark ? 'dark' : 'light')
-    : theme;
+  const resolved = theme === 'system' ? (isSystemDark ? 'dark' : 'light') : theme;
 
   const styledTheme = resolved === 'dark' ? defaultDarkTheme : defaultLightTheme;
 

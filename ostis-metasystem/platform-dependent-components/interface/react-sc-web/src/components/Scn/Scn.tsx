@@ -1,4 +1,3 @@
-import { IScnNode, Scn as ScnBase, useToast, useTranslate } from 'ostis-ui-lib';
 import classNames from 'classnames';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -18,6 +17,7 @@ import {
 } from '@constants';
 import { useErrorToast } from '@hooks/useErrorToast';
 import { useLazyTimeout } from '@hooks/useTimeout';
+import { IScnNode, Scn as ScnBase, useToast, useTranslate } from 'ostis-ui-lib';
 
 import styles from './Scn.module.css';
 import boundaryStyle from '../ErrorBoundary/ErrorBoundary.module.css';

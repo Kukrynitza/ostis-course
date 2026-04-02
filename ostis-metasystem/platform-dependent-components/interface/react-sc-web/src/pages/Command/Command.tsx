@@ -1,4 +1,3 @@
-import { Spinner, useTranslate } from 'ostis-ui-lib';
 import { useCallback, useEffect, useState } from 'react';
 import { generatePath, useMatch, useNavigate } from 'react-router';
 import { appendHistoryItem } from '@api/requests/userHistory';
@@ -8,6 +7,7 @@ import { useDispatch, useErrorToast, useSelector } from '@hooks';
 import { selectArgAddrs } from '@store';
 import { selectUserAddr } from '@store/commonSlice';
 import { addRequest } from '@store/requestHistorySlice';
+import { Spinner, useTranslate } from 'ostis-ui-lib';
 
 import styles from './Command.module.css';
 

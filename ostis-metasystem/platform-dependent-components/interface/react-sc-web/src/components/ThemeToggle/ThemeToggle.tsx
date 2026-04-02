@@ -44,17 +44,9 @@ export const ThemeToggle = () => {
     setTheme(nextTheme(theme));
   };
 
-  const icon = theme === 'light'
-    ? <SunIcon />
-    : theme === 'dark'
-      ? <MoonIcon />
-      : <AutoIcon />;
+  const icon = theme === 'light' ? <SunIcon /> : theme === 'dark' ? <MoonIcon /> : <AutoIcon />;
 
-  const label = theme === 'light'
-    ? 'Светлая'
-    : theme === 'dark'
-      ? 'Тёмная'
-      : 'Системная';
+  const label = theme === 'light' ? 'Светлая' : theme === 'dark' ? 'Тёмная' : 'Системная';
 
   return (
     <button className={styles.button} onClick={handleClick} title={label}>

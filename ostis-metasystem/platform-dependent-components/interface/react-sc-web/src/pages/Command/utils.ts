@@ -1,6 +1,6 @@
 import { doCommand } from '@api/requests/command';
 import { scUtils } from '@api/sc';
-import { debounceWithReturn, lastInstancePromice } from '@utils';
+import { debounceWithReturn, lastInstancePromise } from '@utils';
 
 interface IArgs {
   commandAddr: string | number;
@@ -15,6 +15,6 @@ const executeCommandInner = async ({ commandAddr, addr, args }: IArgs) => {
 };
 
 export const debouncedExecuteCommand = debounceWithReturn(
-  lastInstancePromice(executeCommandInner),
+  lastInstancePromise(executeCommandInner),
   500,
 );

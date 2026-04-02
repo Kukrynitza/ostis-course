@@ -1,7 +1,7 @@
-import { useTranslate } from 'ostis-ui-lib';
 import React from 'react';
 import { ScAddr } from 'ts-sc-client';
 import GithubIcon from '@assets/images/GithubIcon.svg';
+import { useTranslate } from 'ostis-ui-lib';
 import styles from './Card.module.css';
 import { CardComponentType } from './types';
 import { getCardLogo, getSubtitleClassName, truncateString } from './utils';

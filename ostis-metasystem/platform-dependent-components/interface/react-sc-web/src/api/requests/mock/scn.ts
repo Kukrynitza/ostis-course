@@ -1,5 +1,5 @@
-import { IScnChild, IScnNode } from 'ostis-ui-lib';
 import { ScType } from 'ts-sc-client';
+import { IScnChild, IScnNode } from 'ostis-ui-lib';
 
 import { html, image1 } from './constants';
 

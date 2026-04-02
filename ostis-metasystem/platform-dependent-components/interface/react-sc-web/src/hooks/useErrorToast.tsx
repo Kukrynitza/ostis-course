@@ -1,6 +1,6 @@
-import { useToast } from 'ostis-ui-lib';
 import { useCallback } from 'react';
 import { Notification, TNotificationText } from '@components/Notification';
+import { useToast } from 'ostis-ui-lib';
 
 export const useErrorToast = () => {
   const { addToast } = useToast();

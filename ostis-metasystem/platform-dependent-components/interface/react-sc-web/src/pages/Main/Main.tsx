@@ -1,8 +1,8 @@
-import { SwitchScgScn, TScLanguageTab } from 'ostis-ui-lib';
 import { generatePath, Outlet, useLocation, useMatch, useNavigate } from 'react-router';
 import { routes } from '@constants';
 import { useDispatch } from '@hooks/redux';
 import { setFormat } from '@store/commonSlice';
+import { SwitchScgScn, TScLanguageTab } from 'ostis-ui-lib';
 
 import styles from './Main.module.css';
 

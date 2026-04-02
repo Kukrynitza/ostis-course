@@ -1,4 +1,3 @@
-import { langToKeynode, useTranslate, useLanguage } from 'ostis-ui-lib';
 import { useEffect, useState } from 'react';
 import { ScAddr } from 'ts-sc-client';
 import {
@@ -15,6 +14,7 @@ import { Card } from '@components/Card/Card';
 import { CardComponentType } from '@components/Card/types';
 import { CardInfo } from '@components/CardInfo/CardInfo';
 import { Input } from '@components/input/Input';
+import { langToKeynode, useTranslate, useLanguage } from 'ostis-ui-lib';
 import styles from './Library.module.css';
 
 interface CardInterface {

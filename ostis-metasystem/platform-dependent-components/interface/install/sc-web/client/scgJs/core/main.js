@@ -128,6 +128,95 @@ SCWeb.core.Main = {
                         }
                     })
 
+                    window.addEventListener('message', (e) => {
+                        if (e.data.type === 'exportSvg') {
+                            try {
+                                const svg = document.querySelector('svg.SCgSvg');
+                                if (!svg) {
+                                    window.top.postMessage({ type: 'exportSvgError', error: 'SVG not found' }, '*');
+                                    return;
+                                }
+                                const clone = svg.cloneNode(true);
+                                clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+                                clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+                                const origAll = svg.querySelectorAll('*');
+                                const cloneAll = clone.querySelectorAll('*');
+                                for (let i = 0; i < origAll.length; i++) {
+                                    const computed = window.getComputedStyle(origAll[i]);
+                                    let styleStr = '';
+                                    for (let j = 0; j < computed.length; j++) {
+                                        const prop = computed[j];
+                                        styleStr += prop + ':' + computed.getPropertyValue(prop) + ';';
+                                    }
+                                    cloneAll[i].setAttribute('style', styleStr);
+                                }
+                                const svgString = new XMLSerializer().serializeToString(clone);
+                                window.top.postMessage({ type: 'exportSvgResult', data: svgString }, '*');
+                            } catch (err) {
+                                window.top.postMessage({ type: 'exportSvgError', error: err.message }, '*');
+                            }
+                        }
+                    })
+
+                    window.addEventListener('message', (e) => {
+                        if (e.data.type === 'exportPng') {
+                            try {
+                                const svg = document.querySelector('svg.SCgSvg');
+                                if (!svg) {
+                                    window.top.postMessage({ type: 'exportPngError', error: 'SVG not found' }, '*');
+                                    return;
+                                }
+                                const bbox = svg.getBBox();
+                                const w = Math.ceil(bbox.width + 20);
+                                const h = Math.ceil(bbox.height + 20);
+                                const clone = svg.cloneNode(true);
+                                clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+                                clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+                                clone.setAttribute('width', w);
+                                clone.setAttribute('height', h);
+                                clone.setAttribute('viewBox', (bbox.x - 10) + ' ' + (bbox.y - 10) + ' ' + w + ' ' + h);
+                                const origAll = svg.querySelectorAll('*');
+                                const cloneAll = clone.querySelectorAll('*');
+                                for (let i = 0; i < origAll.length; i++) {
+                                    const computed = window.getComputedStyle(origAll[i]);
+                                    let styleStr = '';
+                                    for (let j = 0; j < computed.length; j++) {
+                                        const prop = computed[j];
+                                        styleStr += prop + ':' + computed.getPropertyValue(prop) + ';';
+                                    }
+                                    cloneAll[i].setAttribute('style', styleStr);
+                                }
+                                const svgString = new XMLSerializer().serializeToString(clone);
+                                const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+                                const url = URL.createObjectURL(svgBlob);
+                                const img = new Image();
+                                img.onload = function() {
+                                    const canvas = document.createElement('canvas');
+                                    canvas.width = w * 2;
+                                    canvas.height = h * 2;
+                                    const ctx = canvas.getContext('2d');
+                                    ctx.scale(2, 2);
+                                    ctx.drawImage(img, 0, 0);
+                                    URL.revokeObjectURL(url);
+                                    canvas.toBlob(function(blob) {
+                                        const reader = new FileReader();
+                                        reader.onloadend = function() {
+                                            window.top.postMessage({ type: 'exportPngResult', data: reader.result }, '*');
+                                        };
+                                        reader.readAsDataURL(blob);
+                                    }, 'image/png');
+                                };
+                                img.onerror = function() {
+                                    URL.revokeObjectURL(url);
+                                    window.top.postMessage({ type: 'exportPngError', error: 'Canvas render failed' }, '*');
+                                };
+                                img.src = url;
+                            } catch (err) {
+                                window.top.postMessage({ type: 'exportPngError', error: err.message }, '*');
+                            }
+                        }
+                    })
+
                     resolve();
                 });
             });

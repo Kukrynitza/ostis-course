@@ -1,8 +1,8 @@
-import { useTranslate } from 'ostis-ui-lib';
 import { useMatch } from 'react-router';
 import ErrorBoundary from '@components/ErrorBoundary/ErrorBoundary';
 import { Scn } from '@components/Scn';
 import { routes } from '@constants';
+import { useTranslate } from 'ostis-ui-lib';
 
 import styles from './ScnPage.module.css';
 

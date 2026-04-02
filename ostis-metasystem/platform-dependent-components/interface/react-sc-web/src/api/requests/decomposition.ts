@@ -1,4 +1,3 @@
-import { langToKeynode, snakeToCamelCase, TLanguage } from 'ostis-ui-lib';
 import {
   ScAddr,
   ScConstruction,
@@ -10,6 +9,7 @@ import {
 import { client, isAxiosError, request, scUtils } from '@api';
 import { API_URL } from '@constants';
 import { Decomposition } from '@model/model';
+import { langToKeynode, snakeToCamelCase, TLanguage } from 'ostis-ui-lib';
 
 import { doCommand } from './command';
 

@@ -14,6 +14,8 @@ module.exports = {
     'arrow-parens': 'warn',
     'no-console': 'warn',
     'import/no-unresolved': 'error',
+    'import/default': 'off',
+    'import/namespace': 'off',
     'import/order': [
       'warn',
       {

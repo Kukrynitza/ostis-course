@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import { DecompositionPanel, useDecompositionContext, useTranslate } from 'ostis-ui-lib';
 import { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getHistory } from '@api/requests/userHistory';
@@ -13,6 +12,7 @@ import { SearchField } from '@components/SearchField';
 import { useSelector } from '@hooks';
 import { selectUser } from '@store/commonSlice';
 import { selectRequests, setRequests } from '@store/requestHistorySlice';
+import { DecompositionPanel, useDecompositionContext, useTranslate } from 'ostis-ui-lib';
 import styles from './SidePanel.module.css';
 import { SwitchMode } from './SwitchMode';
 

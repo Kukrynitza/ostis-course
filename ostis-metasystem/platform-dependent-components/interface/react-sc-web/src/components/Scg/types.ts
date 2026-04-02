@@ -1,8 +1,3 @@
-export interface ITarget {
-  element: HTMLElement;
-  addr?: number;
-}
-
 export interface IWindowEventData {
   type: string;
   payload?: Record<string, any>;

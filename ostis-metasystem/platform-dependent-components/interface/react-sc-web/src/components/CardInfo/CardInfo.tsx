@@ -1,5 +1,4 @@
-import { langToKeynode, useLanguage } from 'ostis-ui-lib';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ScAddr } from 'ts-sc-client';
 import {
   searchComponentMainIdentifier,
@@ -14,6 +13,7 @@ import {
 import CloseIcon from '@assets/images/CloseIcon.svg';
 import { CardComponentType } from '@components/Card/types';
 import { getCardLogo, getSubtitleClassName } from '@components/Card/utils';
+import { langToKeynode, useLanguage } from 'ostis-ui-lib';
 import styles from './CardInfo.module.css';
 import { InstallMethodType } from './types';
 import { getInstallationMethodType } from './utils';
@@ -38,6 +38,7 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
   const [installationMethodImg, setInstallMethodImg] = useState<React.ReactNode>();
 
   const lang = useLanguage();
+
   useEffect(() => {
     if (type) {
       setLogoComponent(getCardLogo(type));
@@ -51,45 +52,48 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
     }
   }, [installMethod]);
 
-  const fetchComponent = async (component: ScAddr) => {
-    try {
-      const [
-        mainIdentifier,
-        type,
-        git,
-        explanation,
-        note,
-        installationMethod,
-        dependencies,
-        authors,
-      ] = await Promise.all([
-        searchComponentMainIdentifier(component, langToKeynode[lang]),
-        searchComponentType(component),
-        searchComponentGit(component),
-        searchComponentExplanation(component),
-        searchComponentNote(component),
-        searchComponentInstallationMethod(component),
-        searchComponentDependencies(component),
-        searchComponentAuthor(component),
-      ]);
+  const fetchComponent = useCallback(
+    async (component: ScAddr) => {
+      try {
+        const [
+          mainIdentifier,
+          type,
+          git,
+          explanation,
+          note,
+          installationMethod,
+          dependencies,
+          authors,
+        ] = await Promise.all([
+          searchComponentMainIdentifier(component, langToKeynode[lang]),
+          searchComponentType(component),
+          searchComponentGit(component),
+          searchComponentExplanation(component),
+          searchComponentNote(component),
+          searchComponentInstallationMethod(component),
+          searchComponentDependencies(component),
+          searchComponentAuthor(component),
+        ]);
 
-      setName(mainIdentifier ? (mainIdentifier as string) : '...');
-      setType(type);
-      setInstallMethod(installationMethod as InstallMethodType);
-      setGithub(git ? (git as string) : '#');
-      setExplanation(explanation ? (explanation as string) : '...');
-      setNote(note ? (note as string) : '...');
-      setDependencies(dependencies);
-      setAuthor(authors ? authors.join(', ') : '...');
-    } catch (error) {
-      console.error('Error fetching component specification:', error);
-      throw error;
-    }
-  };
+        setName(mainIdentifier ? (mainIdentifier as string) : '...');
+        setType(type);
+        setInstallMethod(installationMethod as InstallMethodType);
+        setGithub(git ? (git as string) : '#');
+        setExplanation(explanation ? (explanation as string) : '...');
+        setNote(note ? (note as string) : '...');
+        setDependencies(dependencies);
+        setAuthor(authors ? authors.join(', ') : '...');
+      } catch (error) {
+        console.error('Error fetching component specification:', error);
+        throw error;
+      }
+    },
+    [lang],
+  );
 
   useEffect(() => {
     fetchComponent(scAddr);
-  });
+  }, [scAddr, fetchComponent]);
 
   const handleWrapperClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
