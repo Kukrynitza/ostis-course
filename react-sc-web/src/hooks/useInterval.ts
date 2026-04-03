@@ -12,7 +12,7 @@ export const useInterval = (callback: React.EffectCallback, delay: number | null
     if (typeof delay === 'number') {
       intervalRef.current = window.setInterval(() => callbackRef.current(), delay);
 
-      // Clear interval if the components is unmounted or the delay changes:
+
       return () => window.clearInterval(intervalRef.current || 0);
     }
   }, [delay]);

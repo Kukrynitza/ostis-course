@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 import { Field, IFieldProps } from '@components/Field';
-import { FormTextarea, IFormTextareaProps as TextareaProps } from '@components/form/FormTextarea';
+import { FormTextarea, IFormTextareaProps as TextareaProps } from '@components/Form/FormTextarea';
 
 export const TextField = forwardRef<HTMLTextAreaElement, TextareaProps & IFieldProps>(
   (props, ref) => {

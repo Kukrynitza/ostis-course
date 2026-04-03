@@ -12,8 +12,6 @@ export const debounce = <F extends (...args: any[]) => any>(func: F, wait: numbe
   return [debounced, clear] as const;
 };
 
-// TODO: Объединить с debounce и проверить, что все норм
-// Возможно, хорошей идеей будет убрать clear или сделать его методом возвращаемой функции, типа debounced.clear = clear;
 export const debounceWithReturn = <F extends (...args: any[]) => any>(func: F, wait: number) => {
   let timerId: NodeJS.Timeout;
 

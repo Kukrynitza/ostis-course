@@ -1,6 +1,6 @@
 import { ChangeEventHandler, FC } from 'react';
 import SearchIcon from '@assets/images/Search.svg';
-import { Input } from '@components/input/Input';
+import { Input } from '@components/Input/Input';
 
 import styles from './SearchInput.module.css';
 
@@ -19,8 +19,5 @@ export const SearchInput: FC<IProps> = ({ value, placeholder, onChange }) => (
     className={styles.input}
     onChange={onChange}
     isSearch
-    //When we will create the abstract IconButton component,
-    //we need to add logic to the iconRight,
-    //so that the cross will appear if the input is not empty,
   />
 );

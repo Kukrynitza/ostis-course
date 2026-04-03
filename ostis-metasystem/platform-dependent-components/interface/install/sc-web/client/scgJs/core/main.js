@@ -160,17 +160,13 @@ SCWeb.core.Main = {
 
                     window.addEventListener('message', async (e) => {
                         if (e.data.type === 'exportPng') {
-                            console.log('[PNG EXPORT] Handler called, message:', e.data);
                             try {
                                 const svg = document.querySelector('svg.SCgSvg');
-                                console.log('[PNG EXPORT] SVG found:', !!svg);
                                 if (!svg) {
-                                    console.error('[PNG EXPORT] SVG not found');
                                     window.top.postMessage({ type: 'exportPngError', error: 'SVG not found' }, '*');
                                     return;
                                 }
                                 const bbox = svg.getBBox();
-                                console.log('[PNG EXPORT] bbox:', bbox.width, bbox.height);
                                 const w = Math.ceil(bbox.width + 20);
                                 const h = Math.ceil(bbox.height + 20);
                                 const SCALE = 8;
@@ -182,7 +178,6 @@ SCWeb.core.Main = {
                                 clone.setAttribute('viewBox', (bbox.x - 10) + ' ' + (bbox.y - 10) + ' ' + w + ' ' + h);
                                 const origAll = svg.querySelectorAll('*');
                                 const cloneAll = clone.querySelectorAll('*');
-                                console.log('[PNG EXPORT] Inlining styles for', origAll.length, 'elements');
                                 for (let i = 0; i < origAll.length; i++) {
                                     if (!cloneAll[i] || cloneAll[i].tagName === 'foreignObject') {
                                         if (cloneAll[i]) cloneAll[i].remove();
@@ -215,7 +210,6 @@ SCWeb.core.Main = {
                                     cloneAll[i].setAttribute('style', styleStr);
                                 }
                                 const cloneImages = clone.querySelectorAll('image');
-                                console.log('[PNG EXPORT] Found', cloneImages.length, '<image> elements');
                                 for (const cloneImg of cloneImages) {
                                     const href = cloneImg.getAttribute('xlink:href') || cloneImg.getAttribute('href');
                                     if (href && !href.startsWith('data:')) {
@@ -230,7 +224,6 @@ SCWeb.core.Main = {
                                                 });
                                                 cloneImg.setAttribute('xlink:href', base64);
                                                 cloneImg.setAttribute('href', base64);
-                                                console.log('[PNG EXPORT] Inlined image:', href);
                                             }
                                         } catch (err) { }
                                     }
@@ -238,7 +231,6 @@ SCWeb.core.Main = {
                                 const defs = clone.querySelector('defs');
                                 if (defs) {
                                     const cloneUses = clone.querySelectorAll('use');
-                                    console.log('[PNG EXPORT] Resolving', cloneUses.length, '<use> elements');
                                     for (const cloneUse of cloneUses) {
                                         const href = cloneUse.getAttribute('xlink:href') || cloneUse.getAttribute('href');
                                         if (href && href.startsWith('#')) {
@@ -253,54 +245,44 @@ SCWeb.core.Main = {
                                                     }
                                                 }
                                                 cloneUse.parentNode.replaceChild(clonedDef, cloneUse);
-                                                console.log('[PNG EXPORT] Resolved <use>', href);
                                             }
                                         }
                                     }
                                 }
                                 const svgString = new XMLSerializer().serializeToString(clone);
-                                console.log('[PNG EXPORT] SVG string length:', svgString.length);
                                 const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
                                 const url = URL.createObjectURL(svgBlob);
                                 const img = new Image();
                                 img.onload = function() {
-                                    console.log('[PNG EXPORT] Image loaded:', img.naturalWidth, 'x', img.naturalHeight);
                                     const canvas = document.createElement('canvas');
                                     canvas.width = w * SCALE;
                                     canvas.height = h * SCALE;
                                     const ctx = canvas.getContext('2d');
                                     ctx.drawImage(img, 0, 0, w * SCALE, h * SCALE);
                                     URL.revokeObjectURL(url);
-                                    console.log('[PNG EXPORT] Drawn on canvas, calling toBlob');
                                     canvas.toBlob(function(blob) {
                                         if (blob) {
-                                            console.log('[PNG EXPORT] toBlob OK, size:', blob.size);
                                             const reader = new FileReader();
                                             reader.onloadend = function() {
-                                                console.log('[PNG EXPORT] Sending result, data length:', reader.result.length);
                                                 window.top.postMessage({ type: 'exportPngResult', data: reader.result }, '*');
                                             };
                                             reader.readAsDataURL(blob);
                                         } else {
                                             try {
                                                 const dataUrl = canvas.toDataURL('image/png');
-                                                console.log('[PNG EXPORT] toDataURL fallback, length:', dataUrl.length);
                                                 window.top.postMessage({ type: 'exportPngResult', data: dataUrl }, '*');
                                             } catch (err) {
-                                                console.error('[PNG EXPORT] toDataURL failed:', err);
                                                 window.top.postMessage({ type: 'exportPngError', error: 'toBlob returned null and toDataURL failed: ' + err.message }, '*');
                                             }
                                         }
                                     }, 'image/png');
                                 };
                                 img.onerror = function(err) {
-                                    console.error('[PNG EXPORT] Image load failed');
                                     URL.revokeObjectURL(url);
                                     window.top.postMessage({ type: 'exportPngError', error: 'Canvas render failed' }, '*');
                                 };
                                 img.src = url;
                             } catch (err) {
-                                console.error('[PNG EXPORT] Catch error:', err);
                                 window.top.postMessage({ type: 'exportPngError', error: err.message }, '*');
                             }
                         }

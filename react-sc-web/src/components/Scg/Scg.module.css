@@ -24,7 +24,7 @@
 
 .exportBar {
   position: absolute;
-  top: -30px;
+  top: 7px;
   right: 130px;
   z-index: 10;
   display: flex;
@@ -34,7 +34,7 @@
 
 .exportButton {
   padding: 2px 6px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 400;
   color: var(--color-silver);
   border: none;

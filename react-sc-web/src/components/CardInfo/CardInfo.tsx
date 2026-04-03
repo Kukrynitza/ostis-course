@@ -39,6 +39,19 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
 
   const lang = useLanguage();
 
+  useEffect(() => {
+    if (type) {
+      setLogoComponent(getCardLogo(type));
+      setSubtitleClassName(getSubtitleClassName(type));
+    }
+  }, [type]);
+
+  useEffect(() => {
+    if (installMethod) {
+      setInstallMethodImg(getInstallationMethodType(installMethod));
+    }
+  }, [installMethod]);
+
   const fetchComponent = useCallback(
     async (component: ScAddr) => {
       try {
