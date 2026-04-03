@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { scUtils } from '@api';
@@ -14,9 +15,10 @@ import {
   useLanguage,
   useTranslate,
   Popup,
+  Spinner,
 } from 'ostis-ui-lib';
 import { confirmClearScenePopupContent, confirmDeletePopupContent } from './constants';
-import { ExportBar, ExportButton, Frame, StyledSpinner, Wrap } from './styled';
+import styles from './Scg.module.css';
 
 import { EWindowEvents, IWindowEventData } from './types';
 
@@ -38,55 +40,10 @@ const downloadFile = (dataUrl: string, filename: string) => {
   document.body.removeChild(a);
 };
 
-const svgToPng = (svgString: string): Promise<Blob | null> => {
-  return new Promise((resolve) => {
-    const img = new Image();
-    const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
-    const url = URL.createObjectURL(svgBlob);
-
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) {
-        URL.revokeObjectURL(url);
-        resolve(null);
-        return;
-      }
-      ctx.drawImage(img, 0, 0);
-      URL.revokeObjectURL(url);
-      canvas.toBlob(
-        (blob) => resolve(blob),
-        'image/png',
-      );
-    };
-
-    img.onerror = () => {
-      URL.revokeObjectURL(url);
-      resolve(null);
-    };
-
-    img.src = url;
-  });
-};
-
-const downloadBlob = (blob: Blob, filename: string) => {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-};
-
 export const Scg: FC<IProps> = ({ action, className, show = false }) => {
   const [isReady, setIsReady] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
-  const [exportMode, setExportMode] = useState<'png' | 'svg' | null>(null);
   const [isConfirmDeletePopupShown, showConfirmDeletePopup, hideConfirmDeletePopup] =
     useBooleanState(false);
   const [isConfirmClearScenePopupShown, showConfirmClearScenePopup, hideConfirmClearScenePopup] =
@@ -119,11 +76,10 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
     (mode: 'png' | 'svg') => {
       if (!ref.current?.contentWindow) return;
       setIsExporting(true);
-      setExportMode(mode);
-      ref.current.contentWindow.postMessage({ type: 'exportSvg' }, '*');
+      const msgType = mode === 'png' ? 'exportPng' : 'exportSvg';
+      ref.current.contentWindow.postMessage({ type: msgType }, '*');
       timeoutRef.current = setTimeout(() => {
         setIsExporting(false);
-        setExportMode(null);
         addError(translate({ ru: 'Ошибка экспорта', en: 'Export error' }));
       }, EXPORT_TIMEOUT);
     },
@@ -134,7 +90,7 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
     const iframe = ref.current;
     if (!iframe) return;
 
-    const handleMessage = async (event: MessageEvent<IWindowEventData>) => {
+    const handleMessage = (event: MessageEvent<IWindowEventData>) => {
       switch (event.data?.type) {
         case EWindowEvents.onInitializationFinished:
           setIsReady(true);
@@ -149,49 +105,29 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
         case EWindowEvents.commandExecuted:
           onCommandExecuted(event.data);
           break;
+        case EWindowEvents.exportPngResult: {
+          clearExportTimeout();
+          const pngData = (event.data as unknown as Record<string, unknown>)['data'] as string;
+          if (pngData) downloadFile(pngData, 'scg.png');
+          setIsExporting(false);
+          break;
+        }
+        case EWindowEvents.exportPngError:
+          clearExportTimeout();
+          setIsExporting(false);
+          addError(translate({ ru: 'Ошибка экспорта PNG', en: 'PNG export error' }));
+          break;
         case EWindowEvents.exportSvgResult: {
           clearExportTimeout();
           const svgData = (event.data as unknown as Record<string, unknown>)['data'] as string;
-          if (!svgData) {
-            setIsExporting(false);
-            setExportMode(null);
-            return;
-          }
-          if (exportMode === 'png') {
-            const pngBlob = await svgToPng(svgData);
-            if (pngBlob) {
-              downloadBlob(pngBlob, 'scg.png');
-            } else {
-              addError(translate({ ru: 'Ошибка конвертации PNG', en: 'PNG conversion error' }));
-            }
-          } else {
-            downloadFile(
-              'data:text/plain;charset=utf-8,' + encodeURIComponent(svgData),
-              'scg.svg',
-            );
-          }
-          setIsExporting(false);
-          setExportMode(null);
-          break;
-        }
-          if (exportMode === 'png') {
-            try {
-              const pngData = await svgToPng(svgData);
-              downloadFile(pngData, 'scg.png');
-            } catch {
-              addError(translate({ ru: 'Ошибка конвертации PNG', en: 'PNG conversion error' }));
-            }
-          } else {
+          if (svgData)
             downloadFile('data:text/plain;charset=utf-8,' + encodeURIComponent(svgData), 'scg.svg');
-          }
           setIsExporting(false);
-          setExportMode(null);
           break;
         }
         case EWindowEvents.exportSvgError:
           clearExportTimeout();
           setIsExporting(false);
-          setExportMode(null);
           addError(translate({ ru: 'Ошибка экспорта SVG', en: 'SVG export error' }));
           break;
       }
@@ -210,7 +146,6 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
     showConfirmClearScenePopup,
     addError,
     translate,
-    exportMode,
     clearExportTimeout,
   ]);
 
@@ -262,20 +197,29 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
           />
         </Popup>
       )}
-      <Wrap show={show} className={className}>
-        {isLoading && <StyledSpinner appearance={SPINER_COLOR} />}
+      <div className={classNames(styles.wrap, show && styles.wrapShow, className)}>
+        {isLoading && <Spinner className={styles.spinner} appearance={SPINER_COLOR} />}
         {show && isReady && action && (
-          <ExportBar>
-            <ExportButton disabled={isExporting} onClick={() => handleExport('png')}>
+          <div className={styles.exportBar}>
+            <button
+              className={styles.exportButton}
+              disabled={isExporting}
+              onClick={() => handleExport('png')}
+            >
               {isExporting ? '...' : 'PNG'}
-            </ExportButton>
-            <ExportButton disabled={isExporting} onClick={() => handleExport('svg')}>
+            </button>
+            <span className={styles.exportDivider} />
+            <button
+              className={styles.exportButton}
+              disabled={isExporting}
+              onClick={() => handleExport('svg')}
+            >
               {isExporting ? '...' : 'SVG'}
-            </ExportButton>
-          </ExportBar>
+            </button>
+          </div>
         )}
-        <Frame src={scgUrl} ref={ref} title="SCg codes" />
-      </Wrap>
+        <iframe className={styles.frame} src={scgUrl} ref={ref} title="SCg codes" />
+      </div>
     </>
   );
 };

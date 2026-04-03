@@ -1,16 +1,16 @@
-import { Popup } from './styled';
+import styles from './Scg.module.css';
 
 export const confirmDeletePopupContent = (
-  <Popup>
+  <div className={styles.popup}>
     Вы уверены, что хотите <b>удалить</b> выделенные элементы из базы знаний?
     <b>Это действие нельзя будет отменить после синхронизации изменений.</b>
-  </Popup>
+  </div>
 );
 
 export const confirmClearScenePopupContent = (
-  <Popup isClear>
+  <div className={`${styles.popup} ${styles.popupClear}`}>
     В результе этого действия из рабочего пространства будут <b>удалены</b> все элементы.
     <br />
     <b>Это действие нельзя отменить.</b>
-  </Popup>
+  </div>
 );

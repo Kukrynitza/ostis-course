@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCg PNG Export Test</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #1a1a2e; color: #e0e0e0; height: 100vh; display: flex; flex-direction: column; }
+        header { background: #16213e; padding: 10px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #0f3460; }
+        header h1 { font-size: 16px; color: #e94560; }
+        .main { display: flex; flex: 1; overflow: hidden; }
+        .sidebar { width: 260px; background: #16213e; padding: 12px; display: flex; flex-direction: column; gap: 10px; border-right: 1px solid #0f3460; overflow-y: auto; }
+        .sidebar label { font-size: 12px; color: #a0a0b0; }
+        .sidebar input { background: #0f3460; border: 1px solid #1a1a4e; color: #e0e0e0; padding: 6px 10px; border-radius: 4px; font-size: 13px; }
+        .btn { padding: 8px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; }
+        .btn-primary { background: #e94560; color: white; }
+        .btn-primary:disabled { background: #555; cursor: not-allowed; }
+        .btn-secondary { background: #0f3460; color: #e0e0e0; border: 1px solid #1a1a4e; }
+        .status { font-size: 11px; padding: 6px; border-radius: 4px; background: #0f3460; }
+        .status.ready { color: #4ecca3; }
+        .status.loading { color: #f0a500; }
+        .status.error { color: #e94560; }
+        .iframe-wrap { flex: 1; position: relative; }
+        .iframe-wrap iframe { width: 100%; height: 100%; border: none; }
+        .log-panel { height: 200px; background: #0d1117; border-top: 1px solid #0f3460; display: flex; flex-direction: column; }
+        .log-header { padding: 6px 12px; background: #16213e; display: flex; justify-content: space-between; border-bottom: 1px solid #0f3460; }
+        .log-header h3 { font-size: 12px; color: #a0a0b0; }
+        .log-actions button { padding: 3px 10px; font-size: 11px; margin-left: 4px; }
+        .log-content { flex: 1; overflow-y: auto; padding: 6px 12px; font-family: 'Consolas', monospace; font-size: 11px; line-height: 1.5; }
+        .log-line { white-space: pre-wrap; word-break: break-all; }
+        .log-line.info { color: #4ecca3; }
+        .log-line.warn { color: #f0a500; }
+        .log-line.error { color: #e94560; }
+        .log-line.debug { color: #6a7a9b; }
+        .png-preview { text-align: center; }
+        .png-preview img { max-width: 100%; max-height: 120px; border: 1px solid #0f3460; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SCg PNG Export Test</h1>
+    </header>
+    <div class="main">
+        <div class="sidebar">
+            <label>SCg Action Address</label>
+            <input type="text" id="actionAddr" value="myself" placeholder="e.g. myself">
+            <button class="btn btn-primary" id="btnRender" disabled>Render SCg</button>
+            <button class="btn btn-primary" id="btnExport" disabled>Export PNG</button>
+            <div class="status" id="status">Connecting to SCg...</div>
+            <div class="png-preview" id="pngPreview"></div>
+            <button class="btn btn-secondary" id="btnDownload" style="display:none;">Download PNG</button>
+        </div>
+        <div class="iframe-wrap">
+            <iframe id="scgFrame" src="http://localhost:8000/scg"></iframe>
+        </div>
+    </div>
+    <div class="log-panel">
+        <div class="log-header">
+            <h3>Debug Log</h3>
+            <div class="log-actions">
+                <button class="btn btn-secondary" id="btnClearLog">Clear</button>
+                <button class="btn btn-secondary" id="btnCopyLog">Copy</button>
+            </div>
+        </div>
+        <div class="log-content" id="logContent"></div>
+    </div>
+
+    <script>
+        const scgFrame = document.getElementById('scgFrame');
+        const btnRender = document.getElementById('btnRender');
+        const btnExport = document.getElementById('btnExport');
+        const btnDownload = document.getElementById('btnDownload');
+        const status = document.getElementById('status');
+        const logContent = document.getElementById('logContent');
+        const pngPreview = document.getElementById('pngPreview');
+        const actionInput = document.getElementById('actionAddr');
+
+        let pngDataUrl = null;
+        let logLines = [];
+
+        function log(msg, level = 'info') {
+            const line = document.createElement('div');
+            line.className = `log-line ${level}`;
+            const ts = new Date().toLocaleTimeString();
+            line.textContent = `[${ts}] ${msg}`;
+            logContent.appendChild(line);
+            logContent.scrollTop = logContent.scrollHeight;
+            logLines.push(line.textContent);
+        }
+
+        function setStatus(text, cls = 'ready') {
+            status.textContent = text;
+            status.className = `status ${cls}`;
+        }
+
+        // Listen for messages from iframe
+        window.addEventListener('message', (event) => {
+            const data = event.data;
+            if (!data || !data.type) return;
+
+            switch (data.type) {
+                case 'onInitializationFinished':
+                    log('SCg iframe initialized', 'info');
+                    setStatus('Ready — click Render SCg', 'ready');
+                    btnRender.disabled = false;
+                    break;
+
+                case 'exportPngResult':
+                    log(`PNG export succeeded! Data length: ${data.data ? data.data.length : 0}`, 'info');
+                    pngDataUrl = data.data;
+                    if (pngDataUrl) {
+                        pngPreview.innerHTML = `<img src="${pngDataUrl}" alt="PNG Preview">`;
+                        btnDownload.style.display = 'block';
+                        setStatus('PNG exported!', 'ready');
+                    }
+                    btnExport.disabled = false;
+                    break;
+
+                case 'exportPngError':
+                    log(`PNG export error: ${data.error}`, 'error');
+                    setStatus(`Error: ${data.error}`, 'error');
+                    btnExport.disabled = false;
+                    break;
+
+                default:
+                    log(`Unknown message: ${data.type}`, 'debug');
+            }
+        });
+
+        // Render SCg — inject script into iframe
+        btnRender.addEventListener('click', () => {
+            const addr = actionInput.value.trim();
+            if (!addr) { log('Enter action address', 'warn'); return; }
+
+            pngPreview.innerHTML = '';
+            btnDownload.style.display = 'none';
+            pngDataUrl = null;
+
+            log(`Rendering SCg for: "${addr}"`, 'info');
+            setStatus('Rendering...', 'loading');
+            btnRender.disabled = true;
+
+            scgFrame.contentWindow.postMessage({ type: 'renderScg', addr: addr }, '*');
+
+            setTimeout(() => {
+                btnRender.disabled = false;
+                setStatus('Ready', 'ready');
+            }, 5000);
+        });
+
+        // Export PNG — inject debug script into iframe
+        btnExport.addEventListener('click', () => {
+            log('========== PNG EXPORT STARTED ==========', 'info');
+            setStatus('Exporting PNG...', 'loading');
+            btnExport.disabled = true;
+            pngPreview.innerHTML = '';
+            btnDownload.style.display = 'none';
+            pngDataUrl = null;
+
+            scgFrame.contentWindow.postMessage({ type: 'exportPng' }, '*');
+        });
+
+        btnDownload.addEventListener('click', () => {
+            if (!pngDataUrl) return;
+            const a = document.createElement('a');
+            a.href = pngDataUrl;
+            a.download = 'scg-test.png';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            log('PNG downloaded', 'info');
+        });
+
+        document.getElementById('btnClearLog').addEventListener('click', () => {
+            logContent.innerHTML = '';
+            logLines = [];
+        });
+
+        document.getElementById('btnCopyLog').addEventListener('click', () => {
+            navigator.clipboard.writeText(logLines.join('\n')).then(() => {
+                log('Log copied to clipboard', 'info');
+            });
+        });
+    </script>
+</body>
+</html>
