@@ -1,0 +1,68 @@
+// Справка для начинающего — структура и содержимое
+// Guide for beginners — structure and content
+
+// === Класс раздела справки ===
+guide_section
+<- sc_node_class;
+=> nrel_main_idtf: [Раздел справки] (* <- lang_ru;; *);
+=> nrel_main_idtf: [Guide section] (* <- lang_en;; *);;
+
+// === Корневой узел справки ===
+guide_for_beginners
+<- guide_section;
+=> nrel_main_idtf: [Справка для начинающего] (* <- lang_ru;; *);
+=> nrel_main_idtf: [Guide for beginners] (* <- lang_en;; *);
+=> nrel_decomposition: guide_section_navigation;
+=> nrel_decomposition: guide_section_context_menu;
+=> nrel_decomposition: guide_section_view_formats;
+=> nrel_decomposition: guide_section_library;
+=> nrel_decomposition: guide_section_search;
+=> nrel_decomposition: guide_section_history;;
+
+// === Раздел 1: Навигация по графам ===
+guide_section_navigation
+<- guide_section;
+=> nrel_main_idtf: [Навигация по графам] (* <- lang_ru;; *);
+=> nrel_main_idtf: [Navigation by graphs] (* <- lang_en;; *);
+=> nrel_explanation: [База знаний Метасистемы OSTIS представляет собой семантический граф, состоящий из узлов (понятий) и связей между ними. Каждый узел — это элемент знания: понятие, объект, действие или отношение. Для навигации кликните на любой узел в области просмотра — система покажет его семантическую окрестность, то есть все связанные с ним элементы. Таким образом вы можете последовательно исследовать базу знаний, переходя от одного понятия к другому.] (* <- lang_ru;; => nrel_format: format_txt;; *);
+=> nrel_explanation: [The knowledge base of the OSTIS Metasystem is a semantic graph consisting of nodes (concepts) and connections between them. Each node is an element of knowledge: a concept, object, action, or relation. To navigate, click on any node in the view area — the system will show its semantic neighborhood, i.e., all related elements. This way you can sequentially explore the knowledge base, moving from one concept to another.] (* <- lang_en;; => nrel_format: format_txt;; *);;
+
+// === Раздел 2: Контекстное меню узлов ===
+guide_section_context_menu
+<- guide_section;
+=> nrel_main_idtf: [Контекстное меню узлов] (* <- lang_ru;; *);
+=> nrel_main_idtf: [Node context menu] (* <- lang_en;; *);
+=> nrel_explanation: [При нажатии правой кнопкой мыши на любой узел открывается контекстное меню с доступными командами. Команда «Что это такое?» показывает полную семантическую окрестность выбранного элемента. Вы также можете зафиксировать узел как аргумент для последующих команд — это позволяет выполнять действия с конкретным элементом, например, найти связанные понятия или просмотреть информацию о нём в разных форматах.] (* <- lang_ru;; => nrel_format: format_txt;; *);
+=> nrel_explanation: [Right-clicking on any node opens a context menu with available commands. The "What is this?" command shows the full semantic neighborhood of the selected element. You can also fix a node as an argument for subsequent commands — this allows you to perform actions with a specific element, such as finding related concepts or viewing information about it in different formats.] (* <- lang_en;; => nrel_format: format_txt;; *);;
+
+// === Раздел 3: Форматы просмотра ===
+guide_section_view_formats
+<- guide_section;
+=> nrel_main_idtf: [Форматы просмотра] (* <- lang_ru;; *);
+=> nrel_main_idtf: [View formats] (* <- lang_en;; *);
+=> nrel_explanation: [Результаты запросов отображаются в двух форматах. SCn — текстовое представление в виде дерева, где узлы и связи показаны в структурированном текстовом виде. Этот формат удобен для детального изучения связей и чтения содержимого. SCg — графическое представление в виде диаграммы, где узлы отображаются как точки, а связи — как линии между ними. Этот формат удобен для визуального анализа структуры знаний. Переключайтесь между форматами с помощью кнопок в боковой панели.] (* <- lang_ru;; => nrel_format: format_txt;; *);
+=> nrel_explanation: [Query results are displayed in two formats. SCn — a textual representation as a tree, where nodes and connections are shown in structured text form. This format is convenient for detailed study of connections and reading content. SCg — a graphical representation as a diagram, where nodes are displayed as points and connections as lines between them. This format is convenient for visual analysis of knowledge structure. Switch between formats using the buttons in the side panel.] (* <- lang_en;; => nrel_format: format_txt;; *);;
+
+// === Раздел 4: Библиотека компонентов ===
+guide_section_library
+<- guide_section;
+=> nrel_main_idtf: [Библиотека компонентов] (* <- lang_ru;; *);
+=> nrel_main_idtf: [Component library] (* <- lang_en;; *);
+=> nrel_explanation: [Библиотека компонентов OSTIS содержит каталог многократно используемых компонентов: базы знаний, решатели задач, интерфейсные элементы и подсистемы. Для перехода в библиотеку нажмите соответствующую кнопку в боковой панели. Вы можете искать компоненты по имени и фильтровать их по типу. Клик по карточке компонента открывает подробную информацию: описание, тип, ссылку на репозиторий и пояснение к компоненту.] (* <- lang_ru;; => nrel_format: format_txt;; *);
+=> nrel_explanation: [The OSTIS component library contains a catalog of reusable components: knowledge bases, problem solvers, interface elements, and subsystems. To access the library, click the corresponding button in the side panel. You can search components by name and filter them by type. Clicking on a component card opens detailed information: description, type, repository link, and explanation.] (* <- lang_en;; => nrel_format: format_txt;; *);;
+
+// === Раздел 5: Поиск ===
+guide_section_search
+<- guide_section;
+=> nrel_main_idtf: [Поиск] (* <- lang_ru;; *);
+=> nrel_main_idtf: [Search] (* <- lang_en;; *);
+=> nrel_explanation: [Поле поиска в боковой панели позволяет находить элементы базы знаний по подстроке. При вводе текста система ищет совпадения в содержимом текстовых ссылок (контента узлов). Результаты поиска появляются с небольшой задержкой для оптимизации производительности. Выберите найденный элемент — система выполнит команду просмотра и покажет его семантическую окрестность в текущем формате (SCn или SCg).] (* <- lang_ru;; => nrel_format: format_txt;; *);
+=> nrel_explanation: [The search field in the side panel allows you to find knowledge base elements by substring. When you type text, the system searches for matches in the content of text links (node content). Search results appear with a slight delay for performance optimization. Select a found element — the system will execute a view command and show its semantic neighborhood in the current format (SCn or SCg).] (* <- lang_en;; => nrel_format: format_txt;; *);;
+
+// === Раздел 6: История навигации ===
+guide_section_history
+<- guide_section;
+=> nrel_main_idtf: [История навигации] (* <- lang_ru;; *);
+=> nrel_main_idtf: [Navigation history] (* <- lang_en;; *);
+=> nrel_explanation: [Панель истории в боковой панели сохраняет все ваши переходы между элементами базы знаний. Каждый выполненный запрос добавляется в начало списка. Клик по элементу истории позволяет быстро вернуться к ранее просмотренному результату. Текущий элемент выделен в списке. Это удобно при глубокой навигации по графу знаний, когда нужно вернуться к ранее изученному понятию.] (* <- lang_ru;; => nrel_format: format_txt;; *);
+=> nrel_explanation: [The history panel in the side panel saves all your transitions between knowledge base elements. Each executed query is added to the beginning of the list. Clicking on a history item allows you to quickly return to a previously viewed result. The current element is highlighted in the list. This is convenient when deeply navigating the knowledge graph and you need to return to a previously studied concept.] (* <- lang_en;; => nrel_format: format_txt;; *);;
