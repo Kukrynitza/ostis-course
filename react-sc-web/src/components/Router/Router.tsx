@@ -5,12 +5,16 @@ import { routes, DEFAULT_COMMAND_PATH } from '@constants';
 import { Action } from '@pages/Action';
 import { Command } from '@pages/Command';
 import { Library } from '@pages/Library';
+import { Login } from '@pages/Login';
 import { Main } from '@pages/Main';
+import { Register } from '@pages/Register';
 
 export const Router = () => {
   return (
     <Suspense fallback={<>loading...</>}>
       <Routes>
+        <Route path={routes.LOGIN} element={<Login />} />
+        <Route path={routes.REGISTER} element={<Register />} />
         <Route
           path={routes.MAIN}
           element={

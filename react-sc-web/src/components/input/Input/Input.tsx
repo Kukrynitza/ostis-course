@@ -67,10 +67,12 @@ export const Input = forwardRef<HTMLInputElement, IProps>(
     };
 
     useEffect(() => {
-      innerRef.current?.setSelectionRange(
-        innerRef.current?.value.length,
-        innerRef.current?.value.length,
-      );
+      if (innerRef.current && type !== 'email' && type !== 'search') {
+        innerRef.current.setSelectionRange(
+          innerRef.current.value.length,
+          innerRef.current.value.length,
+        );
+      }
     }, [inputType]);
 
     const isPassword = type === 'password';

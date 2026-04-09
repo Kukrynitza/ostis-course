@@ -33,3 +33,7 @@ export const deleteCookie = (name: string) => {
     'max-age': -1,
   });
 };
+
+export const setSessionCookie = (value: string) => {
+  setCookie('session_key', value, 7);
+};
