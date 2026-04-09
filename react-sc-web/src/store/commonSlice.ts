@@ -4,6 +4,7 @@ import { isAxiosError } from '@api/utils';
 import { IInputValidation, IUserData } from '@model/model';
 import { IRootState } from '@store/model';
 
+import { logout } from '../api/requests/auth';
 import { deleteCookie } from '../utils/cookies';
 
 interface IUserStatus {
@@ -38,16 +39,19 @@ const initialState: IInitialState = {
   },
 };
 
-export const fetchUserByToken = createAsyncThunk('/getLogin', async (_, { rejectWithValue }) => {
-  const res = await getUserByToken();
+export const fetchUserByToken = createAsyncThunk<IUserData | null, void>(
+  '/getLogin',
+  async (_, { rejectWithValue }) => {
+    const res = await getUserByToken();
 
-  if (isAxiosError(res)) {
-    return rejectWithValue(res.response?.data);
-  }
-  return res.data;
-});
+    if (isAxiosError(res)) {
+      return rejectWithValue(res.response?.data);
+    }
+    return res.data;
+  },
+);
 
-export const fetchUser = createAsyncThunk<unknown, IInputValidation>(
+export const fetchUser = createAsyncThunk<IUserData, IInputValidation>(
   '/postLogin',
   async (data, { rejectWithValue }) => {
     const res = await getUser(data);
@@ -59,6 +63,12 @@ export const fetchUser = createAsyncThunk<unknown, IInputValidation>(
     return res.data;
   },
 );
+
+export const logoutUser = createAsyncThunk<void, void>('/logout', async () => {
+  await logout();
+  localStorage.removeItem('user');
+  deleteCookie('session_key');
+});
 
 export const commonSlice = createSlice({
   name: 'common',
@@ -112,6 +122,15 @@ export const commonSlice = createSlice({
 
         state.user.status.isLoading = false;
         state.user.status.isError = true;
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.user.data = null;
+        state.user.status = {
+          isLoading: false,
+          isError: false,
+          isLoadingByToken: false,
+          isErrorByToken: false,
+        };
       });
   },
 });
@@ -121,6 +140,7 @@ export const selectUser = (state: IRootState) => state.common.user.data;
 export const selectUserAddr = createSelector(selectUser, (user) => user?.sc_addr);
 export const selectUserStatus = (state: IRootState) => state.common.user.status;
 export const selectFormat = (state: IRootState) => state.common.format || 'scn';
+export const selectIsAuthenticated = createSelector(selectUser, (user) => !!user);
 
 
 export const { setUser, setUserStatus, setFormat } = commonSlice.actions;
