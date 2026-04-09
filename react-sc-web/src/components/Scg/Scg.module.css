@@ -22,49 +22,6 @@
   border: 0;
 }
 
-.exportBar {
-  position: absolute;
-  top: 7px;
-  right: 130px;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  gap: 0;
-}
-
-.exportButton {
-  padding: 2px 6px;
-  font-size: 16px;
-  font-weight: 400;
-  color: var(--color-silver);
-  border: none;
-  border-radius: 4px;
-  background: transparent;
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
-}
-
-.exportDivider {
-  margin: 0 4px;
-  border-left: 1px solid var(--color-silver);
-  height: 18px;
-}
-
-.exportButton:hover {
-  background: var(--color-decomposition-hover);
-  color: var(--color-navy-blue);
-}
-
-.exportButton:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.exportButton:disabled:hover {
-  background: transparent;
-  color: var(--color-silver);
-}
-
 .popup {
   font-family: 'Roboto';
   font-style: normal;
