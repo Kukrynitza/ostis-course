@@ -8,8 +8,4 @@ export const enum EWindowEvents {
   clearScene = 'clearScene',
   onInitializationFinished = 'onInitializationFinished',
   commandExecuted = 'commandExecuted',
-  exportPngResult = 'exportPngResult',
-  exportPngError = 'exportPngError',
-  exportSvgResult = 'exportSvgResult',
-  exportSvgError = 'exportSvgError',
 }
