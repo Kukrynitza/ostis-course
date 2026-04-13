@@ -37,11 +37,17 @@ export const SidePanel: FC<IProps> = ({ className }) => {
     if (!user) return;
     setIsLoading(true);
     (async () => {
-      const history = await getHistory(user.sc_addr);
+      try {
+        const history = await getHistory(user.sc_addr);
 
-      if (!history) return;
-      dispatch(setRequests(history));
-      setIsLoading(false);
+        if (history) {
+          dispatch(setRequests(history));
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsLoading(false);
+      }
     })();
   }, [dispatch, user]);
 
