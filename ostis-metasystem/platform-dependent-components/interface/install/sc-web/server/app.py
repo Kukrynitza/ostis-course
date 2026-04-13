@@ -82,6 +82,15 @@ def init_app_rules():
 
         (r"/static/(.*)", NoCacheStaticHandler, {"path": tornado.options.options.static_path}),
 
+        # auth
+        (r"/login", auth.LoginHandler),
+        (r"/api/register", auth.RegisterHandler),
+        (r"/logout", auth.LogOutHandler),
+        (r"/api/user", auth.MeHandler),
+
+        (r"/auth/google$", auth.GoogleOAuth2LoginHandler),
+        (r"/auth/logout$", auth.LogOutHandler),
+
         # api
         (r"/api/context/", api.ContextMenu),
         (r"/api/cmd/do/", api.CmdDo),
@@ -95,9 +104,6 @@ def init_app_rules():
         (r"/api/info/tooltip/", api.InfoTooltip),
 
         (r"/api/user/", api.User),
-
-        (r"/auth/google$", auth.GoogleOAuth2LoginHandler),
-        (r"/auth/logout$", auth.LogOut),
 
         (r"/admin$", admin.MainHandler),
         (r"/admin/users/get$", admin_users.UsersInfo),
@@ -160,7 +166,7 @@ def main(options):
     application = tornado.web.Application(
         handlers=rules,
         cookie_secret=secret.get_secret(),
-        login_url="/auth/google",
+        login_url="/login",
         template_path=tornado.options.options.templates_path,
         xsrf_cookies=False,
         gzip=True,

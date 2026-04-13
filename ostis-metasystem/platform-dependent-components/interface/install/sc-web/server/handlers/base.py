@@ -9,6 +9,8 @@ import decorators
 @decorators.class_logging
 class User:
     def __init__(self, u, database):
+        self.id = u.id
+        self.login = u.login
         self.email = u.email
         self.name = u.name
         self.avatar = u.avatar
@@ -41,8 +43,14 @@ class BaseHandler(web.RequestHandler):
     cookie_user_key = 'user_key'
     
     def get_current_user(self) -> Optional[User]:
-        key = self.get_secure_cookie(self.cookie_user_key, max_age_days=1)
+        key = self.get_secure_cookie(self.cookie_user_key, max_age_days=7)
         if not key:
+            # AUTO-LOGIN MODE: Return dev_user if no session is found
+            database = db.DataBase()
+            database.ensure_dev_user()
+            u = database.get_user_by_login('dev_user')
+            if u:
+                return User(u, database)
             return None
         key = key.decode('UTF-8')
         
@@ -52,6 +60,15 @@ class BaseHandler(web.RequestHandler):
             return User(u, database)
         
         return None
+
+    def check_auth(self):
+        current_user = self.get_current_user()
+        if not current_user:
+            self.set_status(401)
+            self.write({'error': 'Not authenticated'})
+            self.finish()
+            return False
+        return True
 
     def get_user_id(self, email):
         pass
