@@ -31,14 +31,14 @@ export interface IDataBase {
 }
 
 export interface IUserData {
+  id: number;
   login: string;
+  email: string;
+  role: string;
+  avatar: string | undefined;
   sc_addr: number;
   is_admin: number;
   can_edit: number;
-  avatar: string | undefined;
-  has_entered: boolean;
-  first_time: number;
-  public_url: string;
 }
 
 export interface IKeyValueDescription {

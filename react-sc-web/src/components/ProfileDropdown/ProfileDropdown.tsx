@@ -42,12 +42,17 @@ export const ProfileDropdown = () => {
   return (
     <div className={styles.dropdown} ref={dropdownRef}>
       <button className={styles.avatar} onClick={() => setIsOpen(!isOpen)}>
-        {user.login.charAt(0).toUpperCase()}
+        {user?.avatar ? (
+          <img src={user.avatar} alt={user.login} className={styles.avatarImage} />
+        ) : (
+          user?.login?.charAt(0).toUpperCase() || '?'
+        )}
       </button>
       {isOpen && (
         <div className={styles.menu}>
-          <div className={styles.userInfo}>
-            <span className={styles.userName}>{user.login}</span>
+            <div className={styles.userInfo}>
+            <span className={styles.userName}>{user?.login || 'User'}</span>
+            <span className={styles.userEmail}>{user?.email || ''}</span>
           </div>
           <button className={styles.menuItem} onClick={handleLogout}>
             {translate({ ru: 'Выйти', en: 'Logout' })}
