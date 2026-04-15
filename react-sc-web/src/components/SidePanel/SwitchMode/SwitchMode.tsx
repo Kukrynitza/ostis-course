@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import GuidePageButton from '@assets/images/GuidePageButton.svg';
+import GuidePageButtonFocus from '@assets/images/GuidePageButtonFocus.svg';
+import GuidePageButtonFocusThemed from '@assets/images/GuidePageButtonFocusThemed.svg';
+import GuidePageButtonThemed from '@assets/images/GuidePageButtonThemed.svg';
 import LibraryPageButton from '@assets/images/LibraryPageButton.svg';
 import LibraryPageButtonFocus from '@assets/images/LibraryPageButtonFocus.svg';
 import LibraryPageButtonFocusThemed from '@assets/images/LibraryPageButtonFocusThemed.svg';
@@ -48,6 +52,15 @@ export const SwitchMode = () => {
         ? LibraryPageButtonThemed
         : LibraryPageButton;
 
+  const GuideIcon =
+    activePage === routes.GUIDE
+      ? isDark
+        ? GuidePageButtonFocusThemed
+        : GuidePageButtonFocus
+      : isDark
+        ? GuidePageButtonThemed
+        : GuidePageButton;
+
   return (
     <div className={styles.switchModeButtonsWrapper}>
       <Link
@@ -63,6 +76,13 @@ export const SwitchMode = () => {
         onClick={() => handlePageClick(routes.LIBRARY)}
       >
         <LibraryIcon />
+      </Link>
+      <Link
+        to={routes.GUIDE}
+        className={styles.switchModeButton}
+        onClick={() => handlePageClick(routes.GUIDE)}
+      >
+        <GuideIcon />
       </Link>
     </div>
   );

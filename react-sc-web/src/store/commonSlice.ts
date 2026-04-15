@@ -116,11 +116,9 @@ export const commonSlice = createSlice({
   },
 });
 
-
 export const selectUser = (state: IRootState) => state.common.user.data;
 export const selectUserAddr = createSelector(selectUser, (user) => user?.sc_addr);
 export const selectUserStatus = (state: IRootState) => state.common.user.status;
 export const selectFormat = (state: IRootState) => state.common.format || 'scn';
-
 
 export const { setUser, setUserStatus, setFormat } = commonSlice.actions;

@@ -1,0 +1,37 @@
+<svg width="62" height="62" viewBox="0 0 62 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="62" height="62" rx="12.4" fill="var(--color-soft-grey)"/>
+<path d="M31 13C24 11 16 12 11 15V45C16 42 24 44 31 47V13Z" fill="url(#paint0_linear_guide)"/>
+<path d="M31 13C38 11 46 12 51 15V45C46 42 38 44 31 47V13Z" fill="url(#paint1_linear_guide)"/>
+<path d="M31 16C26 14.5 19 15.5 14 17.5V42.5C19 40.5 26 42 31 44V16Z" fill="url(#paint2_linear_guide)"/>
+<path d="M31 16C36 14.5 43 15.5 48 17.5V42.5C43 40.5 36 42 31 44V16Z" fill="url(#paint3_linear_guide)"/>
+<path d="M18 25H27" stroke="var(--color-white)" stroke-width="1.05" stroke-linecap="round" opacity="0.5"/>
+<path d="M18 30H27" stroke="var(--color-white)" stroke-width="1.05" stroke-linecap="round" opacity="0.5"/>
+<path d="M18 35H23" stroke="var(--color-white)" stroke-width="1.05" stroke-linecap="round" opacity="0.5"/>
+<path d="M35 25H44" stroke="var(--color-white)" stroke-width="1.05" stroke-linecap="round" opacity="0.5"/>
+<path d="M35 30H44" stroke="var(--color-white)" stroke-width="1.05" stroke-linecap="round" opacity="0.5"/>
+<path d="M35 35H40" stroke="var(--color-white)" stroke-width="1.05" stroke-linecap="round" opacity="0.5"/>
+<path d="M29 10C29 10 30.5 10 31 10V24C30.5 24 29 24 29 24L25 34C25 34 26.5 30 29 24V10Z" fill="url(#paint4_linear_guide)"/>
+<path d="M31 13V47" stroke="var(--color-silver)" stroke-width="0.7" opacity="0.4"/>
+<defs>
+<linearGradient id="paint0_linear_guide" x1="11" y1="13" x2="31" y2="47" gradientUnits="userSpaceOnUse">
+<stop stop-color="var(--color-grey-blue)"/>
+<stop offset="1" stop-color="var(--color-navy-blue)"/>
+</linearGradient>
+<linearGradient id="paint1_linear_guide" x1="51" y1="13" x2="31" y2="47" gradientUnits="userSpaceOnUse">
+<stop stop-color="var(--color-grey-blue)"/>
+<stop offset="1" stop-color="var(--color-navy-blue)"/>
+</linearGradient>
+<linearGradient id="paint2_linear_guide" x1="14" y1="16" x2="31" y2="44" gradientUnits="userSpaceOnUse">
+<stop stop-color="var(--color-navy-blue)"/>
+<stop offset="1" stop-color="var(--color-dark-blue)"/>
+</linearGradient>
+<linearGradient id="paint3_linear_guide" x1="48" y1="16" x2="31" y2="44" gradientUnits="userSpaceOnUse">
+<stop stop-color="var(--color-navy-blue)"/>
+<stop offset="1" stop-color="var(--color-dark-blue)"/>
+</linearGradient>
+<linearGradient id="paint4_linear_guide" x1="25" y1="10" x2="31" y2="34" gradientUnits="userSpaceOnUse">
+<stop stop-color="var(--color-navy-blue)"/>
+<stop offset="1" stop-color="var(--color-dark-blue)"/>
+</linearGradient>
+</defs>
+</svg>
