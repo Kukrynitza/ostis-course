@@ -1,0 +1,130 @@
+.container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+.wrapper {
+  display: flex;
+  width: 1045px;
+  border-radius: 24px;
+  background-color: #ffffff;
+  padding: 20px;
+  margin: 20px;
+  flex-direction: column;
+}
+
+.scrollable {
+  overflow-y: auto;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #565656;
+}
+
+.blockName {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.cardInfo {
+  display: flex;
+  justify-content: space-between;
+}
+
+.logo {
+  order: 1;
+}
+
+.info {
+  order: 2;
+  width: 90%;
+  margin-left: 20px;
+}
+
+.infoItem {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 500;
+  order: 1;
+  margin-right: 100px;
+}
+
+.tool {
+  order: 2;
+  width: 250px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.cardType {
+  padding: 4px 8px 4px 8px;
+  height: 5%;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #ffffff;
+  background-color: #5f95e5;
+  width: 135px;
+  height: 26px;
+}
+
+.closeButton {
+  background-color: #ffffff;
+  border: none;
+  cursor: pointer;
+}
+
+.annotation {
+  margin-top: 20px;
+}
+
+.dependencies {
+  margin-top: 20px;
+}
+
+.componentDependencies {
+  display: inline-block;
+  margin: 5px 10px 0px 0px;
+  border-radius: 8px;
+  border: 1px solid #d7d7d7;
+  padding: 4px 8px 4px 8px;
+  color: #4678b9;
+}
+
+.componentDependencies:hover {
+  cursor: pointer;
+}
+
+.address {
+  margin-top: 20px;
+}
+
+.storageAddress a {
+  color: #4678b9;
+}
+
+.installationMethod {
+  margin-top: 20px;
+}
+
+.autorship {
+  margin-top: 20px;
+}
+
+.componentImg {
+  max-width: 50%;
+  max-height: 50%;
+}

@@ -1,0 +1,114 @@
+@import '~@assets/styles/variables/colors.scss';
+
+.libraryContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+}
+
+.scrollableContent {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.scrollableContent::-webkit-scrollbar {
+  width: 16px;
+}
+
+.scrollableContent::-webkit-scrollbar-track {
+  background-color: $white;
+}
+
+.scrollableContent::-webkit-scrollbar-thumb {
+  background-color: #c8c8c8;
+  border: 6px $white solid;
+  border-radius: 16;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0px 10px 0px 10px;
+}
+
+.searchField {
+  width: min-content;
+  min-width: 450px;
+  border: 1px solid #e8e8e8;
+}
+
+.Filter {
+  position: relative;
+  margin-left: 10px;
+}
+
+.FilterButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 8px 16px 8px 16px;
+  color: #737373;
+  background-color: $white;
+}
+.FilterButton:hover {
+  border-color: $dark-blue;
+  cursor: pointer;
+}
+
+.FilterButton label {
+  margin-left: 5px;
+}
+
+.FilterButton label:hover {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.Filter form {
+  display: none;
+  position: absolute;
+  width: 180px;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  background-color: $white;
+  padding: 16px;
+  margin-top: 5px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.14);
+}
+
+.Filter form.visible {
+  display: flex;
+  flex-direction: column;
+}
+
+.Option {
+  color: #737373;
+  display: flex;
+  margin: 5px 0px 5px 0px;
+}
+.Option input[type='checkbox'] {
+  margin-right: 10px;
+  cursor: pointer;
+}
+.Option input:checked + label:after {
+  width: 500px;
+  background-color: #737373;
+  border: 1px solid red;
+  padding: 5px;
+}
+
+.Option label:hover {
+  cursor: pointer;
+}
+
+.CardsContainer {
+  display: flex;
+  flex-wrap: wrap;
+}

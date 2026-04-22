@@ -1,0 +1,39 @@
+@import '~@assets/styles/variables/colors.scss';
+@import '~@assets/styles/services.scss';
+@import '~@assets/styles/mixins.scss';
+
+.pageWrapper {
+  margin: 2em 5em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100vh - 160px);
+}
+
+.spinnerWrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.history {
+  overflow-y: auto;
+  flex: 1;
+  margin-bottom: 1em;
+}
+
+.inputQueryBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0.5em 0;
+  margin-top: auto;
+}
+
+

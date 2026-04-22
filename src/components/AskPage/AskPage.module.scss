@@ -1,0 +1,45 @@
+.pageWrapper {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.askMessage {
+  margin-top: 150px;
+  display: flex;
+  flex-direction: center;
+  align-items: center;
+}
+
+.message {
+  color: #6f6f6f;
+  font-family: Roboto;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.suggestedQuestion {
+  margin-top: 176px;
+  display: flex;
+  width: 822px;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  gap: 36px;
+  flex-wrap: wrap;
+}
+
+.dialogBox {
+  margin-top: 70px;
+  margin-bottom: 304px;
+  display: flex;
+  width: 1457px;
+  padding: 24px 29px;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}

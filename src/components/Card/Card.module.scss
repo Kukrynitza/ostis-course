@@ -1,0 +1,124 @@
+.container {
+  width: 450px;
+  padding: 15px;
+  border-radius: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 10px;
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.14);
+  cursor: pointer;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.logo {
+  order: 1;
+}
+
+.cardInfo {
+  order: 2;
+  margin-left: 15px;
+}
+
+.infoItem {
+  color: #565656;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 300px;
+}
+
+.description {
+  color: #565656;
+  margin-top: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.title {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 25px;
+  color: #323232;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.subtitle {
+  padding: 4px 8px 4px 8px;
+  height: 26px;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #ffffff;
+}
+
+.subtitleSubSystem {
+  background-color: #f56060;
+  width: 95px;
+}
+
+.subtitleKnowledgeBase {
+  background-color: #7fbca9;
+  width: 135px;
+}
+
+.subtitleInterface {
+  background-color: #f59e60;
+  width: 80px;
+}
+
+.subtitleProblemSolver {
+  background-color: #5f95e5;
+  width: 125px;
+}
+
+.infoUrl {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0px 0px 0px;
+}
+
+.icon {
+  order: 1;
+}
+
+.installLink {
+  background-color: #ffffff;
+  color: #5896c0;
+  border: none;
+  order: 2;
+  cursor: pointer;
+}
+
+.installLink:active,
+.installLink:hover {
+  color: #265c80;
+  cursor: pointer;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

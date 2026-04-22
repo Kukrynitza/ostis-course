@@ -1,0 +1,12 @@
+.switchModeButtonsWrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 24px;
+}
+.switchModeButton {
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 15px 0 15px 0;
+}
