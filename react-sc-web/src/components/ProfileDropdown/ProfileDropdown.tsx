@@ -42,11 +42,7 @@ export const ProfileDropdown = () => {
   return (
     <div className={styles.dropdown} ref={dropdownRef}>
       <button className={styles.avatar} onClick={() => setIsOpen(!isOpen)}>
-        {user?.avatar ? (
-          <img src={user.avatar} alt={user.login} className={styles.avatarImage} />
-        ) : (
-          user?.login?.charAt(0).toUpperCase() || '?'
-        )}
+        {user?.login?.charAt(0).toUpperCase() || '?'}
       </button>
       {isOpen && (
         <div className={styles.menu}>

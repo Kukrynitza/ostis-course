@@ -151,6 +151,14 @@ class DataBase:
             )
         return res
 
+    def delete_user(self, user_id):
+        u = self.get_user_by_id(user_id)
+        if u:
+            self._session().delete(u)
+            self._session().commit()
+            return True
+        return False
+
     def ensure_dev_user(self):
         user = self.get_user_by_login('dev_user')
         if not user:

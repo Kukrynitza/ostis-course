@@ -48,7 +48,10 @@ export const loginWithGoogle = async (): Promise<IUserData> => {
 };
 
 export const logout = async (): Promise<void> => {
-  window.location.href = '/logout';
+  await request({
+    method: 'GET',
+    url: `${API_URL}/logout`,
+  });
 };
 
 export const checkSession = async (): Promise<IUserData | null> => {
