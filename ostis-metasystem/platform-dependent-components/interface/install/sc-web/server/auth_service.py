@@ -2,7 +2,7 @@
 import logging
 from sc_client import client
 from sc_client.constants import sc_type
-from sc_client.models import ScAddr, ScConstruction, ScLinkContent, ScLinkContentType
+from sc_client.models import ScAddr, ScConstruction, ScLinkContent, ScLinkContentType, ScTemplate
 from sc_client.sc_keynodes import ScKeynodes
 from keynodes import KeynodeSysIdentifiers
 from sc_client.models import ScIdtfResolveParams
@@ -15,6 +15,26 @@ class AuthService:
     def __init__(self):
         self._keynodes = ScKeynodes()
         logger.info("AuthService initialized with lazy keynode resolution.")
+
+    def _get_arc_addr(self, src: ScAddr, rel: ScAddr, dst: ScAddr) -> int:
+        """Find the address of an arc between src and dst with relation rel."""
+        try:
+            template = ScTemplate()
+            template.quintuple(
+                src,
+                (sc_type.VAR_COMMON_ARC, "arc"),
+                dst,
+                sc_type.VAR_PERM_POS_ARC,
+                rel
+            )
+            res = client.search_by_template(template)
+            if res and len(res) > 0:
+                # ScTemplateResult has a get method that takes one argument
+                arc_addr_obj = res[0].get("arc")
+                return arc_addr_obj.value if arc_addr_obj else 0
+        except Exception as e:
+            logger.error(f"Error finding arc address: {e}")
+        return 0
 
     def get_user_sc_addr(self, email: str) -> int:
         """Get the sc_addr of a user by their email."""
@@ -29,8 +49,15 @@ class AuthService:
             email_link = links[0][0]
             
             # Find the node that is connected to this email link via nrel_email
-            # Template: {?user_node} -> nrel_email -> {email_link}
-            template = f"{{?user_node}} -> {KeynodeSysIdentifiers.nrel_email.value} -> {email_link}"
+            # Using ScTemplate to avoid ParseError
+            template = ScTemplate()
+            template.quintuple(
+                (sc_type.VAR_NODE, "user_node"),
+                sc_type.VAR_COMMON_ARC,
+                email_link,
+                sc_type.VAR_PERM_POS_ARC,
+                self._keynodes[KeynodeSysIdentifiers.nrel_email.value]
+            )
             res = client.search_by_template(template)
             
             if res and len(res) > 0:
@@ -85,6 +112,12 @@ class AuthService:
         result = client.generate_elements(construction)
         return result[construction.get_index('user_node')]
 
+    def register_user(self, email: str, username: str) -> ScAddr:
+        logger.debug(f'Registering user {username} ({email}) in KB')
+        user_node = self.create_kb_user(email, username)
+        self.mark_user_registered(user_node)
+        return user_node
+
     def mark_user_registered(self, user_node: ScAddr) -> None:
         logger.debug('Mark user as registered in kb')
         construction = ScConstruction()
@@ -132,12 +165,16 @@ class AuthService:
             return
         
         try:
-            client.delete_arc(
-                self._keynodes[KeynodeSysIdentifiers.Myself.value], 
-                self._keynodes[KeynodeSysIdentifiers.nrel_registered_user.value], 
-                ScAddr(user_addr)
-            )
-            logger.info(f'User {email} unregistered from KB')
+            src = self._keynodes[KeynodeSysIdentifiers.Myself.value, sc_type.CONST_NODE]
+            rel = self._keynodes[KeynodeSysIdentifiers.nrel_registered_user.value, sc_type.CONST_NODE_NON_ROLE]
+            dst = ScAddr(user_addr)
+            
+            arc_addr = self._get_arc_addr(src, rel, dst)
+            if arc_addr != 0:
+                client.erase_elements(ScAddr(arc_addr))
+                logger.info(f'User {email} unregistered from KB')
+            else:
+                logger.warning(f'Registration arc for user {email} not found')
         except Exception as e:
             logger.error(f'Failed to unregister user {email} from KB: {e}')
 
@@ -145,12 +182,23 @@ class AuthService:
         logger.info(f'Starting sync of {len(users)} users from DB to KB...')
         try:
             res = client.resolve_keynodes(ScIdtfResolveParams(idtf=self.USERS_ROOT_NODE_IDTF, type=None))
-            if not res or not res[0].is_valid():
-                logger.error('Could not resolve users_root node. Did you run sc-builder?')
-                return
-            root_node = res[0]
+            if res and res[0].is_valid():
+                root_node = res[0]
+            else:
+                logger.info(f'{self.USERS_ROOT_NODE_IDTF} node not found, creating it...')
+                construction = ScConstruction()
+                # Create the root node
+                construction.generate_node(sc_type.CONST_NODE, 'root_node')
+                # Assign the identifier 'users_root' to it
+                construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent(self.USERS_ROOT_NODE_IDTF, ScLinkContentType.STRING.value), 'root_link')
+                construction.generate_connector(sc_type.CONST_COMMON_ARC, 'root_node', 'root_link', 'arc_root')
+                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, self._keynodes[KeynodeSysIdentifiers.nrel_main_idtf.value], 'arc_root')
+                
+                result = client.generate_elements(construction)
+                root_node = result[construction.get_index('root_node')]
+                logger.info(f'Successfully created {self.USERS_ROOT_NODE_IDTF} node: {root_node}')
         except Exception as e:
-            logger.error(f'Error resolving users_root: {e}')
+            logger.error(f'Error resolving/creating users_root: {e}')
             return
         
         for user in users:
@@ -163,6 +211,7 @@ class AuthService:
                 try:
                     user_addr_obj = self.create_kb_user(email, username)
                     user_addr = user_addr_obj.value
+                    user.sc_addr = user_addr
                     self.mark_user_registered(user_addr_obj)
                     logger.info(f'Successfully created user node for {username}.')
                 except Exception as e:
@@ -189,11 +238,15 @@ class AuthService:
         user_addr = self.get_user_sc_addr(email)
         if user_addr != 0:
             try:
-                client.delete_arc(
-                    self._keynodes[KeynodeSysIdentifiers.Myself.value],
-                    self._keynodes[KeynodeSysIdentifiers.nrel_authorised_user.value],
-                    ScAddr(user_addr)
-                )
-                logger.info(f"User {email} logged out from KB")
+                src = self._keynodes[KeynodeSysIdentifiers.Myself.value, sc_type.CONST_NODE]
+                rel = self._keynodes[KeynodeSysIdentifiers.nrel_authorised_user.value, sc_type.CONST_NODE_NON_ROLE]
+                dst = ScAddr(user_addr)
+                
+                arc_addr = self._get_arc_addr(src, rel, dst)
+                if arc_addr != 0:
+                    client.erase_elements(ScAddr(arc_addr))
+                    logger.info(f"User {email} logged out from KB")
+                else:
+                    logger.warning(f"Authorisation arc for user {email} not found")
             except Exception as e:
                 logger.error(f"Failed to logout user {email} from KB: {e}")

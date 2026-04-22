@@ -194,9 +194,11 @@ def main(options):
         from db import User
         all_users = session.query(User).all()
         auth_svc.sync_users_from_db(all_users)
+        session.commit()
         logger.info("Users synchronized to KB successfully.")
     except Exception as e:
         logger.error(f"Failed to synchronize users to KB: {e}")
+
 
     app_instance = tornado.ioloop.IOLoop.instance()
     signal.signal(signal.SIGINT, lambda sig, frame: app_instance.add_callback_from_signal(on_shutdown))
