@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 
+import { requestActiveLink } from './activeLinkSlice';
 import { argsFixingSlice } from './argsFixingSlice';
 import { commonSlice } from './commonSlice';
-import { requestHistorySlice } from './requestHistorySlice';
-import { requestActiveLink } from './activeLinkSlice';
 import { requestDialogHistorySlice } from './requestDialogHistorySlice';
+import { requestHistorySlice } from './requestHistorySlice';
 
 export const store = configureStore({
   reducer: {

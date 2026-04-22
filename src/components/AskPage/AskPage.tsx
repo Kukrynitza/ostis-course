@@ -2,14 +2,13 @@ import { useToast, useTranslate } from 'ostis-ui-lib';
 
 import { ChangeEvent, useCallback, useState } from 'react';
 
-import styles from './AskPage.module.scss';
-
 import { useNavigate } from 'react-router-dom';
+import { AskInput } from '@components/AskInput';
+import { Notification } from '@components/Notification';
 import { routes } from '@constants';
 
-import { AskInput } from '@components/AskInput';
 import { AskHintButtons } from './AskHintButtons';
-import { Notification } from '@components/Notification';
+import styles from './AskPage.module.scss';
 
 interface NavigateState {
   query?: string;

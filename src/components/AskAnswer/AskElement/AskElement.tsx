@@ -1,21 +1,20 @@
 import { FC } from 'react';
-import styles from './AskElement.module.scss';
-//import { AnswerText } from '@components/AskAnswer/AskElement/AnswerText';
-
 import AskAIMessageIcon from '@assets/images/AskAIMessageIcon.svg';
+import styles from './AskElement.module.scss';
 
 interface IProps {
   query: string;
-  answer: any;
+  answer: string;
 }
 
 export const AskElement: FC<IProps> = ({ query, answer }) => {
+  console.log('AskElement: rendering, answer =', answer);
   return (
     <div className={styles.elementWrapper}>
       <div className={styles.elementQuery}>{query}</div>
       <div className={styles.elementAnswer}>
         <div>{<AskAIMessageIcon />}</div>
-        {/* <div><AnswerText items={answer} /></div> */}
+        <div className={styles.answerText}>{answer}</div>
       </div>
     </div>
   );

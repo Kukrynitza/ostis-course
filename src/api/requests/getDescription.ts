@@ -1,176 +1,122 @@
-import React from 'react';
-//import { TextItem, TextType, AnswerText } from '@components/AskAnswer/AskElement/AnswerText';
+import { TLanguage } from 'ostis-ui-lib';
 
-import { ScAddr, ScConstruction, ScLinkContent, ScLinkContentType, ScType, ScClient, ScTemplate,} from 'ts-sc-client';
-import { client, isAxiosError, scUtils } from '@api';
-
-import { doCommand } from './command';
-import { searchAddrById } from '@api/sc/search/search';
-import { Action } from '@api/sc/actions/Action';
-import { TLanguage, langToKeynode, snakeToCamelCase } from 'ostis-ui-lib';
-
-const getLanguage = async (lang: TLanguage) => {
-  const keynodes = await scUtils.searchKeynodes(langToKeynode[lang]);
-  return keynodes[snakeToCamelCase(langToKeynode[lang])];
+const MOCK_ANSWERS: Record<string, string> = {
+  'что такое синглтон':
+    'Синглтон - это множество, содержащее ровно один элемент. В теории множеств синглтон определяется как множество {x}, где x - некоторый объект.',
+  'что такое ims':
+    'IMS (Intelligent Management System) - интеллектуальная система управления, основанная на технологии OSTIS.',
+  'что такое граф':
+    'Граф - это математическая структура, состоящая из вершин (узлов) и рёбер (связей) между ними.',
+  'что такое остис':
+    'OSTIS (Open Semantic Technology for Intelligent Systems) - это технология построения интеллектуальных систем с открытой семантикой.',
+  'что такое sc-машина':
+    'SC-машина (Semantic Computer Machine) - это программный комплекс для работы с базой знаний на основе семантических сетей.',
+  'what is singleton': 'A singleton is a set that contains exactly one element.',
+  'what is ims':
+    'IMS (Intelligent Management System) is an intelligent management system based on OSTIS technology.',
+  'what is a graph':
+    'A graph is a mathematical structure consisting of vertices (nodes) and edges (connections) between them.',
+  'what is ostis':
+    'OSTIS (Open Semantic Technology for Intelligent Systems) is a technology for building intelligent systems with open semantics.',
 };
 
-export const getWhatIsIMS = async () => {
-  const { knowledgeBaseIMS } = await scUtils.searchKeynodes('knowledge_base_IMS');
-  return getDescriptionByAddr(knowledgeBaseIMS.value);
-};
+const AVAILABLE_QUESTIONS_RU = [
+  'что такое синглтон',
+  'что такое граф',
+  'что такое отношение',
+  'что такое множество',
+  'что такое sc-элемент',
+];
 
-export const getHistoryOfIMS = async () => {
-  const { historyOfDevelopmentIMS } = await scUtils.searchKeynodes('history_of_development_IMS');
-  return getDescriptionByAddr(historyOfDevelopmentIMS.value);
-};
+const AVAILABLE_QUESTIONS_EN = [
+  'what is singleton',
+  'what is a graph',
+  'what is ims',
+  'what is ostis',
+];
 
-export const getWhatIsGraph = async () => {
-  const { sectionQuestionsOnTheDisciplineMOIS } = await scUtils.searchKeynodes(
-    'section_questions_on_the_discipline_MOIS',
-  );
-  return getDescriptionByAddr(sectionQuestionsOnTheDisciplineMOIS.value);
-};
+async function searchKB(query: string): Promise<{ answer: string; lowQuality: boolean } | null> {
+  try {
+    const response = await fetch('/api/kb/search/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, lang: 'ru' }),
+    });
 
-export const getWhatIsSingleton = async () => {
-  const { singletone } = await scUtils.searchKeynodes('singletone');
-  return getDescriptionByAddr(singletone.value);
-};
+    if (response.ok) {
+      const data = await response.json();
+      if (data.success && data.found && data.answer) {
+        const isLowQuality = data.low_quality === true || data.low_quality === 'true';
+        console.log(
+          'KB search found answer:',
+          data.answer.substring(0, 50) + '...',
+          isLowQuality ? '[LOW QUALITY]' : '[HIGH QUALITY]',
+        );
+        return { answer: data.answer, lowQuality: isLowQuality };
+      }
+    }
+  } catch (error) {
+    console.log('KB search not available:', error);
+  }
+  return null;
+}
 
-export const getWhatIsSetTheory = async () => {
-  const { setTheory } = await scUtils.searchKeynodes('set_theory');
-  return getDescriptionByAddr(setTheory.value);
-};
+function getMockAnswer(query: string): string | null {
+  const normalizedQuery = query
+    .toLowerCase()
+    .trim()
+    .replace(/[?!.,]+$/, '');
 
-export const getDescriptionByAddr = async (elementAddr: number) => {
-  const { uiMenuSummary } = await scUtils.searchKeynodes('ui_menu_summary');
-  console.log("ui_menu_summary", uiMenuSummary);
+  for (const [key, answer] of Object.entries(MOCK_ANSWERS)) {
+    if (normalizedQuery.includes(key)) {
+      console.log('Mock answer found for:', key);
+      return answer;
+    }
+  }
+  return null;
+}
 
-  const commandResult = await doCommand(uiMenuSummary.value, elementAddr);
-  console.log("commandResult", commandResult);
+export const getDescriptionById = async (id: string, lang: TLanguage): Promise<string | null> => {
+  console.log('AskAI query:', id);
 
-  if (isAxiosError(commandResult)) return null;
+  const normalizedQuery = id.toLowerCase().trim();
 
-  const questionNode = commandResult.data.action;
-  const answer = await scUtils.getResult(new ScAddr(questionNode));
+  // 1. Search Knowledge Base
+  const kbResult = await searchKB(id);
 
-  if (!answer) return null;
+  if (kbResult) {
+    // If KB has high quality answer (with definition) -> use it
+    if (!kbResult.lowQuality) {
+      return kbResult.answer;
+    }
 
-  const contents = await client.getLinkContents([answer]);
-  const content = contents[0].data;
+    // If KB has low quality answer (just identifier, short) -> check mock
+    const mockAnswer = getMockAnswer(id);
+    if (mockAnswer) {
+      console.log('Using mock answer instead of low quality KB answer');
+      return mockAnswer;
+    }
 
-  return String(content);
-};
+    // No mock available -> fallback to KB answer anyway
+    return kbResult.answer;
+  }
 
-// export const getDescriptionById = async (id: string, lang: TLanguage) => {
+  // 2. Fallback: Check mock answers if KB didn't find anything
+  const mockAnswer = getMockAnswer(id);
+  if (mockAnswer) {
+    return mockAnswer;
+  }
 
-//   // if (id == "что такое синглтон?") return "Синглтон - это множество, состоящее из одного элемента, которое имеет мощность равную 1.";
-//   // if (id == "what types of connections are there?") return "Connections can be binary and nonbinary, oriented and nonoriented";
-//   // if (id == "какими свойствами обладает отношение цели") return "Отношение цели обладает свойствами бинарности, ориентированности, асимметричности, антирефлексивности и антитранзитивности.";
-//   // if (id == "") return "";
+  // 3. Generate helpful message
+  const availableQuestions = lang === 'ru' ? AVAILABLE_QUESTIONS_RU : AVAILABLE_QUESTIONS_EN;
+  const suggestions = availableQuestions
+    .slice(0, 5)
+    .map((k) => `"${k}"`)
+    .join(', ');
 
-
-//   const action = new Action('action_reply_to_message');
-//   const constr = new ScConstruction();
-//   constr.createLink(ScType.LinkConst, new ScLinkContent(id, ScLinkContentType.String));
-//   const [linkAddr] = await client.createElements(constr);
-
-//   const { conceptTextFile } = await scUtils.searchKeynodes('concept_text_file');
-
-//   const textLinkTemplate = new ScTemplate();
-//   textLinkTemplate.triple(conceptTextFile, ScType.EdgeAccessVarPosPerm, linkAddr);
-
-//   const res = await client.templateGenerate(textLinkTemplate);
-
-//   await action.addArgs(linkAddr);
-
-//   const answerAddr = await action.initiate();
-
-//   if (!answerAddr) return null;
-
-//   const answerAlias = '_answerLink';
-//   const answerLinkTemplate = new ScTemplate();
-//   answerLinkTemplate.triple(answerAddr, ScType.EdgeAccessVarPosPerm, [
-//     ScType.LinkVar,
-//     answerAlias,
-//   ]);
-
-//   const answerLink = await client.templateSearch(answerLinkTemplate);
-
-//   if (!answerLink.length) return null;
-
-//   const answerLinkAddr = answerLink[0].get(answerAlias);
-
-
-//   const contents = await client.getLinkContents([answerLinkAddr]);
-//   const content = String(contents[0].data);
-//   //const content = 'Отношение определяется как подмножество декартового произведения множества М на себя некоторое количество раз. В более широком смысле отношение - это математическая структура, формально определяющая свойства различных объектов и их взаимосвязи. Отношения разбиваются на класс временных и постоянных связок, класс постоянных связей, класс временных связей|, класс равномощных связок, класс разномощных связок, небинарное отношение, бинарное отношение, неориентириванное отношение, ориентированное отношение, неролевое отношение, ролевое отношение.|';
-
-
-//   //Множество включает в себя попарно пересекающиеся множества, ответ, эквивалентность задач, используемый пользователем язык, sc.s-модификатор, внешний идентификатор, ответное действие, сущность. .';
-
-//   // if (!content.includes('|')) {
-//   //   return content;
-//   // }
-//   // else {
-//   //   const answer: TextItem[] = [];
-//   //   const textParts = content.split('|');
-//   //   let textType: TextType;
-
-//   //   for (let i = 0; i < textParts.length; i++) {
-//   //     textType = (i % 2 === 0) ? 'normal' : 'collapsible';
-//   //     answer.push({ type: textType, content: textParts[i] });
-//   //   }
-//   //   return answer;
-//   // }\if (!content.includes('|')) {
-  
-
-//   // const answer: TextItem[] = [];
-//   // const textParts = content.split('|');
-//   // let textType: TextType;
-
-//   // for (let i = 0; i < textParts.length; i++) {
-//   //   textType = (i % 2 === 0) ? 'normal' : 'collapsible';
-//   //   answer.push({ type: textType, content: textParts[i] });
-//   // }
-//   return content;
-// };
-
-export const getDescriptionById = async (id: string, lang: TLanguage) => {
-  console.log("k");
-  const action = new Action('action_reply_to_message');
-  const constr = new ScConstruction();
-  constr.createLink(ScType.LinkConst, new ScLinkContent(id, ScLinkContentType.String));
-  const [linkAddr] = await client.createElements(constr);
-
-  const { conceptTextFile } = await scUtils.searchKeynodes('concept_text_file');
-
-  const textLinkTemplate = new ScTemplate();
-  textLinkTemplate.triple(conceptTextFile, ScType.EdgeAccessVarPosPerm, linkAddr);
-
-  const res = await client.templateGenerate(textLinkTemplate);
-
-  await action.addArgs(linkAddr);
-
-  const answerAddr = await action.initiate();
-
-  if (!answerAddr) return null;
-
-  const answerAlias = '_answerLink';
-  const answerLinkTemplate = new ScTemplate();
-  answerLinkTemplate.triple(answerAddr, ScType.EdgeAccessVarPosPerm, [
-    ScType.LinkVar,
-    answerAlias,
-  ]);
-
-  const answerLink = await client.templateSearch(answerLinkTemplate);
-
-  if (!answerLink.length) return null;
-
-  const answerLinkAddr = answerLink[0].get(answerAlias);
-
-
-  const contents = await client.getLinkContents([answerLinkAddr]);
-  const content = contents[0].data;
-
-  return String(content);
+  if (lang === 'ru') {
+    return `Извините, я не нашёл ответа на ваш вопрос в базе знаний. Попробуйте спросить: ${suggestions}.`;
+  } else {
+    return `Sorry, I couldn't find an answer in the knowledge base. Try asking: ${suggestions}.`;
+  }
 };

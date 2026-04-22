@@ -1,5 +1,6 @@
 import cn from 'classnames';
 
+import { refSetter, useTranslate } from 'ostis-ui-lib';
 import {
   ChangeEvent,
   InputHTMLAttributes,
@@ -10,19 +11,20 @@ import {
   useState,
 } from 'react';
 
+import AskAIInputButton from '@assets/images/AskAIInputButton.svg';
 import styles from './AskInput.module.scss';
 
-import AskAIInputButton from '@assets/images/AskAIInputButton.svg';
-import { refSetter, useTranslate } from 'ostis-ui-lib';
-
-interface IProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'onFocus' | 'onBlur'> {
+interface IProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'onChange' | 'onFocus' | 'onBlur' | 'value'
+> {
   className?: string;
   onEmptySubmit: () => void;
   onSubmit: () => void;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?: (e: React.FocusEvent<HTMLDivElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLDivElement>) => void;
+  value?: string;
 }
 
 export const AskInput = forwardRef<HTMLInputElement, IProps>(
@@ -34,6 +36,7 @@ export const AskInput = forwardRef<HTMLInputElement, IProps>(
       onEmptySubmit,
       onFocus: onFocusFromProps,
       onBlur: onBlurFromProps,
+      value: valueFromProps,
       ...props
     },
     ref,
@@ -45,12 +48,19 @@ export const AskInput = forwardRef<HTMLInputElement, IProps>(
 
     const innerRef = useRef<HTMLInputElement>(null);
 
+    // Use props value if provided, otherwise use local state
+    const currentValue = valueFromProps !== undefined ? valueFromProps : searchValue;
+    const isControlled = valueFromProps !== undefined;
+
     const onWrapperClick = () => {
       innerRef?.current?.focus();
     };
 
     const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-      setSearchValue(e.currentTarget.value);
+      const newValue = e.currentTarget.value;
+      if (!isControlled) {
+        setSearchValue(newValue);
+      }
       onChange(e);
     };
 
@@ -69,7 +79,6 @@ export const AskInput = forwardRef<HTMLInputElement, IProps>(
       const preventKeys = ['Enter'];
       if (preventKeys.includes(code)) {
         e.preventDefault();
-        resetInput();
       }
     };
 
@@ -86,8 +95,14 @@ export const AskInput = forwardRef<HTMLInputElement, IProps>(
     };
 
     const handleSubmit = () => {
+      if (!currentValue.trim()) {
+        onEmptySubmit();
+        return;
+      }
       onSubmit();
-      resetInput();
+      if (!isControlled) {
+        resetInput();
+      }
     };
 
     const resetInput = () => {
@@ -110,7 +125,7 @@ export const AskInput = forwardRef<HTMLInputElement, IProps>(
             en: '🪄 Ask IMS',
           })}
           ref={refSetter<HTMLInputElement>(ref, innerRef)}
-          value={searchValue}
+          value={currentValue}
           onKeyDown={onInputKeyDown}
           onChange={onInputChange}
         />

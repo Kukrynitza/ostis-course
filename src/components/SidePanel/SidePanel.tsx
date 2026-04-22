@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import { DecompositionPanel, useDecompositionContext, useTranslate } from 'ostis-ui-lib';
 import { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { getHistory } from '@api/requests/userHistory';
 import Clock from '@assets/images/Clock.svg';
 import Plus from '@assets/images/plus.svg';
@@ -22,6 +23,7 @@ interface IProps {
 
 export const SidePanel: FC<IProps> = ({ className }) => {
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const user = useSelector(selectUser);
 
@@ -32,6 +34,8 @@ export const SidePanel: FC<IProps> = ({ className }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const requests = useSelector(selectRequests);
+
+  const isAskAIPage = location.pathname.startsWith('/c/');
 
   useEffect(() => {
     if (!user) return;
@@ -65,7 +69,6 @@ export const SidePanel: FC<IProps> = ({ className }) => {
               leftIcon={<Sections />}
               rightIcon={!!user?.is_admin || !!user?.can_edit ? <Plus /> : null}
               onRightClick={onAddClick}
-              expanded
             >
               <ErrorBoundary
                 title={translate({
@@ -75,7 +78,7 @@ export const SidePanel: FC<IProps> = ({ className }) => {
                 paragraph={translate({ ru: 'Ошибка', en: 'Error' })}
                 className={styles.errorBoundary}
               >
-                {<DecompositionPanel />}
+                <DecompositionPanel />
               </ErrorBoundary>
             </Accordion>
           </div>

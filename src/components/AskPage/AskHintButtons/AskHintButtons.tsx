@@ -1,10 +1,9 @@
 import { useTranslate } from 'ostis-ui-lib';
 
-import styles from './AskHintButtons.module.scss';
-
 import { useNavigate } from 'react-router-dom';
 import { routes } from '@constants';
 import { hintButtons } from 'src/constants/hintButtons';
+import styles from './AskHintButtons.module.scss';
 
 interface NavigateState {
   query?: string;

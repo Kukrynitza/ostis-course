@@ -16,7 +16,11 @@ const CollapsibleText: React.FC<Props> = ({ type, content }) => {
 
   return (
     <>
-      {expanded ? <span onClick={() => setExpanded(false)}>{content}</span> : <span onClick={() => setExpanded(true)}>...</span>}
+      {expanded ? (
+        <span onClick={() => setExpanded(false)}>{content}</span>
+      ) : (
+        <span onClick={() => setExpanded(true)}>...</span>
+      )}
     </>
   );
 };

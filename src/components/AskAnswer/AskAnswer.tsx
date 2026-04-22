@@ -1,85 +1,122 @@
-import { useToast, useTranslate } from 'ostis-ui-lib';
-
-import { useLocation } from 'react-router-dom';
-import { ChangeEvent, useEffect, useReducer, useState, useRef, useCallback } from 'react';
-
-import { Spinner, useLanguage } from 'ostis-ui-lib';
-import { SPINER_COLOR } from '@constants';
-import { AskElement } from './AskElement';
-import { TextItem } from '@components/AskAnswer/AskElement/AnswerText';
-
-import styles from './AskAnswer.module.scss';
-import { AskInput } from '@components/AskInput';
-
-import { getHintButtonHandler } from 'src/constants/hintButtons';
-import { getDescriptionById } from '@api/requests/getDescription';
+import { useToast, useTranslate, Spinner, useLanguage } from 'ostis-ui-lib';
+import { ChangeEvent, useEffect, useState, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addInHistory, selectRequests } from '@store/requestDialogHistorySlice';
+import { useLocation } from 'react-router-dom';
+import { getDescriptionById } from '@api/requests/getDescription';
+import { TextItem } from '@components/AskAnswer/AskElement/AnswerText';
+import { AskInput } from '@components/AskInput';
 import { Notification } from '@components/Notification';
+import { SPINER_COLOR } from '@constants';
+import { addInHistory, selectRequests } from '@store/requestDialogHistorySlice';
+import { getHintButtonHandler } from 'src/constants/hintButtons';
+import styles from './AskAnswer.module.scss';
+import { AskElement } from './AskElement';
 
 interface NavigateState {
   query?: string;
   isHintButton: boolean;
 }
 
-
 export const AskAnswer = () => {
-  const state = useLocation().state as NavigateState;
+  const locationState = useLocation().state as NavigateState;
 
   const lang = useLanguage();
 
   const dispatch = useDispatch();
   const history = useSelector(selectRequests);
 
-  const [isLoading, setIsLoading] = useState(false);
+  console.log('AskAnswer: render, history.length =', history.length);
 
-  const [query, setQuery] = useState<string>();
+  const [isLoading, setIsLoading] = useState(false);
+  const [initialQuery] = useState<string | undefined>(locationState?.query);
+  const initialIsHintButton = locationState?.isHintButton || false;
+
+  const [inputValue, setInputValue] = useState('');
 
   const { addToast } = useToast();
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const queryInProgressRef = useRef(false);
+  const initialQueryProcessedRef = useRef(false);
+  const langRef = useRef(lang);
+  langRef.current = lang;
 
   const translate = useTranslate();
 
-  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => setQuery(e.currentTarget.value);
-  const onInputSubmit = async () => await fetchAnswerByQuery(query);
+  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.currentTarget.value);
+  };
 
-  const fetchAnswerByQuery = async (query: string | undefined, isHintButton: boolean = false) => {
-    if (!query) return;
+  const onInputSubmit = useCallback(async () => {
+    const currentQuery = inputValue.trim();
+    if (currentQuery && !queryInProgressRef.current) {
+      await fetchAnswer(currentQuery);
+      setInputValue('');
+    } else if (!currentQuery) {
+      onEmptySubmit();
+    }
+  }, [inputValue]);
+
+  const fetchAnswer = async (queryText: string | undefined, isHintButton: boolean = false) => {
+    if (!queryText || queryInProgressRef.current) return;
+    queryInProgressRef.current = true;
 
     let answer: string | TextItem[] | null = null;
 
     setIsLoading(true);
+    console.log('AskAI: Fetching answer for:', queryText);
 
-    if (isHintButton) {
-      const handler = getHintButtonHandler(query, lang);
-      answer = await handler();
-    } else {
-      answer = await getDescriptionById(query, lang);
-    }
+    try {
+      if (isHintButton) {
+        const handler = getHintButtonHandler(queryText, langRef.current);
+        answer = await handler();
+      } else {
+        answer = await getDescriptionById(queryText, langRef.current);
+      }
+      console.log('AskAI: Got answer:', answer ? 'YES' : 'NO');
 
-    if (answer) {
-      dispatch(addInHistory({ query, answer }));
-    } else {
+      if (answer) {
+        console.log('AskAI: Dispatching addInHistory');
+        dispatch(addInHistory({ query: queryText, answer }));
+      } else {
+        dispatch(
+          addInHistory({
+            query: queryText,
+            answer: translate({
+              ru: 'Я не нашёл ответа на ваш вопрос. Попробуйте задать его иначе.',
+              en: 'I did not find an answer to your question. Try asking it differently.',
+            }),
+          }),
+        );
+      }
+    } catch (error) {
+      console.error('AskAI: Error:', error);
       dispatch(
         addInHistory({
-          query,
+          query: queryText,
           answer: translate({
-            ru: 'К сожалению, в настоящее время нет информации, соответствующей вашему вопросу в базе знаний. Приносим извинения за неудобства.',
-            en: 'Unfortunately, there is currently no information corresponding to your question in the knowledge base. We apologize for the inconvenience.',
+            ru: 'Произошла ошибка при получении ответа.',
+            en: 'An error occurred while getting the answer.',
           }),
         }),
       );
+    } finally {
+      setIsLoading(false);
+      queryInProgressRef.current = false;
     }
+  };
 
-    setIsLoading(false);
+  const handleInitialQuery = () => {
+    if (initialQuery && !initialQueryProcessedRef.current) {
+      console.log('AskAI: Processing initial query:', initialQuery);
+      initialQueryProcessedRef.current = true;
+      fetchAnswer(initialQuery, initialIsHintButton);
+    }
   };
 
   useEffect(() => {
-    if (state.query) {
-      fetchAnswerByQuery(state.query, state.isHintButton);
-    }
-  }, [state]);
+    handleInitialQuery();
+  }, []);
 
   useEffect(() => {
     scrollToBottom();
@@ -91,25 +128,30 @@ export const AskAnswer = () => {
     }
   };
 
-  const onEmptySubmit = useCallback(() => {
+  const onEmptySubmit = () => {
     addToast(
       <Notification
         type="warning"
         title={{
           ru: 'Вы не можете отправить пустой запрос',
-          en: `It's impossible to save an empty fragment`,
+          en: `It is impossible to save an empty fragment`,
         }}
       />,
       {
         position: 'bottomRight',
-        duration: 2000,
+        duration: 20000,
       },
     );
-  }, [addToast]);
+  };
 
-  if (!state) return null;
+  if (!initialQuery && history.length === 0) return null;
 
-  if (isLoading) return <Spinner className={styles.spinner} appearance={SPINER_COLOR} />;
+  if (isLoading)
+    return (
+      <div className={styles.spinnerWrapper}>
+        <Spinner appearance={SPINER_COLOR} />
+      </div>
+    );
 
   return (
     <div className={styles.pageWrapper}>
@@ -124,6 +166,7 @@ export const AskAnswer = () => {
         onChange={onInputChange}
         onSubmit={onInputSubmit}
         onEmptySubmit={onEmptySubmit}
+        value={inputValue}
       />
     </div>
   );

@@ -18,8 +18,10 @@ export const SwitchMode = () => {
   };
 
   useEffect(() => {
-    if (location.pathname.substring(0, 2) === '/q' || location.pathname.substring(0, 2) === '/c') {
+    if (location.pathname.substring(0, 2) === '/q') {
       setActivePage(routes.MAIN);
+    } else if (location.pathname.startsWith('/ask-ai')) {
+      setActivePage(routes.ASK_AI);
     } else {
       setActivePage(location.pathname);
     }
@@ -58,9 +60,9 @@ export const SwitchMode = () => {
       <Link
         to={routes.ASK_AI}
         className={styles.switchModeButton}
-        onClick={() => handlePageClick(routes.LIBRARY)}
+        onClick={() => handlePageClick(routes.ASK_AI)}
       >
-        {activePage === routes.LIBRARY ? <AskAiPageButtonFocus /> : <AskAiPageButton />}
+        {activePage === routes.ASK_AI ? <AskAiPageButtonFocus /> : <AskAiPageButton />}
       </Link>
     </div>
   );
