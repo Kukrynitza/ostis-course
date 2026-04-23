@@ -91,6 +91,19 @@ def parse_menu_command(cmd_addr: ScAddr):
         keynodes[KeynodeSysIdentifiers.nrel_ui_commands_decomposition.value],
     )
     result = client.search_by_template(template)
+    
+    if not result:
+        # Fallback to logical decomposition if UI decomposition is not found
+        template = ScTemplate()
+        template.quintuple(
+            (sc_type.VAR_NODE, DECOMPOSITION_NODE),
+            sc_type.VAR_COMMON_ARC,
+            cmd_addr,
+            sc_type.VAR_PERM_POS_ARC,
+            keynodes[KeynodeSysIdentifiers.nrel_decomposition.value],
+        )
+        result = client.search_by_template(template)
+
     if result:
         # iterate child commands
         decomposition_node = result[0].get(DECOMPOSITION_NODE)

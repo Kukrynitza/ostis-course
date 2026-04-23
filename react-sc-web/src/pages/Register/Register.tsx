@@ -38,7 +38,7 @@ export const Register = () => {
         login: loginValue,
         email: emailValue,
         password: passwordValue,
-        role,
+        role: 'user',
       });
       dispatch(setUser(response));
       navigate('/');
@@ -85,7 +85,7 @@ export const Register = () => {
           required
         />
 
-        <div className={styles.roleSelect}>
+        {/* <div className={styles.roleSelect}>
           <label className={styles.roleLabel}>{translate({ ru: 'Роль', en: 'Role' })}:</label>
           <select
             className={styles.select}
@@ -95,7 +95,7 @@ export const Register = () => {
             <option value="user">{translate({ ru: 'Пользователь', en: 'User' })}</option>
             <option value="admin">{translate({ ru: 'Администратор', en: 'Administrator' })}</option>
           </select>
-        </div>
+        </div> */}
 
         <Button type="submit" disabled={isLoading}>
           {translate({ ru: 'Зарегистрироваться', en: 'Sign Up' })}

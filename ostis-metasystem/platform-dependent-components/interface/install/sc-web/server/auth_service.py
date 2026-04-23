@@ -10,7 +10,8 @@ from sc_client.models import ScIdtfResolveParams
 logger = logging.getLogger()
 
 class AuthService:
-    USERS_ROOT_NODE_IDTF = "users_root"
+    USERS_ROOT_NODE_IDTF = "sys_users_root"
+    USERS_SECTION_NODE_IDTF = "sys_users_section"
 
     def __init__(self):
         self._keynodes = ScKeynodes()
@@ -37,24 +38,19 @@ class AuthService:
         return 0
 
     def get_user_sc_addr(self, email: str) -> int:
-        """Get the sc_addr of a user by their email."""
+        """Get the sc_addr of a user by their email safely."""
         logger.debug(f'Get user sc_addr by email: {email}')
         try:
-            # Search for a link with the email content
             links = client.search_links_by_contents(email)
-            if not links:
+            if not links or len(links) == 0:
                 return 0
             
-            # The link is the first element of the first match
-            email_link = links[0][0]
-            
             # Find the node that is connected to this email link via nrel_email
-            # Using ScTemplate to avoid ParseError
             template = ScTemplate()
             template.quintuple(
                 (sc_type.VAR_NODE, "user_node"),
                 sc_type.VAR_COMMON_ARC,
-                email_link,
+                links[0][0],
                 sc_type.VAR_PERM_POS_ARC,
                 self._keynodes[KeynodeSysIdentifiers.nrel_email.value]
             )
@@ -94,18 +90,18 @@ class AuthService:
         
         # 2. System identifier
         sys_idtf = email.split('@')[0]
-        construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent(sys_idtf, ScLinkContentType.STRING.value), 'sys_idtf_link')
+        construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent(sys_idtf, ScLinkContentType.STRING), 'sys_idtf_link')
         construction.generate_connector(sc_type.CONST_COMMON_ARC, 'user_node', 'sys_idtf_link', 'bin_arc_sys_idtf')
         construction.generate_connector(sc_type.CONST_PERM_POS_ARC, kn_sys_idtf, 'bin_arc_sys_idtf')
         
         # 3. Main identifier
-        construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent(username, ScLinkContentType.STRING.value), 'main_idtf_link')
+        construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent(username, ScLinkContentType.STRING), 'main_idtf_link')
         construction.generate_connector(sc_type.CONST_COMMON_ARC, 'user_node', 'main_idtf_link', 'bin_arc_main_idtf')
         construction.generate_connector(sc_type.CONST_PERM_POS_ARC, kn_main_idtf, 'bin_arc_main_idtf')
         construction.generate_connector(sc_type.CONST_PERM_POS_ARC, kn_lang_ru, 'main_idtf_link')
         
         # 4. Email link
-        construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent(email, ScLinkContentType.STRING.value), 'email_link')
+        construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent(email, ScLinkContentType.STRING), 'email_link')
         construction.generate_connector(sc_type.CONST_COMMON_ARC, 'user_node', 'email_link', 'bin_arc_email')
         construction.generate_connector(sc_type.CONST_PERM_POS_ARC, kn_email, 'bin_arc_email')
         
@@ -178,30 +174,174 @@ class AuthService:
         except Exception as e:
             logger.error(f'Failed to unregister user {email} from KB: {e}')
 
+    def _cleanup_user_nodes(self, users):
+        """Purge corrupted state: remove UI-command arcs and erroneous decomposition ONLY from user nodes."""
+        logger.info("Cleaning up corrupted UI-command state from user nodes...")
+        
+        kn_ui_decomp = self._keynodes[KeynodeSysIdentifiers.nrel_ui_commands_decomposition.value]
+        kn_decomp = self._keynodes[KeynodeSysIdentifiers.nrel_decomposition.value]
+        kn_ui_cmd_class_noatom = self._keynodes[KeynodeSysIdentifiers.ui_user_command_class_noatom.value]
+        kn_ui_cmd_class_atom = self._keynodes[KeynodeSysIdentifiers.ui_user_command_class_atom.value]
+
+        for user in users:
+            user_addr_val = self.get_user_sc_addr(user.email)
+            if user_addr_val == 0:
+                continue
+            
+            user_addr = ScAddr(user_addr_val)
+            try:
+                # 1. Remove UI-command decomposition arcs where user is the source
+                template_ui_decomp = ScTemplate()
+                template_ui_decomp.quintuple(
+                    user_addr,
+                    sc_type.VAR_COMMON_ARC,
+                    sc_type.UNKNOWN,
+                    sc_type.VAR_PERM_POS_ARC,
+                    kn_ui_decomp
+                )
+                res_ui_decomp = client.search_by_template(template_ui_decomp)
+                if res_ui_decomp:
+                    for item in res_ui_decomp:
+                        arc_addr = item.get(1)
+                        if arc_addr:
+                            client.erase_elements(arc_addr if isinstance(arc_addr, ScAddr) else ScAddr(arc_addr))
+                
+                # 2. Remove UI-command classes specifically from this user node
+                for kn_class in [kn_ui_cmd_class_noatom, kn_ui_cmd_class_atom]:
+                    template_class = ScTemplate()
+                    template_class.quintuple(
+                        kn_class,
+                        sc_type.VAR_COMMON_ARC,
+                        user_addr,
+                        sc_type.VAR_PERM_POS_ARC,
+                        kn_class
+                    )
+                    res_class = client.search_by_template(template_class)
+                    if res_class:
+                        for item in res_class:
+                            arc_addr = item.get(1)
+                            if arc_addr:
+                                client.erase_elements(arc_addr if isinstance(arc_addr, ScAddr) else ScAddr(arc_addr))
+                
+                # 3. Remove logical decomposition arcs where user is the source (fixing 'user-as-root' bug)
+                template_decomp = ScTemplate()
+                template_decomp.quintuple(
+                    user_addr,
+                    sc_type.VAR_COMMON_ARC,
+                    sc_type.UNKNOWN,
+                    sc_type.VAR_PERM_POS_ARC,
+                    kn_decomp
+                )
+                res_decomp = client.search_by_template(template_decomp)
+                if res_decomp:
+                    for item in res_decomp:
+                        arc_addr = item.get(1)
+                        if arc_addr:
+                            client.erase_elements(arc_addr if isinstance(arc_addr, ScAddr) else ScAddr(arc_addr))
+                            
+            except Exception as e:
+                logger.error(f"Error cleaning up user {user.email}: {e}")
+
+
     def sync_users_from_db(self, users):
         logger.info(f'Starting sync of {len(users)} users from DB to KB...')
+        
+        # First, clean up corrupted state where users might be acting as roots
+        self._cleanup_user_nodes(users)
+        
         try:
-            res = client.resolve_keynodes(ScIdtfResolveParams(idtf=self.USERS_ROOT_NODE_IDTF, type=None))
-            if res and res[0].is_valid():
-                root_node = res[0]
+            # 1. Resolve or Create the Section Class (Analogous to guide_section)
+            res_class = client.resolve_keynodes(ScIdtfResolveParams(idtf='user_section_class', type=None))
+            if res_class and res_class[0].is_valid():
+                section_class = res_class[0]
+            else:
+                logger.info('user_section_class not found, creating it...')
+                construction = ScConstruction()
+                construction.generate_node(sc_type.CONST_NODE, 'class_node')
+                construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent('user_section_class', ScLinkContentType.STRING), 'class_link')
+                construction.generate_connector(sc_type.CONST_COMMON_ARC, 'class_node', 'class_link', 'class_arc')
+                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, self._keynodes[KeynodeSysIdentifiers.nrel_main_idtf.value], 'class_arc')
+                
+                # Assign base class sc_node_class (or a general class to make it a valid section)
+                # We use ui_user as a base if sc_node_class is not available
+                kn_base_class = self._keynodes[KeynodeSysIdentifiers.ui_user.value]
+                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, kn_base_class, 'class_node')
+                
+                result = client.generate_elements(construction)
+                section_class = result[construction.get_index('class_node')]
+                logger.info(f'Successfully created user_section_class: {section_class}')
+
+            # 2. Resolve or Create User Section Root
+            res_section = client.resolve_keynodes(ScIdtfResolveParams(idtf=self.USERS_SECTION_NODE_IDTF, type=None))
+            if res_section and res_section[0].is_valid():
+                section_node = res_section[0]
+            else:
+                logger.info(f'{self.USERS_SECTION_NODE_IDTF} node not found, creating it...')
+                construction = ScConstruction()
+                construction.generate_node(sc_type.CONST_NODE, 'section_node')
+                
+                # System IDTF
+                construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent(self.USERS_SECTION_NODE_IDTF, ScLinkContentType.STRING), 'sys_idtf')
+                construction.generate_connector(sc_type.CONST_COMMON_ARC, 'section_node', 'sys_idtf', 'arc_sys')
+                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, self._keynodes[KeynodeSysIdentifiers.nrel_system_identifier.value], 'arc_sys')
+                
+                # Main IDTF
+                construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent("Раздел пользователей", ScLinkContentType.STRING), 'main_idtf')
+                construction.generate_connector(sc_type.CONST_COMMON_ARC, 'section_node', 'main_idtf', 'arc_main')
+                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, self._keynodes[KeynodeSysIdentifiers.nrel_main_idtf.value], 'arc_main')
+                
+                # Assign to Section Class
+                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, section_class, 'section_node')
+                
+                # Link Section to Main Menu using LOGICAL decomposition
+                kn_main_menu = self._keynodes[KeynodeSysIdentifiers.ui_main_menu.value]
+                kn_decomp = self._keynodes[KeynodeSysIdentifiers.nrel_decomposition.value]
+                construction.generate_connector(sc_type.CONST_COMMON_ARC, kn_main_menu, 'section_node', 'menu_arc')
+                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, kn_decomp, 'menu_arc')
+                
+                result = client.generate_elements(construction)
+                section_node = result[construction.get_index('section_node')]
+                logger.info(f'Successfully created {self.USERS_SECTION_NODE_IDTF} node: {section_node}')
+
+            # 3. Resolve or Create Users Root (The List)
+            res_root = client.resolve_keynodes(ScIdtfResolveParams(idtf=self.USERS_ROOT_NODE_IDTF, type=None))
+            if res_root and res_root[0].is_valid():
+                root_node = res_root[0]
             else:
                 logger.info(f'{self.USERS_ROOT_NODE_IDTF} node not found, creating it...')
                 construction = ScConstruction()
-                # Create the root node
                 construction.generate_node(sc_type.CONST_NODE, 'root_node')
-                # Assign the identifier 'users_root' to it
-                construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent(self.USERS_ROOT_NODE_IDTF, ScLinkContentType.STRING.value), 'root_link')
-                construction.generate_connector(sc_type.CONST_COMMON_ARC, 'root_node', 'root_link', 'arc_root')
-                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, self._keynodes[KeynodeSysIdentifiers.nrel_main_idtf.value], 'arc_root')
+                
+                # System IDTF
+                construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent(self.USERS_ROOT_NODE_IDTF, ScLinkContentType.STRING), 'sys_idtf')
+                construction.generate_connector(sc_type.CONST_COMMON_ARC, 'root_node', 'sys_idtf', 'arc_sys')
+                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, self._keynodes[KeynodeSysIdentifiers.nrel_system_identifier.value], 'arc_sys')
+                
+                # Main IDTF
+                construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent("Список пользователей", ScLinkContentType.STRING), 'main_idtf')
+                construction.generate_connector(sc_type.CONST_COMMON_ARC, 'root_node', 'main_idtf', 'arc_main')
+                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, self._keynodes[KeynodeSysIdentifiers.nrel_main_idtf.value], 'arc_main')
+                
+                # Assign to Section Class
+                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, section_class, 'root_node')
+                
+                # Link List to Section via LOGICAL decomposition
+                kn_decomp = self._keynodes[KeynodeSysIdentifiers.nrel_decomposition.value]
+                construction.generate_connector(sc_type.CONST_COMMON_ARC, section_node, 'root_node', 'section_to_list_arc')
+                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, kn_decomp, 'section_to_list_arc')
                 
                 result = client.generate_elements(construction)
                 root_node = result[construction.get_index('root_node')]
                 logger.info(f'Successfully created {self.USERS_ROOT_NODE_IDTF} node: {root_node}')
+                
         except Exception as e:
-            logger.error(f'Error resolving/creating users_root: {e}')
+            logger.error(f'Error resolving/creating user section/root: {e}')
             return
         
         for user in users:
+
+
+
             email = user.email
             username = user.login
             user_addr = self.get_user_sc_addr(email)
