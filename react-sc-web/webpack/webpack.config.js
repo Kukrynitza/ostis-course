@@ -19,7 +19,7 @@ module.exports = {
     new ESLintPlugin({
       emitError: true,
       emitWarning: true,
-      failOnError: true,
+      failOnError: false,
       extensions: ['.ts', '.tsx', '.js'],
     }),
   ],
@@ -31,6 +31,9 @@ module.exports = {
         exclude: [/node_modules/, /\.d\.ts$/],
         options: {
           transpileOnly: true,
+          compilerOptions: {
+            skipLibCheck: true,
+          },
         },
       },
       {

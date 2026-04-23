@@ -1,7 +1,7 @@
 .root {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 463px) 1fr;
+  grid-template-columns: 463px 1fr;
   grid-template-rows: 80px 1fr;
   grid-template-areas:
     'logo  header'
@@ -56,6 +56,6 @@
 
 @media (max-width: 1365px) {
   .root {
-    grid-template-columns: minmax(0, 25%) 1fr;
+    grid-template-columns: 350px 1fr;
   }
 }

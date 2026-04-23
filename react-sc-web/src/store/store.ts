@@ -3,6 +3,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { requestActiveLink } from './activeLinkSlice';
 import { argsFixingSlice } from './argsFixingSlice';
 import { commonSlice } from './commonSlice';
+import { requestDialogHistorySlice } from './requestDialogHistorySlice';
 import { requestHistorySlice } from './requestHistorySlice';
 
 export const store = configureStore({
@@ -11,5 +12,6 @@ export const store = configureStore({
     [requestHistorySlice.name]: requestHistorySlice.reducer,
     [argsFixingSlice.name]: argsFixingSlice.reducer,
     [requestActiveLink.name]: requestActiveLink.reducer,
+    [requestDialogHistorySlice.name]: requestDialogHistorySlice.reducer,
   },
 });

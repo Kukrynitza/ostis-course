@@ -1,0 +1,11 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  height: calc(100vh - 160px);
+  background-color: var(--color-beige);
+}
+
+:global(header) {
+  margin-left: -150px;
+}

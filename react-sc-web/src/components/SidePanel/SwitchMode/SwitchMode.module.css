@@ -10,4 +10,18 @@
   border: none;
   background: none;
   padding: 15px 0;
+  filter: brightness(0.9);
+  transition: filter 0.2s ease;
+}
+
+.switchModeButton:hover {
+  filter: brightness(1.1);
+}
+
+.switchModeButtonDark {
+  filter: brightness(0.5) contrast(1.1);
+}
+
+.switchModeButtonDark:hover {
+  filter: brightness(0.65);
 }

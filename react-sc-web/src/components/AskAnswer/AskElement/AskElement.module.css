@@ -1,0 +1,13 @@
+.elementWrapper {
+  margin: 3em 5em;
+}
+
+.elementQuery {
+  margin: 0 0em 2em 1em;
+  color: var(--color-dark-grey);
+}
+
+.elementAnswer {
+  margin: 0 0em 0 1em;
+  color: var(--color-dull-grey);
+}

@@ -76,12 +76,7 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
     return () => {
       window.removeEventListener('message', handleMessage);
     };
-  }, [
-    action,
-    onCommandExecuted,
-    showConfirmDeletePopup,
-    showConfirmClearScenePopup,
-  ]);
+  }, [action, onCommandExecuted, showConfirmDeletePopup, showConfirmClearScenePopup]);
 
   useEffect(() => {
     (async () => {
