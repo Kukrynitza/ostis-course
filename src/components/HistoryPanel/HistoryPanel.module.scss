@@ -51,3 +51,64 @@
   background-color: $decomposition-hover;
   border-radius: 4px;
 }
+
+.historyItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 8px 10px;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: $decomposition-hover;
+  }
+}
+
+.deleteBtn {
+  opacity: 0;
+  padding: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: opacity ease 0.2s;
+
+  path {
+    fill: $dark-grey;
+  }
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.1);
+
+    path {
+      fill: #d9534f;
+    }
+  }
+}
+
+.historyItem:hover .deleteBtn {
+  opacity: 1;
+}
+
+.clearBtn {
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  background: none;
+  border: 1px solid $soft-grey;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  transition: all ease 0.2s;
+  font-size: 14px;
+  color: #d9534f;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: #d9534f;
+  }
+}

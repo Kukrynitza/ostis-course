@@ -26,7 +26,7 @@ interface IInitialState {
 }
 
 const initialState: IInitialState = {
-  format: 'scn',
+  format: (localStorage.getItem('format') as TFormat) || 'scn',
   user: {
     data: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string) : null,
     status: {
@@ -72,6 +72,7 @@ export const commonSlice = createSlice({
     },
     setFormat(state, action: PayloadAction<TFormat>) {
       state.format = action.payload;
+      localStorage.setItem('format', action.payload);
     },
   },
   extraReducers: (builder) => {
