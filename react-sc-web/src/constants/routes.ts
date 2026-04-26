@@ -4,3 +4,5 @@ export const ACTION = '/q/:action/:format' as const;
 export const LIBRARY = '/l/' as const;
 export const GUIDE = '/guide/' as const;
 export const ASK_AI = '/c/' as const;
+export const LOGIN = '/login' as const;
+export const REGISTER = '/register' as const;

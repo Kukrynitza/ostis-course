@@ -28,9 +28,6 @@ ostis-metasystem/kb.bin/
 # === Compiled sc-machine binaries (included in git) ===
 # ostis-metasystem/install/ — НЕ игнорируется
 
-# === Other install directories ===
-platform-dependent-components/problem-solver/install/
-
 # === IDE ===
 .idea/
 .vscode/
@@ -59,3 +56,4 @@ Thumbs.db
 # === Misc ===
 *.swp
 *.swo
+ostis-metasystem/platform-dependent-components/interface/install/ostis-kb-lib

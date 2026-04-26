@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Logo from '@assets/images/Logo.svg';
 import { Language } from '@components/Language';
+import { ProfileDropdown } from '@components/ProfileDropdown';
 import { ScgPage } from '@components/ScgPage';
 import { SidePanel } from '@components/SidePanel';
 import { SidePanelWrapper } from '@components/SidePanelWrapper';
@@ -32,6 +33,7 @@ export const Layout: FC<IProps> = ({ children }) => {
       </div>
       <header className={styles.header}>
         <div className={styles.headerControls}>
+          <ProfileDropdown />
           <ThemeToggle />
           <Language />
         </div>
