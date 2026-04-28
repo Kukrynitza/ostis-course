@@ -1,6 +1,6 @@
 import { PseudoText } from 'ostis-ui-lib';
 
-import styles from './Skeleton.module.scss';
+import styles from './Skeleton.module.css';
 
 export const Skeleton = () => {
   return (

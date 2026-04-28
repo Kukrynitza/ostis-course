@@ -33,7 +33,6 @@ export const searchComponentBySpecification = async (specification: ScAddr) => {
   const result = await client.searchByTemplate(template);
   if (!result.length) {
     const errorStr = `Cannot find component of specification with ScAddr ${specification.value}`;
-    console.error(errorStr);
     throw Error(errorStr);
   }
   return result[0].get(componentAlias);

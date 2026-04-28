@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import AskAIMessageIcon from '@assets/images/AskAIMessageIcon.svg';
-import styles from './AskElement.module.scss';
+import styles from './AskElement.module.css';
 
 interface IProps {
   query: string;

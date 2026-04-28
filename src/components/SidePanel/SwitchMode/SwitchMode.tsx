@@ -7,7 +7,7 @@ import LibraryPageButtonFocus from '@assets/images/LibraryPageButtonFocus.svg';
 import ScnPageButton from '@assets/images/ScnPageButton.svg';
 import ScnPageButtonFocus from '@assets/images/ScnPageButtonFocus.svg';
 import { routes } from '@constants';
-import styles from './SwitchMode.module.scss';
+import styles from './SwitchMode.module.css';
 
 export const SwitchMode = () => {
   const [activePage, setActivePage] = useState<string | '/'>();

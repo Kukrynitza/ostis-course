@@ -8,7 +8,7 @@ import { Notification } from '@components/Notification';
 import { routes } from '@constants';
 
 import { AskHintButtons } from './AskHintButtons';
-import styles from './AskPage.module.scss';
+import styles from './AskPage.module.css';
 
 interface NavigateState {
   query?: string;

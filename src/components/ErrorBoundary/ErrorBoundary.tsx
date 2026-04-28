@@ -5,7 +5,7 @@ import ArrowIcon from '@assets/images/goBack.svg';
 import { Button } from '@components/Button';
 import { useBackNavigation } from '@hooks/useBackNavigation';
 
-import styles from './ErrorBoundary.module.scss';
+import styles from './ErrorBoundary.module.css';
 
 interface Props {
   children?: ReactNode;

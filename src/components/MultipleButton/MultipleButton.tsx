@@ -4,7 +4,7 @@ import { ReactNode, RefObject, useEffect, useRef, useState } from 'react';
 import ChevronDown from '@assets/images/chevronDown.svg';
 import { Button } from '@components/Button';
 
-import styles from './MultipleButton.module.scss';
+import styles from './MultipleButton.module.css';
 
 interface IProps<T extends string> {
   value?: T;

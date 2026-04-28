@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import styles from './PagesMenu.module.scss';
+import styles from './PagesMenu.module.css';
 
 export interface IProps {
   icon: ReactNode;

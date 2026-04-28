@@ -36,6 +36,7 @@ export const HistoryPanel = (props: IProps) => {
               })}
               addr={action}
               onClick={onBtnClick(String(action))}
+              title="Открыть команду из истории"
             >
               <ScLangText addrOrSystemId={action} defaultText={String(action)} />
             </ScTag>

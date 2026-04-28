@@ -7,7 +7,7 @@ interface Props {
   content: string;
 }
 
-const CollapsibleText: React.FC<Props> = ({ type, content }) => {
+export const CollapsibleText: React.FC<Props> = ({ type, content }) => {
   const [expanded, setExpanded] = React.useState(false);
 
   if (type === 'normal') {
@@ -17,9 +17,13 @@ const CollapsibleText: React.FC<Props> = ({ type, content }) => {
   return (
     <>
       {expanded ? (
-        <span onClick={() => setExpanded(false)}>{content}</span>
+        <span onClick={() => setExpanded(false)} title="Свернуть текст">
+          {content}
+        </span>
       ) : (
-        <span onClick={() => setExpanded(true)}>...</span>
+        <span onClick={() => setExpanded(true)} title="Развернуть текст">
+          ...
+        </span>
       )}
     </>
   );

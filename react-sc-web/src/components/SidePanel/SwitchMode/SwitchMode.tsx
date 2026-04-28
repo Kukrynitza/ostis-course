@@ -69,6 +69,8 @@ export const SwitchMode = () => {
         to={routes.MAIN}
         className={`${styles.switchModeButton} ${isDark ? styles.switchModeButtonDark : ''}`}
         onClick={() => handlePageClick(routes.ACTION)}
+        title="SCn/SCg режим"
+        aria-label="Переключить на режим SCn/SCg"
       >
         <ScnIcon />
       </Link>
@@ -76,6 +78,8 @@ export const SwitchMode = () => {
         to={routes.LIBRARY}
         className={`${styles.switchModeButton} ${isDark ? styles.switchModeButtonDark : ''}`}
         onClick={() => handlePageClick(routes.LIBRARY)}
+        title="Библиотека компонентов"
+        aria-label="Переключить на библиотеку компонентов"
       >
         <LibraryIcon />
       </Link>
@@ -83,6 +87,8 @@ export const SwitchMode = () => {
         to={routes.ASK_AI}
         className={`${styles.switchModeButton} ${isDark ? styles.switchModeButtonDark : ''}`}
         onClick={() => handlePageClick(routes.ASK_AI)}
+        title="Диалоговый помощник AskAI"
+        aria-label="Переключить на AskAI"
       >
         <AskAiIcon />
       </Link>

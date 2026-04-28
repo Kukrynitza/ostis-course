@@ -9,7 +9,7 @@ import { SidePanelWrapper } from '@components/SidePanelWrapper';
 
 import { routes } from '@constants';
 import { setActiveLink } from '@store/activeLinkSlice';
-import styles from './Layout.module.scss';
+import styles from './Layout.module.css';
 
 export interface IProps {
   children?: ReactNode;

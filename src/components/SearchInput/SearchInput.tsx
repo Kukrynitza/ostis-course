@@ -2,7 +2,7 @@ import { ChangeEventHandler, FC } from 'react';
 import SearchIcon from '@assets/images/Search.svg';
 import { Input } from '@components/input/Input';
 
-import styles from './SearchInput.module.scss';
+import styles from './SearchInput.module.css';
 
 interface IProps {
   value?: string;

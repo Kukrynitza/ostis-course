@@ -10,6 +10,7 @@ interface IProps {
   header: ReactNode;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
+  rightIconTitle?: string;
   children: ReactNode;
   className?: string;
   expanded?: boolean;
@@ -22,6 +23,7 @@ export const Accordion: FC<IProps> = ({
   header,
   leftIcon,
   rightIcon,
+  rightIconTitle,
   children,
   className,
   onToggle,
@@ -63,7 +65,12 @@ export const Accordion: FC<IProps> = ({
           </div>
         </div>
         {rightIcon && (
-          <IconButton squared={true} onClick={onIconBtnClick}>
+          <IconButton
+            squared={true}
+            onClick={onIconBtnClick}
+            title={rightIconTitle}
+            aria-label={rightIconTitle}
+          >
             {rightIcon}
           </IconButton>
         )}

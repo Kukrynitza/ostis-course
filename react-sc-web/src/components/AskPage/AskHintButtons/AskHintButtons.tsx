@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { routes, hintButtons, HintButton } from '@constants';
+import { routes, hintButtons } from '@constants';
 import { useTranslate } from 'ostis-ui-lib';
 import styles from './AskHintButtons.module.css';
 
@@ -27,6 +27,8 @@ export const AskHintButtons = () => {
             onClick={() => {
               handleButtonClick({ query: translatedText, isHintButton: true });
             }}
+            title={translatedText}
+            aria-label={translatedText}
           >
             {translatedText}
           </button>

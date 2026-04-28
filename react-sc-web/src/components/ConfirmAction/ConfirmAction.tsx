@@ -28,10 +28,15 @@ export const ConfirmAction: FC<IProps> = ({
       <div className={styles.title}>{title}</div>
       <div className={styles.content}>{content}</div>
       <div className={styles.buttons}>
-        <Button className={styles.button} appearance="secondaryAction" onClick={onClose}>
+        <Button
+          className={styles.button}
+          appearance="secondaryAction"
+          onClick={onClose}
+          title="Отменить действие"
+        >
           Отмена
         </Button>
-        <Button className={styles.button} onClick={onCompleteFunc}>
+        <Button className={styles.button} onClick={onCompleteFunc} title={completeBtnText}>
           {completeBtnText}
         </Button>
       </div>

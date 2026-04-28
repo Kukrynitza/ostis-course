@@ -49,6 +49,7 @@ export const MultipleButton = <T extends string>({
   }, [scrollPosition]);
 
   const title = options.find((option) => option.value === value)?.title;
+  const titleAsText = typeof title === 'string' ? title : 'Выбрать значение';
   return (
     <>
       <div
@@ -67,6 +68,7 @@ export const MultipleButton = <T extends string>({
             e.preventDefault();
             toggleDropDown();
           }}
+          title={titleAsText}
         >
           {title}
           <ChevronDown
@@ -86,6 +88,7 @@ export const MultipleButton = <T extends string>({
                   onChange(option.value);
                   onClose();
                 }}
+                title={typeof option.title === 'string' ? option.title : undefined}
               >
                 {option.title}
               </DropdownOption>

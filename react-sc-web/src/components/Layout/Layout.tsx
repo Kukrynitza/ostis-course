@@ -28,7 +28,12 @@ export const Layout: FC<IProps> = ({ children }) => {
   return (
     <div className={styles.root}>
       <div className={styles.logoWrapper}>
-        <Link to={routes.MAIN} onClick={handleLogoOnClick}>
+        <Link
+          to={routes.MAIN}
+          onClick={handleLogoOnClick}
+          title="Перейти на главную страницу"
+          aria-label="Перейти на главную страницу"
+        >
           <Logo />
         </Link>
       </div>

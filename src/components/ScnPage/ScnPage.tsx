@@ -4,7 +4,7 @@ import ErrorBoundary from '@components/ErrorBoundary/ErrorBoundary';
 import { Scn } from '@components/Scn';
 import { routes } from '@constants';
 
-import styles from './ScnPage.module.scss';
+import styles from './ScnPage.module.css';
 
 export const ScnPage = () => {
   const translate = useTranslate();

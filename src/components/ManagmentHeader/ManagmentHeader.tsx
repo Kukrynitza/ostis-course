@@ -2,7 +2,7 @@ import { ChangeEventHandler, FC } from 'react';
 import BackArrow from '@assets/images/backArrow.svg';
 import { useScNavigation } from '@hooks/useScNavigation';
 
-import styles from './ManagmentHeader.module.scss';
+import styles from './ManagmentHeader.module.css';
 
 import { SearchBar } from './SearchBar';
 

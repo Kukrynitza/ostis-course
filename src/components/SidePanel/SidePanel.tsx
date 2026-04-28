@@ -14,7 +14,7 @@ import { SearchField } from '@components/SearchField';
 import { useSelector } from '@hooks';
 import { selectUser } from '@store/commonSlice';
 import { selectRequests, setRequests } from '@store/requestHistorySlice';
-import styles from './SidePanel.module.scss';
+import styles from './SidePanel.module.css';
 import { SwitchMode } from './SwitchMode';
 
 interface IProps {

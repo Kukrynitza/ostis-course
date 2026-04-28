@@ -10,10 +10,16 @@ interface IProps {
 export const AskElement: FC<IProps> = ({ query, answer }) => {
   return (
     <div className={styles.elementWrapper}>
-      <div className={styles.elementQuery}>{query}</div>
+      <div className={styles.elementQuery} title={query}>
+        {query}
+      </div>
       <div className={styles.elementAnswer}>
-        <div>{<AskAIMessageIcon />}</div>
-        <div className={styles.answerText}>{answer}</div>
+        <div className={styles.iconWrapper} title="Ответ AskAI">
+          {<AskAIMessageIcon />}
+        </div>
+        <div className={styles.answerText} title={answer}>
+          {answer}
+        </div>
       </div>
     </div>
   );
