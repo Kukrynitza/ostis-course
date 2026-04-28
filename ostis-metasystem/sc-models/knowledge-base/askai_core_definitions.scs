@@ -1,0 +1,194 @@
+myself
+=> nrel_definition:
+    [myself — специальный sc-элемент, обозначающий текущего пользователя и точку входа в декомпозицию Метасистемы OSTIS.]
+    (* <- lang_ru;; *);
+=> nrel_definition:
+    [myself is a special sc-element that denotes current user and an entry point to OSTIS Metasystem decomposition.]
+    (* <- lang_en;; *);;
+
+library_of_reusable_components_interfaces
+=> nrel_definition:
+    [Библиотека компонентов — это библиотека многократно используемых компонентов sc-моделей интерфейсов, предназначенная для повторного использования при построении интерфейсов ostis-систем.]
+    (* <- lang_ru;; *);
+=> nrel_definition:
+    [Library of components is a library of reusable components of interface sc-models used to assemble interfaces of ostis-systems.]
+    (* <- lang_en;; *);;
+
+section_concept_of_reusable_component_interface
+=> nrel_definition:
+    [Раздел описывает понятие многократно используемого компонента sc-моделей интерфейсов, его назначение и место в библиотеке интерфейсных компонентов.]
+    (* <- lang_ru;; *);
+=> nrel_definition:
+    [This section describes concept of reusable component of interface sc-models, its purpose and place in component library.]
+    (* <- lang_en;; *);;
+
+problem_solver_Metasystem
+=> nrel_definition:
+    [Решатель задач Метасистемы OSTIS — подсистема, которая выполняет обработку задач, запускает и координирует решающие процедуры и формирует результаты решения в SC-памяти.]
+    (* <- lang_ru;; *);
+=> nrel_definition:
+    [Problem solver of OSTIS Metasystem is a subsystem that processes tasks, coordinates solving procedures and produces solution results in SC-memory.]
+    (* <- lang_en;; *);;
+
+section_sc_code
+=> nrel_definition:
+    [Semantic code (SC-код) — язык и форма представления знаний в ostis-системах, основанные на графовых SC-конструкциях и формальных отношениях между sc-элементами.]
+    (* <- lang_ru;; *);
+=> nrel_definition:
+    [Semantic code (SC-code) is a language and representation form for knowledge in ostis-systems based on graph SC-constructions and formal relations between sc-elements.]
+    (* <- lang_en;; *);;
+
+sc_memory
+=> nrel_definition:
+    [SC-память — графовая память ostis-системы, в которой хранятся sc-элементы (узлы, дуги, связи) и поддерживается единое семантическое представление знаний.]
+    (* <- lang_ru;; *);
+=> nrel_definition:
+    [SC-memory is graph-based memory of an ostis-system that stores sc-elements (nodes, arcs, relations) and supports unified semantic knowledge representation.]
+    (* <- lang_en;; *);;
+
+semantic_neighborhood
+=> nrel_definition:
+    [Семантическая окрестность sc-элемента — совокупность связанных с ним sc-элементов и отношений, достаточная для восстановления его смысла в заданном контексте.]
+    (* <- lang_ru;; *);
+=> nrel_definition:
+    [Semantic neighborhood of an sc-element is a set of related sc-elements and relations sufficient to reconstruct its meaning in a given context.]
+    (* <- lang_en;; *);;
+
+sc_element
+=> nrel_definition:
+    [SC-элемент — базовая единица SC-памяти (узел, дуга или связь), которая используется для представления знаний и связей между понятиями.]
+    (* <- lang_ru;; *);
+=> nrel_definition:
+    [SC-element is a basic unit of SC-memory (node, arc or relation) used to represent knowledge and semantic links between concepts.]
+    (* <- lang_en;; *);;
+
+section_structure_of_knowledge_base_model
+=> nrel_definition:
+    [База знаний Метасистемы OSTIS — системно организованная совокупность SC-моделей, понятий, отношений и правил, используемых для хранения и обработки знаний.]
+    (* <- lang_ru;; *);
+=> nrel_definition:
+    [Knowledge base of OSTIS Metasystem is a systematized set of SC-models, concepts, relations and rules used for knowledge storage and processing.]
+    (* <- lang_en;; *);;
+
+askai_q_sc_memory
+=> nrel_main_idtf: [Что такое sc-память?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [что такое sc-память?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [What is SC-memory?] (* <- lang_en;; *);
+=> nrel_answer:
+    [SC-память — графовая память ostis-системы, в которой хранятся sc-элементы (узлы, дуги, связи) и поддерживается единое семантическое представление знаний.]
+    (* <- lang_ru;; *);;
+
+askai_q_semantic_code
+=> nrel_main_idtf: [Что такое semantic code?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [Что такое SC-код?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [что такое семантика?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [What is semantic code?] (* <- lang_en;; *);
+=> nrel_answer:
+    [Semantic code (SC-код) — язык и форма представления знаний в ostis-системах, основанные на графовых SC-конструкциях и формальных отношениях между sc-элементами.]
+    (* <- lang_ru;; *);;
+
+askai_q_semantic_neighborhood
+=> nrel_main_idtf: [Что такое семантическая окрестность?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [Что такое семантическая окрестность sc-элемента?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [What is semantic neighborhood?] (* <- lang_en;; *);
+=> nrel_answer:
+    [Семантическая окрестность sc-элемента — совокупность связанных с ним sc-элементов и отношений, достаточная для восстановления его смысла в заданном контексте.]
+    (* <- lang_ru;; *);;
+
+askai_q_myself
+=> nrel_main_idtf: [Что такое myself?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [What is myself?] (* <- lang_en;; *);
+=> nrel_answer:
+    [myself — специальный sc-элемент, обозначающий текущего пользователя и точку входа в декомпозицию Метасистемы OSTIS.]
+    (* <- lang_ru;; *);;
+
+askai_q_components_library
+=> nrel_main_idtf: [Что такое Библиотека компонентов?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [что такое Библиотека компонентов?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [What is components library?] (* <- lang_en;; *);
+=> nrel_answer:
+    [Библиотека компонентов — это библиотека многократно используемых компонентов sc-моделей интерфейсов, предназначенная для повторного использования при построении интерфейсов ostis-систем.]
+    (* <- lang_ru;; *);;
+
+askai_q_problem_solver
+=> nrel_main_idtf: [Что такое Решатель задач Метасистемы OSTIS?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [What is problem solver of OSTIS Metasystem?] (* <- lang_en;; *);
+=> nrel_answer:
+    [Решатель задач Метасистемы OSTIS — подсистема, которая выполняет обработку задач, запускает и координирует решающие процедуры и формирует результаты решения в SC-памяти.]
+    (* <- lang_ru;; *);;
+
+askai_q_decomposition
+=> nrel_main_idtf: [Что такое декомпозиция?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [что такое декомпозиция?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [What is decomposition?] (* <- lang_en;; *);
+=> nrel_answer:
+    [Декомпозиция — это разбиение сложной системы или задачи на более простые составные части (подсистемы), которые можно рассматривать и анализировать отдельно.]
+    (* <- lang_ru;; *);;
+
+askai_q_ims
+=> nrel_main_idtf: [Что такое IMS?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [что такое ims?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [Что такое ИМС?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [What is IMS?] (* <- lang_en;; *);
+=> nrel_answer:
+    [IMS (Intelligent Management System) — интеллектуальная система управления, построенная на технологии OSTIS и использующая семантическое представление знаний.]
+    (* <- lang_ru;; *);;
+
+askai_q_ostis
+=> nrel_main_idtf: [Что такое OSTIS?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [что такое ostis?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [Что такое ОСТИС?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [What is OSTIS?] (* <- lang_en;; *);
+=> nrel_answer:
+    [OSTIS (Open Semantic Technology for Intelligent Systems) — технология проектирования интеллектуальных систем с открытой семантикой и единым форматом представления знаний.]
+    (* <- lang_ru;; *);;
+
+askai_q_system
+=> nrel_main_idtf: [Что такое система?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [что такое система?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [What is system?] (* <- lang_en;; *);
+=> nrel_answer:
+    [Система — это целостная совокупность взаимосвязанных элементов, которые совместно выполняют функции и образуют единое целое.]
+    (* <- lang_ru;; *);;
+
+askai_q_discrete_math
+=> nrel_main_idtf: [Что такое дискретная математика?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [Что такое дикретная математика?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [what is discrete mathematics?] (* <- lang_en;; *);
+=> nrel_answer:
+    [Дискретная математика — раздел математики, изучающий дискретные структуры: множества, графы, отношения, логические и комбинаторные объекты.]
+    (* <- lang_ru;; *);;
+
+askai_q_graph
+=> nrel_main_idtf: [Что такое граф?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [что такое граф?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [What is graph?] (* <- lang_en;; *);
+=> nrel_answer:
+    [Граф — это математическая структура, состоящая из вершин (узлов) и рёбер (связей), которые задают отношения между объектами.]
+    (* <- lang_ru;; *);;
+
+askai_q_singleton
+=> nrel_main_idtf: [Что такое синглтон?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [что такое синглтон?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [What is singleton?] (* <- lang_en;; *);
+=> nrel_answer:
+    [Синглтон — это множество, содержащее ровно один элемент.]
+    (* <- lang_ru;; *);;
+
+askai_q_external_language
+=> nrel_main_idtf: [Что такое внешний язык?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [что такое внешний язык?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [What is external language?] (* <- lang_en;; *);
+=> nrel_answer:
+    [Внешний язык — это язык пользовательского представления и ввода/вывода, который используется для взаимодействия с ostis-системой поверх внутреннего SC-представления знаний.]
+    (* <- lang_ru;; *);;
+
+askai_q_sc_element
+=> nrel_main_idtf: [Что такое sc-элемент?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [что такое sc-элемент?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [Что такое sc элемент?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [что такое sc элемент?] (* <- lang_ru;; *);
+=> nrel_main_idtf: [What is sc-element?] (* <- lang_en;; *);
+=> nrel_answer:
+    [SC-элемент — базовая единица SC-памяти (узел, дуга или связь), которая используется для представления знаний и связей между понятиями.]
+    (* <- lang_ru;; *);;
