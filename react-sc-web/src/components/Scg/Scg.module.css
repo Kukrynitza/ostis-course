@@ -8,11 +8,34 @@
   display: block;
 }
 
+.reloadButton {
+  position: absolute;
+  top: -37px;
+  left: -7px;
+  z-index: 1000;
+  cursor: pointer;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-silver);
+  border: 1px solid var(--color-silver);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+}
+
+.reloadButton:hover {
+  background: var(--color-silver);
+  color: var(--color-bg-primary);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
 .spinner {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate3d(-50%, -50%, 0);
+  z-index: 10;
 }
 
 .frame {

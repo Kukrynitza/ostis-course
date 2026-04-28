@@ -86,6 +86,12 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
     [addError, translate],
   );
 
+  const handleReload = useCallback(() => {
+    if (!ref.current) return;
+    setIsReady(false);
+    setIsLoading(true);
+    ref.current.src = scgUrl;
+  }, []);
   useEffect(() => {
     const iframe = ref.current;
     if (!iframe) return;
@@ -198,6 +204,9 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
         </Popup>
       )}
       <div className={classNames(styles.wrap, show && styles.wrapShow, className)}>
+        <button className={styles.reloadButton} onClick={handleReload}>
+          Перезагрузить SCG
+        </button>
         {isLoading && <Spinner className={styles.spinner} appearance={SPINER_COLOR} />}
         {show && isReady && action && (
           <div className={styles.exportBar}>
