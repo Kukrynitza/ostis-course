@@ -1,0 +1,137 @@
+.logo {
+  max-height: 28px;
+  height: 100%;
+  max-width: 302px;
+  width: 100%;
+  margin-bottom: 62px;
+  cursor: pointer;
+}
+
+@media (max-width: 1919px) {
+  .logo {
+    padding-right: 24px;
+  }
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 23px;
+  color: var(--color-dull-grey);
+  width: 120px;
+  height: 39px;
+  padding: 8px;
+  margin-left: -6px;
+  margin-bottom: 24px;
+  border-radius: 10px;
+  background: var(--color-beige);
+}
+
+.search:hover {
+  background: var(--color-smoky-white);
+}
+
+.searchFieldWrap {
+  margin-right: 24px;
+}
+
+.searchField {
+  margin-bottom: 24px;
+  margin-left: -6px;
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid var(--color-white);
+}
+
+.searchField:hover {
+  border: 1px solid var(--color-grey-blue);
+}
+
+.searchField_disabled {
+  color: var(--color-silver);
+}
+
+.pagesMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 51px;
+}
+
+.accordionContent {
+  display: flex;
+  flex-direction: column;
+  gap: 46px;
+  height: calc(100vh - var(--logo-search-height));
+  margin-bottom: 24px;
+  margin-right: 6px;
+  cursor: auto;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+.accordionContent::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  margin: 8px;
+}
+
+.accordionContent::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: var(--color-silver);
+  margin: 8px;
+}
+
+.accordionContent::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: transparent;
+}
+
+.accordionContent_userCanEdit {
+  height: calc(100vh - var(--logo-search-create-requests-height));
+}
+
+.accordionContent_admin {
+  height: calc(100vh - var(--logo-search-pages-menu-height));
+}
+
+.plusWrapper {
+  position: fixed;
+  left: 403px;
+  top: 335px;
+  padding: 10px;
+  z-index: 100;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.plusWrapper:hover {
+  background: var(--color-soft-grey);
+}
+
+.errorBoundary {
+  margin: 16px 0 0;
+}
+
+.icon {
+  overflow: visible;
+  flex-basis: 24px;
+}
+
+.switchModeButtonsWrapper button {
+  width: 62px;
+  height: 62px;
+  border-radius: 12px;
+  margin-right: 20px;
+  border: none;
+  background: none;
+}

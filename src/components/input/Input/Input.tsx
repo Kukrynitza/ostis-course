@@ -13,7 +13,7 @@ import {
 
 import AuthPassword from './assets/authorization-password.svg';
 import AuthPasswordCrossed from './assets/eyeCrossed.svg';
-import styles from './Input.module.scss';
+import styles from './Input.module.css';
 
 export interface IProps extends InputHTMLAttributes<HTMLInputElement> {
   iconLeft?: ReactNode;

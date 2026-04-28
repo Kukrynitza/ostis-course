@@ -1,0 +1,61 @@
+.multiplyButton {
+  position: relative;
+  width: fit-content;
+}
+
+.multiplyButton_disabled {
+  pointer-events: none;
+}
+
+.button.button {
+  padding: 8px 16px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 27px;
+  color: var(--color-dark-grey);
+}
+
+.button.button_active {
+  background-color: var(--color-smoky-white);
+}
+
+.button.button_disabled {
+  color: var(--color-silver);
+}
+
+.button.button:hover {
+  color: var(--color-dark-grey);
+}
+
+.dropdown {
+  width: fit-content;
+  background: var(--color-white);
+  border-radius: 10px;
+  box-shadow: 0 2px 4px var(--color-card-shadow);
+  overflow: hidden;
+  z-index: 100;
+  align-self: flex-end;
+  margin-right: 0;
+}
+
+.option {
+  transition: all 0.3s ease;
+}
+
+.option:hover {
+  background-color: var(--color-smoky-white);
+}
+
+.chevronDown {
+  transition: all 0.3s ease;
+}
+
+.chevronDown_revert {
+  transform: rotate(180deg);
+}
+
+.chevronDown_disabled path {
+  fill: var(--color-silver);
+}

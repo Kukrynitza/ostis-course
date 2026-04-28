@@ -1,0 +1,132 @@
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  height: 40px;
+  padding: 8px 16px;
+  border: 2px solid var(--color-border-white);
+  border-radius: 10px;
+  outline: none;
+  cursor: text;
+  background-color: var(--color-white);
+}
+
+.wrapper:hover {
+  border-color: var(--color-dark-blue);
+}
+
+.wrapper_focused {
+  border-color: var(--color-dark-blue);
+}
+
+.wrapper_focused:hover {
+  border-color: var(--color-dark-blue);
+}
+
+.wrapper_error {
+  border-color: var(--color-error-message);
+}
+
+.wrapper_error:hover {
+  border-color: var(--color-red);
+}
+
+.wrapper_disabled {
+  background-color: var(--color-beige);
+  border-color: var(--color-border-disabled);
+  cursor: default;
+  pointer-events: none;
+}
+
+.search {
+  width: 415px;
+  height: 40px;
+  border: 1px solid var(--color-white);
+  border-radius: 10px;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 23px;
+  color: var(--color-dark-grey);
+}
+
+.search:hover,
+.search_focused {
+  border: 1px solid var(--color-grey-blue);
+}
+
+.search::placeholder {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 23px;
+  color: var(--color-dull-grey);
+  
+}
+
+.search_disabled {
+  color: var(--color-silver);
+}
+
+.input {
+  flex-grow: 1;
+  padding: 0;
+  min-width: 0;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  border: none;
+  outline: none;
+  color: var(--color-dark-grey);
+  background-color: var(--color-white);
+}
+
+.input::placeholder {
+  color: var(--color-dull-grey);
+  font-weight: 300;
+}
+
+.input_disabled {
+  background-color: var(--color-beige);
+  color: var(--color-dull-grey);
+  cursor: default;
+}
+
+.hidePasswordSvg {
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.hidePasswordSvg:active {
+  transform: scale(0.9);
+}
+
+.showPasswordSvg {
+  flex-shrink: 0;
+  padding: 0 1px;
+  cursor: pointer;
+}
+
+.showPasswordSvg:active {
+  transform: scale(0.9);
+}
+
+.leftIcon {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+}
+
+.rightIcon {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+}

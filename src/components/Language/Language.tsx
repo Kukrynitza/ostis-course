@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { TLanguage, useLanguageContext } from 'ostis-ui-lib';
 
-import styles from './language.module.scss';
+import styles from './language.module.css';
 
 export const Language = () => {
   const { lang, setLang } = useLanguageContext();

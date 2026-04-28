@@ -3,9 +3,16 @@ import { SnakeToCamelCase } from './types';
 export const snakeToCamelCase = <Str extends string>(str: Str): SnakeToCamelCase<Str> =>
   str.replace(/_(\w)/g, (_, p1) => p1.toUpperCase()) as SnakeToCamelCase<Str>;
 
-export const objectToFormData = (obj: Record<string, any>) => {
+type FormDataValue = string | Blob;
+
+const toFormDataValue = (value: unknown): FormDataValue => {
+  if (value instanceof Blob) return value;
+  return String(value);
+};
+
+export const objectToFormData = (obj: Record<string, unknown>) => {
   const formData = new FormData();
-  Object.keys(obj).forEach((key) => formData.append(key, obj[key]));
+  Object.keys(obj).forEach((key) => formData.append(key, toFormDataValue(obj[key])));
   return formData;
 };
 
@@ -18,7 +25,7 @@ export const getRandomInt = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-export const shiftMap = (map: Map<any, any>, to = 1) => {
+export const shiftMap = (map: Map<unknown, unknown>, to = 1) => {
   if (to < 1) return;
 
   let isDone = false;

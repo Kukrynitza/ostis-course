@@ -38,16 +38,19 @@ const initialState: IInitialState = {
   },
 };
 
-export const fetchUserByToken = createAsyncThunk('/getLogin', async (_, { rejectWithValue }) => {
-  const res = await getUserByToken();
+export const fetchUserByToken = createAsyncThunk<IUserData, void>(
+  '/getLogin',
+  async (_, { rejectWithValue }) => {
+    const res = await getUserByToken();
 
-  if (isAxiosError(res)) {
-    return rejectWithValue(res.response?.data);
-  }
-  return res.data;
-});
+    if (isAxiosError(res)) {
+      return rejectWithValue(res.response?.data);
+    }
+    return res.data;
+  },
+);
 
-export const fetchUser = createAsyncThunk<unknown, IInputValidation>(
+export const fetchUser = createAsyncThunk<IUserData, IInputValidation>(
   '/postLogin',
   async (data, { rejectWithValue }) => {
     const res = await getUser(data);

@@ -4,7 +4,7 @@ import { useLocation } from 'react-router';
 import ErrorBoundary from '@components/ErrorBoundary/ErrorBoundary';
 import { Scg } from '@components/Scg';
 
-import styles from './ScgPage.module.scss';
+import styles from './ScgPage.module.css';
 
 export const ScgPage = () => {
   const location = useLocation();

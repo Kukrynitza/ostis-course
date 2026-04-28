@@ -3,6 +3,7 @@ import {
   ChangeEvent,
   InputHTMLAttributes,
   KeyboardEvent,
+  MouseEvent,
   forwardRef,
   useRef,
   useState,
@@ -53,7 +54,11 @@ export const AskInput = forwardRef<HTMLInputElement, IProps>(
     const currentValue = valueFromProps !== undefined ? valueFromProps : searchValue;
     const isControlled = valueFromProps !== undefined;
 
-    const onWrapperClick = () => {
+    const onWrapperClick = (e: MouseEvent<HTMLDivElement>) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('input')) {
+        return;
+      }
       innerRef?.current?.focus();
     };
 
@@ -113,25 +118,46 @@ export const AskInput = forwardRef<HTMLInputElement, IProps>(
         className={cn(className, styles.inputWrapper)}
         onKeyUp={handleKeyUp}
         onClick={onWrapperClick}
-        onMouseDown={(e) => e.preventDefault()}
         onFocus={onFocus}
         onBlur={onBlur}
       >
         <input
+          {...props}
           className={styles.dialogInput}
           placeholder={translate({
-            ru: '🪄 Спросите IMS',
-            en: '🪄 Ask IMS',
+            ru: '🪄 Спросите AskAI',
+            en: '🪄 Ask AskAI a question',
+          })}
+          title={translate({
+            ru: 'Введите вопрос для AskAI',
+            en: 'Type a question for AskAI',
+          })}
+          aria-label={translate({
+            ru: 'Поле ввода вопроса',
+            en: 'Question input field',
           })}
           ref={refSetter<HTMLInputElement>(ref, innerRef)}
           value={currentValue}
           onKeyDown={onInputKeyDown}
           onChange={onInputChange}
         />
-        <button className={styles.dialogBoxButton} onClick={handleSubmit}>
+        <button
+          className={styles.dialogBoxButton}
+          onClick={handleSubmit}
+          type="button"
+          title={translate({
+            ru: 'Отправить вопрос',
+            en: 'Send question',
+          })}
+          aria-label={translate({
+            ru: 'Отправить вопрос',
+            en: 'Send question',
+          })}
+        >
           {isDark ? <AskAIInputButtonThemed /> : <AskAIInputButton />}
         </button>
       </div>
     );
   },
 );
+AskInput.displayName = 'AskInput';

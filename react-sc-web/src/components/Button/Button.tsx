@@ -16,9 +16,16 @@ export const Button = ({
   className,
   ...restProps
 }: IButton) => {
+  const stringChildren = typeof children === 'string' ? children.trim() : '';
+  const defaultTooltip = stringChildren || undefined;
+  const title = restProps.title ?? defaultTooltip;
+  const ariaLabel = restProps['aria-label'] ?? defaultTooltip;
+
   return (
     <button
       className={classNames(styles.button, styles[`button_${appearance}`], className)}
+      title={title}
+      aria-label={ariaLabel}
       {...restProps}
     >
       {children}

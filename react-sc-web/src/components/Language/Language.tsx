@@ -19,6 +19,7 @@ export const Language = () => {
             [styles.activeLanguage]: lang === 'en',
           })}
           onClick={setLanguage('en')}
+          title="Switch interface language to English"
         >
           En
         </span>
@@ -28,6 +29,7 @@ export const Language = () => {
             [styles.activeLanguage]: lang === 'ru',
           })}
           onClick={setLanguage('ru')}
+          title="Переключить язык интерфейса на русский"
         >
           Ru
         </span>

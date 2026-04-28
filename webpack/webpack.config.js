@@ -40,8 +40,8 @@ module.exports = {
         type: 'asset/resource',
       },
       {
-        test: /\.scss$/i,
-        use: ['style-loader', 'css-loader', 'sass-loader'],
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /.svg$/,
@@ -51,7 +51,7 @@ module.exports = {
   },
   resolve: {
     symlinks: false,
-    extensions: ['.ts', '.tsx', '.js', '.scss', '.css'],
+    extensions: ['.ts', '.tsx', '.js', '.css'],
     plugins: [new TsconfigPathsPlugin()],
   },
   optimization: {

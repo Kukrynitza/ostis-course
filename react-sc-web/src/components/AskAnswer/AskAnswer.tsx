@@ -2,7 +2,6 @@ import { ChangeEvent, useEffect, useState, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { getDescriptionById } from '@api/requests/getDescription';
-import { TextItem } from '@components/AskAnswer/AskElement/AnswerText';
 import { AskInput } from '@components/AskInput';
 import { Notification } from '@components/Notification';
 import { SPINER_COLOR, getHintButtonHandler } from '@constants';
@@ -58,7 +57,7 @@ export const AskAnswer = () => {
     if (!queryText || queryInProgressRef.current) return;
     queryInProgressRef.current = true;
 
-    let answer: string | TextItem[] | null = null;
+    let answer: string | null = null;
 
     setIsLoading(true);
 

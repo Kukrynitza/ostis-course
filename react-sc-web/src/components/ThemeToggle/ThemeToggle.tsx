@@ -47,9 +47,16 @@ export const ThemeToggle = () => {
   const icon = theme === 'light' ? <SunIcon /> : theme === 'dark' ? <MoonIcon /> : <AutoIcon />;
 
   const label = theme === 'light' ? 'Светлая' : theme === 'dark' ? 'Тёмная' : 'Системная';
+  const tooltip = `Тема: ${label}. Нажмите для переключения`;
 
   return (
-    <button className={styles.button} onClick={handleClick} title={label}>
+    <button
+      className={styles.button}
+      onClick={handleClick}
+      type="button"
+      title={tooltip}
+      aria-label={tooltip}
+    >
       {icon}
     </button>
   );

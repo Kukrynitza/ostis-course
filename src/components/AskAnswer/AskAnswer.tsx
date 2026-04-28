@@ -9,7 +9,7 @@ import { Notification } from '@components/Notification';
 import { SPINER_COLOR } from '@constants';
 import { addInHistory, selectRequests } from '@store/requestDialogHistorySlice';
 import { getHintButtonHandler } from 'src/constants/hintButtons';
-import styles from './AskAnswer.module.scss';
+import styles from './AskAnswer.module.css';
 import { AskElement } from './AskElement';
 
 interface NavigateState {

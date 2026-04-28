@@ -12,7 +12,7 @@ import {
 } from 'react';
 
 import AskAIInputButton from '@assets/images/AskAIInputButton.svg';
-import styles from './AskInput.module.scss';
+import styles from './AskInput.module.css';
 
 interface IProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { FC } from 'react';
 
-import styles from './TabBar.module.scss';
+import styles from './TabBar.module.css';
 
 import { ITab } from './types';
 

@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react';
 
-import styles from './Field.module.scss';
+import styles from './Field.module.css';
 
 export interface IFieldProps {
   label?: string;
