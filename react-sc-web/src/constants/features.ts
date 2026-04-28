@@ -5,4 +5,5 @@ export const FEATURES = {
   enableContextMenuOnLanguage: true,
   enableContextMenuOnScgScn: false,
   enableContextMenuOnLibrary: true,
+  enableContextMenuOnLogo: true,
 };
