@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import { useMatch } from 'react-router';
 import {routes} from '@constants';
+import {FEATURES} from '@constants/features';
 import {useScNavigation} from '@hooks/useScNavigation';
 import {IRequest, clearRequests, removeRequest} from '@store/requestHistorySlice';
 import {useDispatch} from 'react-redux';
@@ -52,6 +53,7 @@ export const HistoryPanel = (props: IProps) => {
                   [styles.historyBtnActive]: String(action) === match?.params.action,
                 })}
                 addr={action}
+                showMenu={FEATURES.enableContextMenuOnHistory}
                 onClick={onBtnClick(String(action))}
               >
                 <ScLangText addrOrSystemId={action} defaultText={String(action)} />

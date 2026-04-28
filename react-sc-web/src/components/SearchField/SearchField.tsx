@@ -1,11 +1,13 @@
-import { ChangeEvent, FC, useCallback, useMemo, useState } from 'react';
+import { ChangeEvent, FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { client } from '@api';
 import { searchAddrById } from '@api/sc/search/search';
+import { scUtils } from '@api';
 import SearchIcon from '@assets/images/Search.svg';
+import { FEATURES } from '@constants/features';
 import { useScNavigation } from '@hooks/useScNavigation';
 import { useThemeContext } from '@themes/ThemeContext';
 import { debounce } from '@utils';
-import { useTranslate, Select, Option } from 'ostis-ui-lib';
+import { ScTag, useTranslate, Select, Option } from 'ostis-ui-lib';
 
 import styles from './SearchField.module.css';
 
@@ -21,11 +23,20 @@ export const SearchField: FC<IProps> = ({ className }) => {
   const [options, setOptions] = useState<string[] | null>(null);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [searchInputAddr, setSearchInputAddr] = useState<number | null>(null);
 
   const { goToActiveFormatCommand } = useScNavigation();
   const { resolved } = useThemeContext();
 
   const translate = useTranslate();
+
+  useEffect(() => {
+    if (FEATURES.enableContextMenuOnSearch) {
+      scUtils.searchKeynodes('ui_search').then(({ uiSearch }) => {
+        if (uiSearch?.value) setSearchInputAddr(uiSearch.value);
+      });
+    }
+  }, []);
 
   const highlightedColors = {
     backgroundColor: '#e0e0e0',
@@ -117,7 +128,7 @@ export const SearchField: FC<IProps> = ({ className }) => {
       })
     : undefined;
 
-  return (
+  const searchField = (
     <Select
       className={className}
       mode="search"
@@ -137,4 +148,10 @@ export const SearchField: FC<IProps> = ({ className }) => {
       ))}
     </Select>
   );
+
+  if (FEATURES.enableContextMenuOnSearch && searchInputAddr) {
+    return <ScTag addr={searchInputAddr} showMenu={true}>{searchField}</ScTag>;
+  }
+
+  return searchField;
 };

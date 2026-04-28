@@ -1,7 +1,8 @@
 import React from 'react';
 import { ScAddr } from 'ts-sc-client';
 import GithubIcon from '@assets/images/GithubIcon.svg';
-import { useTranslate } from 'ostis-ui-lib';
+import { ScTag, useTranslate } from 'ostis-ui-lib';
+import { FEATURES } from '@constants/features';
 import styles from './Card.module.css';
 import { CardComponentType } from './types';
 import { getCardLogo, getSubtitleClassName, truncateString } from './utils';
@@ -32,7 +33,7 @@ export const Card: React.FC<ComponentCardProps> = ({
     setShowComponent(component);
   };
 
-  return (
+  const cardElement = (
     <div className={styles.container} onClick={handleContainerClick}>
       <div className={styles.info}>
         <div className={styles.logo}>{logoComponent}</div>
@@ -69,4 +70,10 @@ export const Card: React.FC<ComponentCardProps> = ({
       </div>
     </div>
   );
+
+  if (FEATURES.enableContextMenuOnLibrary) {
+    return <ScTag addr={component.value} showMenu={true}>{cardElement}</ScTag>;
+  }
+
+  return cardElement;
 };
