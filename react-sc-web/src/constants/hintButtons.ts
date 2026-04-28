@@ -4,33 +4,28 @@ export interface HintButton {
   text: { ru: string; en: string };
 }
 
-export const hintButtons: HintButton[] = [
+const STABLE_KB_HINT_BUTTONS: HintButton[] = [
   {
-    text: { ru: 'Что такое синглтон?', en: 'What is singleton?' },
+    text: { ru: 'Что такое семантическая окрестность?', en: 'What is semantic neighborhood?' },
   },
   {
-    text: { ru: 'Что такое IMS?', en: 'What is IMS?' },
+    text: { ru: 'Что такое OSTIS?', en: 'What is OSTIS?' },
   },
   {
-    text: { ru: 'Что такое граф?', en: 'What is a graph?' },
+    text: { ru: 'Что такое SC-память?', en: 'What is SC-memory?' },
   },
   {
-    text: { ru: 'Расскажи про историю развития IMS', en: 'Tell me about the history of IMS' },
+    text: { ru: 'Что такое Библиотека компонентов?', en: 'What is components library?' },
   },
 ];
+
+export const hintButtons: HintButton[] = STABLE_KB_HINT_BUTTONS;
 
 export const getHintButtonHandler = (
   query: string,
   lang: 'ru' | 'en',
 ): (() => Promise<string | null>) => {
-  const matchedButton = hintButtons.find((button) => button.text[lang] == query.trim());
-
-  if (matchedButton) {
-    return async () => {
-      const answer = await getDescriptionById(query, lang);
-      return answer;
-    };
-  } else {
-    return () => Promise.resolve(null);
-  }
+  return async () => {
+    return getDescriptionById(query, lang);
+  };
 };
