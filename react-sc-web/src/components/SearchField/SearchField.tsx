@@ -29,6 +29,10 @@ export const SearchField: FC<IProps> = ({ className }) => {
   const { resolved } = useThemeContext();
 
   const translate = useTranslate();
+  const searchTooltip = translate({
+    ru: 'Поиск sc-элементов по текстовым фрагментам',
+    en: 'Search for sc-elements by text fragments',
+  });
 
   useEffect(() => {
     if (FEATURES.enableContextMenuOnSearch) {
@@ -134,6 +138,8 @@ export const SearchField: FC<IProps> = ({ className }) => {
       mode="search"
       value=""
       placeholder={translate({ ru: 'Поиск...', en: 'Search...' })}
+      title={searchTooltip}
+      aria-label={searchTooltip}
       isLoading={isLoading}
       onInputChange={onInputChange}
       onChange={onChange}
@@ -142,7 +148,13 @@ export const SearchField: FC<IProps> = ({ className }) => {
       iconsLeft={<SearchIcon />}
     >
       {(options || []).map((option, index) => (
-        <Option key={option} value={option} style={optionStyles(index)}>
+        <Option
+          key={option}
+          value={option}
+          className={styles.option}
+          style={optionStyles(index)}
+          title={option}
+        >
           {option}
         </Option>
       ))}

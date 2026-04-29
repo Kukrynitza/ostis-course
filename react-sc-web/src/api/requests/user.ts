@@ -10,7 +10,7 @@ export const getUsersList = () => {
 };
 
 export const postNewUser = async (user: IUser) => {
-  const res = await request({
+  const res = await request<{ sc_addr: number }>({
     method: 'POST',
     url: `${API_URL}/api/users`,
     data: JSON.stringify({
@@ -22,7 +22,7 @@ export const postNewUser = async (user: IUser) => {
 
   if (isAxiosError(res)) return res;
 
-  const scAddr = await res.data;
+  const scAddr = res.data;
 
   return {
     ...user,

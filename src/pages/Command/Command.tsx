@@ -9,7 +9,7 @@ import { selectArgAddrs } from '@store';
 import { selectUserAddr } from '@store/commonSlice';
 import { addRequest } from '@store/requestHistorySlice';
 
-import styles from './Command.module.scss';
+import styles from './Command.module.css';
 
 import { debouncedExecuteCommand } from './utils';
 

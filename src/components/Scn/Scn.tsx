@@ -18,8 +18,8 @@ import {
 import { useErrorToast } from '@hooks/useErrorToast';
 import { useLazyTimeout } from '@hooks/useTimeout';
 
-import styles from './Scn.module.scss';
-import boundaryStyle from '../ErrorBoundary/ErrorBoundary.module.scss';
+import styles from './Scn.module.css';
+import boundaryStyle from '../ErrorBoundary/ErrorBoundary.module.css';
 
 const timeoutText = {
   ru: (

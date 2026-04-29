@@ -6,7 +6,7 @@ import { useScNavigation } from '@hooks/useScNavigation';
 import { IRequest, clearRequests, removeRequest } from '@store/requestHistorySlice';
 import { useDispatch } from 'react-redux';
 
-import styles from './HistoryPanel.module.scss';
+import styles from './HistoryPanel.module.css';
 
 import { Skeleton } from './Skeleton';
 import Delete from '@assets/images/delete.svg';

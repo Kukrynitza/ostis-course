@@ -15,7 +15,7 @@ import { Card } from '@components/Card/Card';
 import { CardComponentType } from '@components/Card/types';
 import { CardInfo } from '@components/CardInfo/CardInfo';
 import { Input } from '@components/input/Input';
-import styles from './Library.module.scss';
+import styles from './Library.module.css';
 
 interface CardInterface {
   name: string;

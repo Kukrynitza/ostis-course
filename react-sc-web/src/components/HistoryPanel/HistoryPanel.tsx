@@ -1,15 +1,15 @@
 import classNames from 'classnames';
 import { useMatch } from 'react-router';
-import {routes} from '@constants';
-import {FEATURES} from '@constants/features';
-import {useScNavigation} from '@hooks/useScNavigation';
-import {IRequest, clearRequests, removeRequest} from '@store/requestHistorySlice';
-import {useDispatch} from 'react-redux';
-import {ScLangText, ScTag} from 'ostis-ui-lib';
+import { routes } from '@constants';
+import { FEATURES } from '@constants/features';
+import { useScNavigation } from '@hooks/useScNavigation';
+import { IRequest, clearRequests, removeRequest } from '@store/requestHistorySlice';
+import { useDispatch } from 'react-redux';
+import { ScLangText, ScTag } from 'ostis-ui-lib';
 
 import styles from './HistoryPanel.module.css';
 
-import {Skeleton} from './Skeleton';
+import { Skeleton } from './Skeleton';
 import Delete from '@assets/images/delete.svg';
 
 interface IProps {
@@ -21,7 +21,7 @@ export const HistoryPanel = (props: IProps) => {
   const match = useMatch(routes.ACTION);
   const dispatch = useDispatch();
 
-  const {goToActiveFormatAction} = useScNavigation();
+  const { goToActiveFormatAction } = useScNavigation();
 
   const onBtnClick = (action: string) => () => {
     goToActiveFormatAction(action);
@@ -45,7 +45,7 @@ export const HistoryPanel = (props: IProps) => {
               Очистить историю
             </button>
           )}
-          {props.requests.map(({action}, ind) => (
+          {props.requests.map(({ action }, ind) => (
             <div key={ind} className={styles.historyItem}>
               <ScTag
                 as="span"
@@ -55,6 +55,7 @@ export const HistoryPanel = (props: IProps) => {
                 addr={action}
                 showMenu={FEATURES.enableContextMenuOnHistory}
                 onClick={onBtnClick(String(action))}
+                title="Открыть команду из истории"
               >
                 <ScLangText addrOrSystemId={action} defaultText={String(action)} />
               </ScTag>

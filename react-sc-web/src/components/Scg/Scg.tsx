@@ -12,6 +12,7 @@ import {
   snakeToCamelCase,
   useBooleanState,
   useLanguage,
+  useTranslate,
   Popup,
   Spinner,
 } from 'ostis-ui-lib';
@@ -37,6 +38,7 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
     useBooleanState(false);
   const ref = useRef<HTMLIFrameElement>(null);
   const lang = useLanguage();
+  const translate = useTranslate();
   const dispatch = useDispatch();
   const scNavigation = useScNavigation();
 
@@ -76,12 +78,7 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
     return () => {
       window.removeEventListener('message', handleMessage);
     };
-  }, [
-    action,
-    onCommandExecuted,
-    showConfirmDeletePopup,
-    showConfirmClearScenePopup,
-  ]);
+  }, [action, onCommandExecuted, showConfirmDeletePopup, showConfirmClearScenePopup]);
 
   useEffect(() => {
     (async () => {
@@ -133,7 +130,15 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
       )}
       <div className={classNames(styles.wrap, show && styles.wrapShow, className)}>
         {isLoading && <Spinner className={styles.spinner} appearance={SPINER_COLOR} />}
-        <iframe className={styles.frame} src={scgUrl} ref={ref} title="SCg codes" />
+        <iframe
+          className={styles.frame}
+          src={scgUrl}
+          ref={ref}
+          title={translate({
+            ru: 'Редактор SCg-кода',
+            en: 'SCg code editor',
+          })}
+        />
       </div>
     </>
   );

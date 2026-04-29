@@ -6,10 +6,12 @@ import { nanoid } from 'nanoid';
  * @param func
  * @returns
  */
-export const lastInstancePromise = <F extends (...args: any[]) => Promise<any>>(func: F) => {
+export const lastInstancePromise = <Args extends unknown[], ReturnValue>(
+  func: (...args: Args) => Promise<ReturnValue>,
+) => {
   let calls: string[] = [];
 
-  return async (...args: Parameters<F>) => {
+  return async (...args: Args) => {
     const id = nanoid(5);
     calls.push(id);
 

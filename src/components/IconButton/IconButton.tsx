@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { ButtonHTMLAttributes, forwardRef } from 'react';
 
-import styles from './IconButton.module.scss';
+import styles from './IconButton.module.css';
 
 interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   squared?: boolean;

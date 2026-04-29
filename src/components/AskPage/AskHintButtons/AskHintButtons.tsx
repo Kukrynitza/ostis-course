@@ -3,7 +3,7 @@ import { useTranslate } from 'ostis-ui-lib';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '@constants';
 import { hintButtons } from 'src/constants/hintButtons';
-import styles from './AskHintButtons.module.scss';
+import styles from './AskHintButtons.module.css';
 
 interface NavigateState {
   query?: string;

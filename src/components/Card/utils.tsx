@@ -6,7 +6,7 @@ import KnowledgeBase from '@assets/images/DefaultPluginImages/KnowledgeBase.svg'
 import ProblemSolver from '@assets/images/DefaultPluginImages/ProblemSolver.svg';
 import Subsystem from '@assets/images/DefaultPluginImages/Subsystem.svg';
 import { CardComponentType } from '@components/Card/types';
-import styles from './Card.module.scss';
+import styles from './Card.module.css';
 
 export const getCardLogo = (type: CardComponentType): React.ReactNode => {
   switch (type) {

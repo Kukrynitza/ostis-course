@@ -15,12 +15,10 @@ const getClient = () => {
   client = new ScClient(SC_URL);
   helper = new ScHelper(client);
   onError = () => {
-    console.error('error connecting to ts-client, trying to reconnect in 2 seconds');
     setTimeout(getClient, TIMEOUT);
   };
 
   onClose = () => {
-    console.error('ts-client websocket was closed, trying to reconnect in 2 seconds');
     setTimeout(getClient, TIMEOUT);
   };
 

@@ -1,6 +1,6 @@
 import { ChangeEventHandler, FC } from 'react';
 import SearchIcon from '@assets/images/Search.svg';
-import { Input } from '@components/input/Input';
+import { Input } from '@components/Input/Input/Input';
 
 import styles from './SearchInput.module.css';
 

@@ -14,7 +14,7 @@ import {
 import CloseIcon from '@assets/images/CloseIcon.svg';
 import { CardComponentType } from '@components/Card/types';
 import { getCardLogo, getSubtitleClassName } from '@components/Card/utils';
-import styles from './CardInfo.module.scss';
+import styles from './CardInfo.module.css';
 import { InstallMethodType } from './types';
 import { getInstallationMethodType } from './utils';
 

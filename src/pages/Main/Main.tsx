@@ -5,7 +5,7 @@ import { routes } from '@constants';
 import { useDispatch } from '@hooks/redux';
 import { setFormat } from '@store/commonSlice';
 
-import styles from './Main.module.scss';
+import styles from './Main.module.css';
 
 const StyledSwitchScgScn = styled(SwitchScgScn)`
   position: absolute;

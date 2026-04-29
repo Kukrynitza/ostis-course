@@ -94,6 +94,8 @@ def init_app_rules():
 
         (r"/api/info/tooltip/", api.InfoTooltip),
 
+        (r"/api/kb/search/", api.KbSearch),
+
         (r"/api/user/", api.User),
 
         (r"/auth/google$", auth.GoogleOAuth2LoginHandler),

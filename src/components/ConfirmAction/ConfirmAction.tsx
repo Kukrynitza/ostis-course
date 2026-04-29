@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { Button } from '@components/Button';
-import styles from './ConfirmAction.module.scss';
+import styles from './ConfirmAction.module.css';
 
 interface IProps {
   onComplete: () => void;

@@ -38,16 +38,19 @@ const initialState: IInitialState = {
   },
 };
 
-export const fetchUserByToken = createAsyncThunk('/getLogin', async (_, { rejectWithValue }) => {
-  const res = await getUserByToken();
+export const fetchUserByToken = createAsyncThunk<IUserData, void>(
+  '/getLogin',
+  async (_, { rejectWithValue }) => {
+    const res = await getUserByToken();
 
-  if (isAxiosError(res)) {
-    return rejectWithValue(res.response?.data);
-  }
-  return res.data;
-});
+    if (isAxiosError(res)) {
+      return rejectWithValue(res.response?.data);
+    }
+    return res.data;
+  },
+);
 
-export const fetchUser = createAsyncThunk<unknown, IInputValidation>(
+export const fetchUser = createAsyncThunk<IUserData, IInputValidation>(
   '/postLogin',
   async (data, { rejectWithValue }) => {
     const res = await getUser(data);
@@ -117,11 +120,9 @@ export const commonSlice = createSlice({
   },
 });
 
-//Selectors
 export const selectUser = (state: IRootState) => state.common.user.data;
 export const selectUserAddr = createSelector(selectUser, (user) => user?.sc_addr);
 export const selectUserStatus = (state: IRootState) => state.common.user.status;
 export const selectFormat = (state: IRootState) => state.common.format || 'scn';
 
-//Reducers and actions
 export const { setUser, setUserStatus, setFormat } = commonSlice.actions;

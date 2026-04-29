@@ -23,6 +23,8 @@ export const TabBar: FC<IProps> = ({ className, activeTab, tabs, onChange }) => 
           })}
           key={tab.value}
           onClick={() => onChange(tab.value)}
+          title={tab.title}
+          aria-label={tab.title}
         >
           <div className={styles.tabWrapper}>
             <div

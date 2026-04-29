@@ -6,7 +6,7 @@ import CloseIcon from '@assets/images/close.svg';
 import ErrorIcon from '@assets/images/errorIcon.svg';
 import SuccessIcon from '@assets/images/successIcon.svg';
 import WarningIcon from '@assets/images/warningIcon.svg';
-import styles from './Notification.module.scss';
+import styles from './Notification.module.css';
 
 const getTargetText = (text: TNotificationText, lang: TLanguage): string | ReactNode => {
   if (typeof text === 'function') return text(lang);

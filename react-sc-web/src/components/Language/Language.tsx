@@ -17,7 +17,7 @@ export const Language = () => {
         ({ uiEnglishLanguage, uiRussianLanguage }) => {
           if (uiEnglishLanguage?.value) setEnAddr(uiEnglishLanguage.value);
           if (uiRussianLanguage?.value) setRuAddr(uiRussianLanguage.value);
-        }
+        },
       );
     }
   }, []);
@@ -37,6 +37,7 @@ export const Language = () => {
                 [styles.activeLanguage]: lang === 'en',
               })}
               onClick={setLanguage('en')}
+              title="Switch interface language to English"
             >
               En
             </span>
@@ -47,6 +48,7 @@ export const Language = () => {
               [styles.activeLanguage]: lang === 'en',
             })}
             onClick={setLanguage('en')}
+            title="Switch interface language to English"
           >
             En
           </span>
@@ -59,6 +61,7 @@ export const Language = () => {
                 [styles.activeLanguage]: lang === 'ru',
               })}
               onClick={setLanguage('ru')}
+              title="Переключить язык интерфейса на русский"
             >
               Ru
             </span>
@@ -69,6 +72,7 @@ export const Language = () => {
               [styles.activeLanguage]: lang === 'ru',
             })}
             onClick={setLanguage('ru')}
+            title="Переключить язык интерфейса на русский"
           >
             Ru
           </span>

@@ -14,7 +14,7 @@ import { ThemeProvider } from 'styled-components';
 import { App } from '@components/App';
 import { store } from '@store/index';
 
-import './assets/styles/index.scss';
+import './assets/styles/index.css';
 import { client } from './api';
 
 const element = document.getElementById('root')!;
