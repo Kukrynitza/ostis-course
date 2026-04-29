@@ -39,16 +39,16 @@ export const SearchField: FC<IProps> = ({ className }) => {
   }, []);
 
   const highlightedColors = {
-    backgroundColor: 'var(--color-navy-blue, #6db3e0)',
-    color: 'var(--color-white, #ffffff)',
-    outline: '3px solid var(--color-dark-blue, #1e1e1e)',
+    backgroundColor: '#e0e0e0',
+    color: '#1e1e1e',
+    outline: '3px solid #6db3e0',
     outlineOffset: '-3px',
   };
 
   const searchColors = {
-    backgroundColor: 'var(--color-navy-blue, #6db3e0)',
-    color: 'var(--color-white, #ffffff)',
-    outline: '3px solid var(--color-dark-blue, #1e1e1e)',
+    backgroundColor: '#6db3e0',
+    color: '#ffffff',
+    outline: '3px solid #1e1e1e',
     outlineOffset: '-3px',
   };
 
