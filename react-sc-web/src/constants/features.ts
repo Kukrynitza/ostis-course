@@ -6,4 +6,5 @@ export const FEATURES = {
   enableContextMenuOnScgScn: false,
   enableContextMenuOnLibrary: true,
   enableContextMenuOnLogo: true,
+  enableContextMenuOnLibraryPageButton: true,
 };

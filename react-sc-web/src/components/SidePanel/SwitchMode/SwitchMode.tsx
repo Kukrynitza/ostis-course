@@ -8,8 +8,11 @@ import ScnPageButton from '@assets/images/ScnPageButton.svg';
 import ScnPageButtonFocus from '@assets/images/ScnPageButtonFocus.svg';
 import ScnPageButtonFocusThemed from '@assets/images/ScnPageButtonFocusThemed.svg';
 import ScnPageButtonThemed from '@assets/images/ScnPageButtonThemed.svg';
+import { FEATURES } from '@constants/features';
+import { scUtils } from '@api';
 import { routes } from '@constants';
 import { useThemeContext } from '@themes/index';
+import { ScTag } from 'ostis-ui-lib';
 import styles from './SwitchMode.module.css';
 
 export const SwitchMode = () => {
@@ -17,6 +20,15 @@ export const SwitchMode = () => {
   const location = useLocation();
   const { resolved } = useThemeContext();
   const isDark = resolved === 'dark';
+  const [libraryPageAddr, setLibraryPageAddr] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (FEATURES.enableContextMenuOnLibraryPageButton) {
+      scUtils.searchKeynodes('ui_section').then(({ uiSection }) => {
+        if (uiSection?.value) setLibraryPageAddr(uiSection.value);
+      });
+    }
+  }, []);
 
   const handlePageClick = (page: string) => {
     setActivePage(page);
@@ -57,13 +69,25 @@ export const SwitchMode = () => {
       >
         <ScnIcon />
       </Link>
-      <Link
-        to={routes.LIBRARY}
-        className={styles.switchModeButton}
-        onClick={() => handlePageClick(routes.LIBRARY)}
-      >
-        <LibraryIcon />
-      </Link>
+      {FEATURES.enableContextMenuOnLibraryPageButton && libraryPageAddr ? (
+        <ScTag addr={libraryPageAddr} showMenu={true}>
+          <Link
+            to={routes.LIBRARY}
+            className={styles.switchModeButton}
+            onClick={() => handlePageClick(routes.LIBRARY)}
+          >
+            <LibraryIcon />
+          </Link>
+        </ScTag>
+      ) : (
+        <Link
+          to={routes.LIBRARY}
+          className={styles.switchModeButton}
+          onClick={() => handlePageClick(routes.LIBRARY)}
+        >
+          <LibraryIcon />
+        </Link>
+      )}
     </div>
   );
 };
