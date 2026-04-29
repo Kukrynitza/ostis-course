@@ -69,25 +69,13 @@ export const SwitchMode = () => {
       >
         <ScnIcon />
       </Link>
-      {FEATURES.enableContextMenuOnLibraryPageButton && libraryPageAddr ? (
-        <ScTag addr={libraryPageAddr} showMenu={true}>
-          <Link
-            to={routes.LIBRARY}
-            className={styles.switchModeButton}
-            onClick={() => handlePageClick(routes.LIBRARY)}
-          >
-            <LibraryIcon />
-          </Link>
-        </ScTag>
-      ) : (
-        <Link
-          to={routes.LIBRARY}
-          className={styles.switchModeButton}
-          onClick={() => handlePageClick(routes.LIBRARY)}
-        >
-          <LibraryIcon />
-        </Link>
-      )}
+      <Link
+        to={routes.LIBRARY}
+        className={styles.switchModeButton}
+        onClick={() => handlePageClick(routes.LIBRARY)}
+      >
+        <LibraryIcon />
+      </Link>
     </div>
   );
 };
