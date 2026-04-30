@@ -29,7 +29,21 @@ class AuthService:
                 if isinstance(item, list): links.extend(item)
                 else: links.append(item)
             
-            rel_addr = self._keynodes[getattr(KeynodeSysIdentifiers, relation_key).value]
+            # Get relation identifier string
+            rel_idtf = getattr(KeynodeSysIdentifiers, relation_key).value
+            
+            # Try to get relation address from cache
+            rel_addr = self._keynodes[rel_idtf]
+            
+            # If cache is 0 or invalid, resolve it directly from the KB
+            # Use .value for ScAddr objects to avoid TypeError with int
+            rel_val = rel_addr.value if isinstance(rel_addr, ScAddr) else rel_addr
+            if not rel_val or rel_val == 0:
+                res = client.resolve_keynodes(ScIdtfResolveParams(idtf=rel_idtf, type=None))
+                if res and res[0].is_valid():
+                    rel_addr = res[0]
+                else:
+                    return 0
             
             for link in links:
                 if not link: continue
@@ -176,7 +190,7 @@ class AuthService:
             kn_main_idtf = self._keynodes[KeynodeSysIdentifiers.nrel_main_idtf.value]
             kn_lang_ru = self._keynodes[KeynodeSysIdentifiers.lang_ru.value]
             kn_email = self._keynodes[KeynodeSysIdentifiers.nrel_email.value]
-
+        
         construction = ScConstruction()
         
         # 1. Create node and assign class ui_user
@@ -203,11 +217,41 @@ class AuthService:
         result = client.generate_elements(construction)
         return result[construction.get_index('user_node')]
 
+    def _link_user_to_root(self, root_node: ScAddr, user_node: ScAddr) -> None:
+        """Links a user node to the root users list via nrel_decomposition if not already linked."""
+        try:
+            user_node_obj = user_node if isinstance(user_node, ScAddr) else ScAddr(user_node)
+            kn_decomp = self._keynodes[KeynodeSysIdentifiers.nrel_decomposition.value]
+            
+            if self._get_arc_addr(root_node, kn_decomp, user_node_obj) == 0:
+                construction = ScConstruction()
+                construction.generate_connector(sc_type.CONST_COMMON_ARC, root_node, user_node_obj, 'user_link')
+                construction.generate_connector(
+                    sc_type.CONST_PERM_POS_ARC, 
+                    kn_decomp, 
+                    'user_link'
+                )
+                result = client.generate_elements(construction)
+                logger.info(f'Linked user {user_node_obj} to root section. Result: {result}')
+            else:
+                logger.info(f'User {user_node_obj} already linked to root section.')
+        except Exception as e:
+            logger.error(f'Failed to link user {user_node} to root section: {e}')
+
     def register_user(self, email: str, username: str) -> ScAddr:
         logger.debug(f'Registering user {username} ({email}) in KB')
         user_node = self.create_kb_user(email, username)
         self.mark_user_registered(user_node)
+        
+        # Ensure the user is linked to the users root list immediately
+        root_node_addr = self._resolve_node_by_idtf(self.USERS_ROOT_NODE_IDTF, relation_key="nrel_system_identifier")
+        if root_node_addr != 0:
+            self._link_user_to_root(ScAddr(root_node_addr), user_node)
+        else:
+            logger.error(f"Could not find {self.USERS_ROOT_NODE_IDTF} to link new user {username}")
+            
         return user_node
+
 
     def mark_user_registered(self, user_node: ScAddr) -> None:
         logger.debug('Mark user as registered in kb')
