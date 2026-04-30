@@ -49,8 +49,6 @@ export const Card: React.FC<ComponentCardProps> = ({
       <div className={styles.info}>
         <div className={styles.logo}>{logoComponent}</div>
 
-        <div className={styles.logo}>{logoComponent}</div>
-
         <div className={styles.cardInfo}>
           <div className={styles.infoItem}>
             <div className={subtitleClassName} title={String(type)}>
