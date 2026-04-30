@@ -13,7 +13,7 @@ import SearchIcon from '@assets/images/Search.svg';
 import { Card } from '@components/Card/Card';
 import { CardComponentType } from '@components/Card/types';
 import { CardInfo } from '@components/CardInfo/CardInfo';
-import { Input } from '@components/input/Input';
+import { Input } from '@components/Input/Input';
 import { FEATURES } from '@constants/features';
 import { scUtils } from '@api';
 import { langToKeynode, ScTag, useTranslate, useLanguage } from 'ostis-ui-lib';
@@ -42,12 +42,12 @@ const Library = () => {
 
   useEffect(() => {
     if (FEATURES.enableContextMenuOnLibrary) {
-      scUtils.searchKeynodes('ui_search_component', 'ui_filter').then(
-        ({ uiSearchComponent, uiFilter }) => {
+      scUtils
+        .searchKeynodes('ui_search_component', 'ui_filter')
+        .then(({ uiSearchComponent, uiFilter }) => {
           if (uiSearchComponent?.value) setSearchInputAddr(uiSearchComponent.value);
           if (uiFilter?.value) setFilterAddr(uiFilter.value);
-        }
-      );
+        });
     }
   }, []);
 
