@@ -6,7 +6,7 @@ import { routes } from '@constants';
 import { FEATURES } from '@constants/features';
 import { useScNavigation } from '@hooks/useScNavigation';
 import { IRequest, clearRequests, removeRequest } from '@store/requestHistorySlice';
-import { ScLangText, ScTag } from 'ostis-ui-lib';
+import { ScLangText, ScTag, useTranslate } from 'ostis-ui-lib';
 
 import styles from './HistoryPanel.module.css';
 
@@ -22,6 +22,7 @@ export const HistoryPanel = (props: IProps) => {
   const dispatch = useDispatch();
 
   const { goToActiveFormatAction } = useScNavigation();
+  const translate = useTranslate();
 
   const onBtnClick = (action: string) => () => {
     goToActiveFormatAction(action);

@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { scUtils } from '@api';
 import { FEATURES } from '@constants/features';
-import { TLanguage, ScTag, useLanguageContext } from 'ostis-ui-lib';
+import { TLanguage, ScTag, useLanguageContext, useTranslate } from 'ostis-ui-lib';
 
 import styles from './language.module.css';
 
@@ -10,6 +10,7 @@ export const Language = () => {
   const { lang, setLang } = useLanguageContext();
   const [enAddr, setEnAddr] = useState<number | null>(null);
   const [ruAddr, setRuAddr] = useState<number | null>(null);
+  const translate = useTranslate();
 
   useEffect(() => {
     if (FEATURES.enableContextMenuOnLanguage) {

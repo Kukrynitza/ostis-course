@@ -55,7 +55,6 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
   const dispatch = useDispatch();
   const scNavigation = useScNavigation();
   const addError = useErrorToast();
-  const translate = useTranslate();
 
   const onCommandExecuted = useCallback(
     (data: IWindowEventData) => {

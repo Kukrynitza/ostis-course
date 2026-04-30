@@ -37,5 +37,5 @@ export const deleteCookie = (name: string) => {
 };
 
 export const setSessionCookie = (value: string) => {
-  setCookie('session_key', value, 7);
+  setCookie('session_key', value, { 'max-age': 604800 });
 };

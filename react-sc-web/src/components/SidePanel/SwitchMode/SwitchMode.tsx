@@ -109,15 +109,15 @@ export const SwitchMode = () => {
           </Link>
         </ScTag>
       ) : (
-          <Link
-            to={routes.LIBRARY}
-            className={`${styles.switchModeButton} ${isDark ? styles.switchModeButtonDark : ''}`}
-            onClick={() => handlePageClick(routes.LIBRARY)}
-            title="Библиотека компонентов"
-            aria-label="Переключить на библиотеку компонентов"
-          >
-            <LibraryIcon />
-          </Link>
+        <Link
+          to={routes.LIBRARY}
+          className={`${styles.switchModeButton} ${isDark ? styles.switchModeButtonDark : ''}`}
+          onClick={() => handlePageClick(routes.LIBRARY)}
+          title="Библиотека компонентов"
+          aria-label="Переключить на библиотеку компонентов"
+        >
+          <LibraryIcon />
+        </Link>
       )}
       <Link
         to={routes.GUIDE}

@@ -136,19 +136,6 @@ export const SidePanel: FC<IProps> = ({ className }) => {
                 </ErrorBoundary>
               </Accordion>
             )}
-              >
-                <ErrorBoundary
-                  title={translate({
-                    ru: 'Ошибка получения декомпозиции',
-                    en: 'Error requesting a decomposition',
-                  })}
-                  paragraph={translate({ ru: 'Ошибка', en: 'Error' })}
-                  className={styles.errorBoundary}
-                >
-                  {<DecompositionPanel className="dark-decomposition" />}
-                </ErrorBoundary>
-              </Accordion>
-            )}
           </div>
           <div className={styles.decompositionAndHistoryPanels}>
             {FEATURES.enableContextMenuOnHistory && historyAddr ? (
