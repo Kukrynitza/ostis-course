@@ -1,6 +1,7 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { scUtils } from '@api';
 import Logo from '@assets/images/Logo.svg';
 import { Language } from '@components/Language';
 import { ProfileDropdown } from '@components/ProfileDropdown';
@@ -8,9 +9,11 @@ import { ScgPage } from '@components/ScgPage';
 import { SidePanel } from '@components/SidePanel';
 import { SidePanelWrapper } from '@components/SidePanelWrapper';
 import { ThemeToggle } from '@components/ThemeToggle';
-
 import { routes } from '@constants';
+import { FEATURES } from '@constants/features';
+
 import { setActiveLink } from '@store/activeLinkSlice';
+import { ScTag } from 'ostis-ui-lib';
 import styles from './Layout.module.css';
 
 export interface IProps {
@@ -19,6 +22,15 @@ export interface IProps {
 
 export const Layout: FC<IProps> = ({ children }) => {
   const dispatch = useDispatch();
+  const [logoAddr, setLogoAddr] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (FEATURES.enableContextMenuOnLogo) {
+      scUtils.searchKeynodes('ui_logo').then(({ uiLogo }) => {
+        if (uiLogo?.value) setLogoAddr(uiLogo.value);
+      });
+    }
+  }, []);
 
   const handleLogoOnClick = () => {
     dispatch(setActiveLink({ newActiveLink: routes.MAIN }));
@@ -27,9 +39,17 @@ export const Layout: FC<IProps> = ({ children }) => {
   return (
     <div className={styles.root}>
       <div className={styles.logoWrapper}>
-        <Link to={routes.MAIN} onClick={handleLogoOnClick}>
-          <Logo />
-        </Link>
+        {FEATURES.enableContextMenuOnLogo && logoAddr ? (
+          <ScTag addr={logoAddr} showMenu={true}>
+            <Link to={routes.MAIN} onClick={handleLogoOnClick}>
+              <Logo />
+            </Link>
+          </ScTag>
+        ) : (
+          <Link to={routes.MAIN} onClick={handleLogoOnClick}>
+            <Logo />
+          </Link>
+        )}
       </div>
       <header className={styles.header}>
         <div className={styles.headerControls}>

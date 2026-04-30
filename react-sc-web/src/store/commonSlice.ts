@@ -27,7 +27,7 @@ interface IInitialState {
 }
 
 const initialState: IInitialState = {
-  format: 'scn',
+  format: (localStorage.getItem('format') as TFormat) || 'scn',
   user: {
     data: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string) : null,
     status: {
@@ -82,6 +82,7 @@ export const commonSlice = createSlice({
     },
     setFormat(state, action: PayloadAction<TFormat>) {
       state.format = action.payload;
+      localStorage.setItem('format', action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -135,6 +136,7 @@ export const commonSlice = createSlice({
   },
 });
 
+//Selectors
 export const selectUser = (state: IRootState) => state.common.user.data;
 export const selectUserAddr = createSelector(selectUser, (user) => user?.sc_addr);
 export const selectUserStatus = (state: IRootState) => state.common.user.status;

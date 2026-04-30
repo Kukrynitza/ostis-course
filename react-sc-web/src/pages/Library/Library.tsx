@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ScAddr } from 'ts-sc-client';
+import { scUtils } from '@api';
 import {
   searchSpecifications,
   searchComponentGit,
@@ -14,7 +15,8 @@ import { Card } from '@components/Card/Card';
 import { CardComponentType } from '@components/Card/types';
 import { CardInfo } from '@components/CardInfo/CardInfo';
 import { Input } from '@components/Input/Input';
-import { langToKeynode, useTranslate, useLanguage } from 'ostis-ui-lib';
+import { FEATURES } from '@constants/features';
+import { langToKeynode, ScTag, useTranslate, useLanguage } from 'ostis-ui-lib';
 import styles from './Library.module.css';
 
 interface CardInterface {
@@ -32,9 +34,22 @@ const Library = () => {
   const [filteredCards, setFilteredCards] = useState<CardInterface[] | undefined>([]);
   const [specifications, setSpecifications] = useState<ScAddr[]>([]);
   const [showComponent, setShowComponent] = useState<ScAddr | undefined>();
+  const [searchInputAddr, setSearchInputAddr] = useState<number | null>(null);
+  const [filterAddr, setFilterAddr] = useState<number | null>(null);
 
   const lang = useLanguage();
   const translate = useTranslate();
+
+  useEffect(() => {
+    if (FEATURES.enableContextMenuOnLibrary) {
+      scUtils
+        .searchKeynodes('ui_search_component', 'ui_filter')
+        .then(({ uiSearchComponent, uiFilter }) => {
+          if (uiSearchComponent?.value) setSearchInputAddr(uiSearchComponent.value);
+          if (uiFilter?.value) setFilterAddr(uiFilter.value);
+        });
+    }
+  }, []);
 
   useEffect(() => {
     fetchSpecifications();
@@ -127,17 +142,37 @@ const Library = () => {
       <div className={styles.libraryContainer} onClick={closeFilterForm}>
         <div className={styles.scrollableContent}>
           <div className={styles.header}>
-            <Input
-              className={styles.searchField}
-              placeholder={translate({ ru: 'Поиск компонентов', en: 'Search for components' })}
-              iconLeft={<SearchIcon />}
-              onChange={handleSearchChange}
-            />
+            {FEATURES.enableContextMenuOnLibrary && searchInputAddr ? (
+              <ScTag addr={searchInputAddr} showMenu={true}>
+                <Input
+                  className={styles.searchField}
+                  placeholder={translate({ ru: 'Поиск компонентов', en: 'Search for components' })}
+                  iconLeft={<SearchIcon />}
+                  onChange={handleSearchChange}
+                />
+              </ScTag>
+            ) : (
+              <Input
+                className={styles.searchField}
+                placeholder={translate({ ru: 'Поиск компонентов', en: 'Search for components' })}
+                iconLeft={<SearchIcon />}
+                onChange={handleSearchChange}
+              />
+            )}
             <div className={styles.Filter}>
-              <button className={styles.FilterButton} onClick={toggleFilterVisibility}>
-                <FilterIcon />
-                <label>{translate({ ru: 'Фильтр', en: 'Filter' })}</label>
-              </button>
+              {FEATURES.enableContextMenuOnLibrary && filterAddr ? (
+                <ScTag addr={filterAddr} showMenu={true}>
+                  <button className={styles.FilterButton} onClick={toggleFilterVisibility}>
+                    <FilterIcon />
+                    <label>{translate({ ru: 'Фильтр', en: 'Filter' })}</label>
+                  </button>
+                </ScTag>
+              ) : (
+                <button className={styles.FilterButton} onClick={toggleFilterVisibility}>
+                  <FilterIcon />
+                  <label>{translate({ ru: 'Фильтр', en: 'Filter' })}</label>
+                </button>
+              )}
               <form
                 className={isFilterVisible ? styles.visible : ''}
                 onClick={handleFilterFormClick}

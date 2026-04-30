@@ -46,7 +46,7 @@ export const ProfileDropdown = () => {
       </button>
       {isOpen && (
         <div className={styles.menu}>
-            <div className={styles.userInfo}>
+          <div className={styles.userInfo}>
             <span className={styles.userName}>{user?.login || 'User'}</span>
             <span className={styles.userEmail}>{user?.email || ''}</span>
           </div>

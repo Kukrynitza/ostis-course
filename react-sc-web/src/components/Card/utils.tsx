@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import React from 'react';
-
 import Interface from '@assets/images/DefaultPluginImages/Interface.svg';
 import KnowledgeBase from '@assets/images/DefaultPluginImages/KnowledgeBase.svg';
 import ProblemSolver from '@assets/images/DefaultPluginImages/ProblemSolver.svg';

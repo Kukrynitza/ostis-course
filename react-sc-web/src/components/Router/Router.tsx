@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from '@components/Layout';
-import { PrivateRoute, PublicRoute } from '../ProtectedRoute/ProtectedRoute';
 import { routes, DEFAULT_COMMAND_PATH } from '@constants';
 import { Action } from '@pages/Action';
 import { Command } from '@pages/Command';
@@ -10,6 +9,7 @@ import { Library } from '@pages/Library';
 import { Login } from '@pages/Login';
 import { Main } from '@pages/Main';
 import { Register } from '@pages/Register';
+import { PrivateRoute, PublicRoute } from '../ProtectedRoute/ProtectedRoute';
 
 export const Router = () => {
   return (

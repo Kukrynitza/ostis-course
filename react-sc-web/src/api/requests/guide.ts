@@ -66,7 +66,10 @@ export const getGuideSections = async (lang: TLanguage): Promise<IGuideSection[]
   console.log('[Guide] sections result count:', sectionsResult.length);
 
   const sectionAddrs = sectionsResult.map((r) => r.get('_section'));
-  console.log('[Guide] section addresses:', sectionAddrs.map(a => a?.value));
+  console.log(
+    '[Guide] section addresses:',
+    sectionAddrs.map((a) => a?.value),
+  );
 
   const sections: IGuideSection[] = [];
 

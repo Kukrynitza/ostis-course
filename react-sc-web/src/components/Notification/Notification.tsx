@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import { ReactNode } from 'react';
-
 import CloseIcon from '@assets/images/close.svg';
 import ErrorIcon from '@assets/images/errorIcon.svg';
 import SuccessIcon from '@assets/images/successIcon.svg';

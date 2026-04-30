@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { forwardRef, InputHTMLAttributes, ReactNode } from 'react';
-
 import CheckMark from '@assets/images/checkMark.svg';
+
 import styles from './checkbox.module.css';
 
 interface IProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
