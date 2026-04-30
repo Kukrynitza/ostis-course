@@ -53,8 +53,8 @@ export const AskPage = () => {
       <div className={styles.askMessage}>
         <h1 className={styles.message}>
           {translate({
-            ru: 'Спросите что-нибудь и IMS найдет ответ! ',
-            en: 'Ask anything and IMS will find the answer!',
+            ru: 'Спросите что-нибудь, и AskAI найдёт ответ!',
+            en: 'Ask anything, and AskAI will find an answer!',
           })}
         </h1>
       </div>

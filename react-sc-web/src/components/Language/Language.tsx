@@ -37,6 +37,10 @@ export const Language = () => {
                 [styles.activeLanguage]: lang === 'en',
               })}
               onClick={setLanguage('en')}
+              title={translate({
+                ru: 'Переключить язык интерфейса на английский',
+                en: 'Switch interface language to English',
+              })}
             >
               En
             </span>
@@ -47,6 +51,10 @@ export const Language = () => {
               [styles.activeLanguage]: lang === 'en',
             })}
             onClick={setLanguage('en')}
+            title={translate({
+              ru: 'Переключить язык интерфейса на английский',
+              en: 'Switch interface language to English',
+            })}
           >
             En
           </span>
@@ -59,6 +67,10 @@ export const Language = () => {
                 [styles.activeLanguage]: lang === 'ru',
               })}
               onClick={setLanguage('ru')}
+              title={translate({
+                ru: 'Переключить язык интерфейса на русский',
+                en: 'Switch interface language to Russian',
+              })}
             >
               Ru
             </span>
@@ -69,6 +81,10 @@ export const Language = () => {
               [styles.activeLanguage]: lang === 'ru',
             })}
             onClick={setLanguage('ru')}
+            title={translate({
+              ru: 'Переключить язык интерфейса на русский',
+              en: 'Switch interface language to Russian',
+            })}
           >
             Ru
           </span>

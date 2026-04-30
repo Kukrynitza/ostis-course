@@ -42,6 +42,12 @@ export const Input = forwardRef<HTMLInputElement, IProps>(
     const [isFocused, setIsFocused] = useState(false);
     const [inputType, setInputType] = useState(type);
     const [isShowPassword, setIsShowPassword] = useState(false);
+    const inputTooltip =
+      typeof restProps.title === 'string'
+        ? restProps.title
+        : typeof restProps.placeholder === 'string'
+          ? restProps.placeholder
+          : undefined;
 
     const innerRef = useRef<HTMLInputElement>(null);
     const onMakePasswordVisible = () => {
@@ -99,6 +105,8 @@ export const Input = forwardRef<HTMLInputElement, IProps>(
           spellCheck="false"
           type={inputType}
           disabled={disabled}
+          title={inputTooltip}
+          aria-label={restProps['aria-label'] ?? inputTooltip}
           {...restProps}
           onFocus={onFocus}
           onBlur={onBlur}
@@ -110,10 +118,15 @@ export const Input = forwardRef<HTMLInputElement, IProps>(
               <AuthPasswordCrossed
                 className={styles.showPasswordSvg}
                 onClick={onMakePasswordVisible}
+                title="Скрыть пароль"
               />
             )}
             {isPassword && !isShowPassword && (
-              <AuthPassword className={styles.hidePasswordSvg} onClick={onMakePasswordVisible} />
+              <AuthPassword
+                className={styles.hidePasswordSvg}
+                onClick={onMakePasswordVisible}
+                title="Показать пароль"
+              />
             )}
             {iconRight}
           </div>

@@ -51,6 +51,7 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
   const ref = useRef<HTMLIFrameElement>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lang = useLanguage();
+  const translate = useTranslate();
   const dispatch = useDispatch();
   const scNavigation = useScNavigation();
   const addError = useErrorToast();
@@ -227,7 +228,15 @@ export const Scg: FC<IProps> = ({ action, className, show = false }) => {
             </button>
           </div>
         )}
-        <iframe className={styles.frame} src={scgUrl} ref={ref} title="SCg codes" />
+        <iframe
+          className={styles.frame}
+          src={scgUrl}
+          ref={ref}
+          title={translate({
+            ru: 'Редактор SCg-кода',
+            en: 'SCg code editor',
+          })}
+        />
       </div>
     </>
   );

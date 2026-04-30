@@ -3,7 +3,7 @@ import { IRootState } from '@store/model';
 
 export interface IRequest {
   query: string;
-  answer: any;
+  answer: string;
 }
 
 interface IInitialState {

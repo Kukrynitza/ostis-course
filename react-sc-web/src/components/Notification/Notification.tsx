@@ -44,6 +44,8 @@ export const Notification = ({ type, title = '', text, onClose }: IProps) => {
             <div
               className={classNames(styles.close, { [styles.closeWithText]: text })}
               onClick={onClose}
+              title="Закрыть уведомление"
+              aria-label="Закрыть уведомление"
             >
               <CloseIcon />
             </div>

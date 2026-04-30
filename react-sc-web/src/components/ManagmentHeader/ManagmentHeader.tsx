@@ -18,7 +18,12 @@ export const ManagmentHeader: FC<IProps> = ({ title, inputPlaceholder, onInputCh
   return (
     <>
       <div className={styles.header}>
-        <div className={styles.backArrow} onClick={goToPrevHistoryItem}>
+        <div
+          className={styles.backArrow}
+          onClick={goToPrevHistoryItem}
+          title="Вернуться назад"
+          aria-label="Вернуться назад"
+        >
           <BackArrow />
         </div>
         <div className={styles.headerContent}>

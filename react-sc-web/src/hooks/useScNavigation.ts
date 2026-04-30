@@ -19,8 +19,10 @@ export const useScNavigation = () => {
   }, [firstRequest, navigate, format]);
 
   const goToActiveFormatCommand = useCallback(
-    (addr: string | number, command: any = DEFAULT_COMMAND_SYSTEM_ID) => {
-      navigate(generatePath(routes.COMMAND, { addr: String(addr), commandAddr: command, format }));
+    (addr: string | number, command: string | number = DEFAULT_COMMAND_SYSTEM_ID) => {
+      navigate(
+        generatePath(routes.COMMAND, { addr: String(addr), commandAddr: String(command), format }),
+      );
     },
     [format, navigate],
   );

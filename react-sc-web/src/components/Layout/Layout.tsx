@@ -43,12 +43,22 @@ export const Layout: FC<IProps> = ({ children }) => {
       <div className={styles.logoWrapper}>
         {FEATURES.enableContextMenuOnLogo && logoAddr ? (
           <ScTag addr={logoAddr} showMenu={true}>
-            <Link to={routes.MAIN} onClick={handleLogoOnClick}>
+            <Link
+              to={routes.MAIN}
+              onClick={handleLogoOnClick}
+              title="Перейти на главную страницу"
+              aria-label="Перейти на главную страницу"
+            >
               <Logo />
             </Link>
           </ScTag>
         ) : (
-          <Link to={routes.MAIN} onClick={handleLogoOnClick}>
+          <Link
+            to={routes.MAIN}
+            onClick={handleLogoOnClick}
+            title="Перейти на главную страницу"
+            aria-label="Перейти на главную страницу"
+          >
             <Logo />
           </Link>
         )}

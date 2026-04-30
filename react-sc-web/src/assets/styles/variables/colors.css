@@ -56,6 +56,12 @@
   --color-card-text: #565656;
   --color-card-install-link-hover: #265c80;
   --color-input-border-hover: #e8e8e8;
+  --color-chat-query-bg: #ffffff;
+  --color-chat-query-shadow: rgba(0, 0, 0, 0.12);
+  --color-chat-answer-bg: #f4f6f8;
+  --color-chat-answer-border: #e7ebef;
+  --color-chat-answer-shadow: rgba(0, 0, 0, 0.1);
+  --color-chat-answer-hover-shadow: rgba(0, 0, 0, 0.14);
 }
 
 :root[data-theme="dark"] {
@@ -116,4 +122,10 @@
   --color-card-text: #c0c0c0;
   --color-card-install-link-hover: #90d0ff;
   --color-input-border-hover: #555555;
+  --color-chat-query-bg: #2a2f35;
+  --color-chat-query-shadow: rgba(0, 0, 0, 0.28);
+  --color-chat-answer-bg: #313840;
+  --color-chat-answer-border: #434d57;
+  --color-chat-answer-shadow: rgba(0, 0, 0, 0.22);
+  --color-chat-answer-hover-shadow: rgba(0, 0, 0, 0.32);
 }

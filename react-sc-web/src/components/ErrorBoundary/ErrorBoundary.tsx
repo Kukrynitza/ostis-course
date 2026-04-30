@@ -29,7 +29,12 @@ function GoBack() {
 
   const translate = useTranslate();
   return (
-    <Button appearance="secondaryAction" className={styles.backButton} onClick={goBack}>
+    <Button
+      appearance="secondaryAction"
+      className={styles.backButton}
+      onClick={goBack}
+      title={translate({ ru: 'Вернуться к предыдущему действию', en: 'Go back' })}
+    >
       <ArrowIcon />
       {translate({ ru: 'Вернуться к предыдущему действию', en: 'Go back' })}
     </Button>

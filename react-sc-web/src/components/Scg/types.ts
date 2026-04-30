@@ -1,6 +1,13 @@
+interface ICommandResponsePayload {
+  action: string;
+}
+
 export interface IWindowEventData {
   type: string;
-  payload?: Record<string, any>;
+  payload?: {
+    state?: unknown;
+    response?: ICommandResponsePayload;
+  };
 }
 
 export const enum EWindowEvents {

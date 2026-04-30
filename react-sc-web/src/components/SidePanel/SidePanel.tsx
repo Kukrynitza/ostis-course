@@ -59,13 +59,13 @@ export const SidePanel: FC<IProps> = ({ className }) => {
     setIsLoading(true);
     (async () => {
       try {
-        const history = await getHistory(user.sc_addr);
+        const history = await getHistory();
 
         if (history) {
           dispatch(setRequests(history));
         }
       } catch (e) {
-        console.error(e);
+        dispatch(setRequests([]));
       } finally {
         setIsLoading(false);
       }
@@ -93,6 +93,10 @@ export const SidePanel: FC<IProps> = ({ className }) => {
                   header={translate({ ru: 'Разделы', en: 'Sections' })}
                   leftIcon={<Sections />}
                   rightIcon={!!user?.is_admin || !!user?.can_edit ? <Plus /> : null}
+                  rightIconTitle={translate({
+                    ru: 'Добавить новый раздел',
+                    en: 'Add new section',
+                  })}
                   onRightClick={onAddClick}
                   expanded
                 >
@@ -113,8 +117,25 @@ export const SidePanel: FC<IProps> = ({ className }) => {
                 header={translate({ ru: 'Разделы', en: 'Sections' })}
                 leftIcon={<Sections />}
                 rightIcon={!!user?.is_admin || !!user?.can_edit ? <Plus /> : null}
+                rightIconTitle={translate({
+                  ru: 'Добавить новый раздел',
+                  en: 'Add new section',
+                })}
                 onRightClick={onAddClick}
                 expanded
+              >
+                <ErrorBoundary
+                  title={translate({
+                    ru: 'Ошибка получения декомпозиции',
+                    en: 'Error requesting a decomposition',
+                  })}
+                  paragraph={translate({ ru: 'Ошибка', en: 'Error' })}
+                  className={styles.errorBoundary}
+                >
+                  {<DecompositionPanel className="dark-decomposition" />}
+                </ErrorBoundary>
+              </Accordion>
+            )}
               >
                 <ErrorBoundary
                   title={translate({

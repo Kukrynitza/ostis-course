@@ -55,6 +55,10 @@ export const HistoryPanel = (props: IProps) => {
                 addr={action}
                 showMenu={FEATURES.enableContextMenuOnHistory}
                 onClick={onBtnClick(String(action))}
+                title={translate({
+                  ru: 'Открыть команду из истории',
+                  en: 'Open command from history',
+                })}
               >
                 <ScLangText addrOrSystemId={action} defaultText={String(action)} />
               </ScTag>

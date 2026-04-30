@@ -5,7 +5,7 @@ import { FEATURES } from '@constants/features';
 import { ScTag, useTranslate } from 'ostis-ui-lib';
 import styles from './Card.module.css';
 import { CardComponentType } from './types';
-import { getCardLogo, getSubtitleClassName, truncateString } from './utils';
+import { getCardLogo, getSubtitleClassName } from './utils';
 import { initiateComponentInstallAgent } from '../../api/sc/install/install';
 
 export interface ComponentCardProps {
@@ -34,17 +34,36 @@ export const Card: React.FC<ComponentCardProps> = ({
   };
 
   const cardElement = (
-    <div className={styles.container} onClick={handleContainerClick}>
+    <div
+      className={styles.container}
+      onClick={handleContainerClick}
+      title={translate({
+        ru: 'Открыть карточку компонента',
+        en: 'Open component card',
+      })}
+      aria-label={translate({
+        ru: 'Открыть карточку компонента',
+        en: 'Open component card',
+      })}
+    >
       <div className={styles.info}>
+        <div className={styles.logo}>{logoComponent}</div>
+
         <div className={styles.logo}>{logoComponent}</div>
 
         <div className={styles.cardInfo}>
           <div className={styles.infoItem}>
-            <div className={subtitleClassName}>{type}</div>
+            <div className={subtitleClassName} title={String(type)}>
+              {type}
+            </div>
           </div>
-          <div className={styles.title}>{name}</div>
+          <div className={styles.title} title={name}>
+            {name}
+          </div>
 
-          <div className={styles.description}>{description}</div>
+          <div className={styles.description} title={description}>
+            {description}
+          </div>
         </div>
       </div>
 
@@ -64,6 +83,10 @@ export const Card: React.FC<ComponentCardProps> = ({
             initiateComponentInstallAgent(component);
             event.stopPropagation();
           }}
+          title={translate({
+            ru: 'Запустить установку компонента',
+            en: 'Run component installation',
+          })}
         >
           {translate({ ru: 'Установить', en: 'Install' })}
         </button>
