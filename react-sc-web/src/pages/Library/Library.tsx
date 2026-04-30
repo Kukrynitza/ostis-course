@@ -13,7 +13,7 @@ import SearchIcon from '@assets/images/Search.svg';
 import { Card } from '@components/Card/Card';
 import { CardComponentType } from '@components/Card/types';
 import { CardInfo } from '@components/CardInfo/CardInfo';
-import { Input } from '@components/input/Input';
+import { Input } from '@components/Input/Input';
 import { langToKeynode, useTranslate, useLanguage } from 'ostis-ui-lib';
 import styles from './Library.module.css';
 
