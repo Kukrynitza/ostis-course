@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { scUtils } from '@api';
+import AskAiPageButton from '@assets/images/AskAiPageButton.svg';
+import AskAiPageButtonFocus from '@assets/images/AskAiPageButtonFocus.svg';
+import AskAiPageButtonFocusThemed from '@assets/images/AskAiPageButtonFocusThemed.svg';
+import AskAiPageButtonThemed from '@assets/images/AskAiPageButtonThemed.svg';
 import GuidePageButton from '@assets/images/GuidePageButton.svg';
 import GuidePageButtonFocus from '@assets/images/GuidePageButtonFocus.svg';
 import GuidePageButtonFocusThemed from '@assets/images/GuidePageButtonFocusThemed.svg';
@@ -39,8 +43,10 @@ export const SwitchMode = () => {
   };
 
   useEffect(() => {
-    if (location.pathname.substring(0, 2) === '/q' || location.pathname.substring(0, 2) === '/c') {
+    if (location.pathname.substring(0, 2) === '/q') {
       setActivePage(routes.MAIN);
+    } else if (location.pathname.startsWith('/ask-ai')) {
+      setActivePage(routes.ASK_AI);
     } else {
       setActivePage(location.pathname);
     }
@@ -72,12 +78,20 @@ export const SwitchMode = () => {
       : isDark
         ? GuidePageButtonThemed
         : GuidePageButton;
+  const AskAiIcon =
+    activePage === routes.ASK_AI
+      ? isDark
+        ? AskAiPageButtonFocusThemed
+        : AskAiPageButtonFocus
+      : isDark
+        ? AskAiPageButtonThemed
+        : AskAiPageButton;
 
   return (
     <div className={styles.switchModeButtonsWrapper}>
       <Link
         to={routes.MAIN}
-        className={styles.switchModeButton}
+        className={`${styles.switchModeButton} ${isDark ? styles.switchModeButtonDark : ''}`}
         onClick={() => handlePageClick(routes.ACTION)}
       >
         <ScnIcon />
@@ -103,7 +117,7 @@ export const SwitchMode = () => {
       )}
       <Link
         to={routes.LIBRARY}
-        className={styles.switchModeButton}
+        className={`${styles.switchModeButton} ${isDark ? styles.switchModeButtonDark : ''}`}
         onClick={() => handlePageClick(routes.LIBRARY)}
       >
         <LibraryIcon />
@@ -114,6 +128,13 @@ export const SwitchMode = () => {
         onClick={() => handlePageClick(routes.GUIDE)}
       >
         <GuideIcon />
+      </Link>
+      <Link
+        to={routes.ASK_AI}
+        className={`${styles.switchModeButton} ${isDark ? styles.switchModeButtonDark : ''}`}
+        onClick={() => handlePageClick(routes.ASK_AI)}
+      >
+        <AskAiIcon />
       </Link>
     </div>
   );

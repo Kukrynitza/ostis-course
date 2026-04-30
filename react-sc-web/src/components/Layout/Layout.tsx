@@ -1,6 +1,6 @@
 import { FC, ReactNode, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { scUtils } from '@api';
 import Logo from '@assets/images/Logo.svg';
 import { Language } from '@components/Language';
@@ -31,6 +31,8 @@ export const Layout: FC<IProps> = ({ children }) => {
       });
     }
   }, []);
+  const location = useLocation();
+  const isAskAiPage = location.pathname === routes.ASK_AI;
 
   const handleLogoOnClick = () => {
     dispatch(setActiveLink({ newActiveLink: routes.MAIN }));
@@ -51,7 +53,7 @@ export const Layout: FC<IProps> = ({ children }) => {
           </Link>
         )}
       </div>
-      <header className={styles.header}>
+      <header className={styles.header} style={{ marginLeft: isAskAiPage ? '-150px' : '0' }}>
         <div className={styles.headerControls}>
           <ProfileDropdown />
           <ThemeToggle />
@@ -62,7 +64,7 @@ export const Layout: FC<IProps> = ({ children }) => {
         <SidePanel className={styles.sideBar} />
       </SidePanelWrapper>
       <main className={styles.main}>
-        <ScgPage />
+        {!isAskAiPage && <ScgPage />}
         {children}
       </main>
     </div>

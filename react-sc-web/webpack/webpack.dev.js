@@ -15,6 +15,13 @@ module.exports = merge(config, {
     liveReload: true,
     historyApiFallback: true,
     allowedHosts: 'all',
+    proxy: [
+      {
+        context: ['/api'],
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
+    ],
     watchFiles: {
       options: {
         usePolling: true,
