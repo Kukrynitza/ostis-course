@@ -17,6 +17,92 @@ class AuthService:
         self._keynodes = ScKeynodes()
         logger.info("AuthService initialized with lazy keynode resolution.")
 
+    def _resolve_node_by_idtf(self, idtf: str, relation_key: str = "nrel_main_idtf") -> int:
+        """Robustly resolve a node address by its IDTF content."""
+        try:
+            links_results = client.search_links_by_contents(idtf)
+            if not links_results:
+                return 0
+            
+            links = []
+            for item in links_results:
+                if isinstance(item, list): links.extend(item)
+                else: links.append(item)
+            
+            # Get relation identifier string
+            rel_idtf = getattr(KeynodeSysIdentifiers, relation_key).value
+            
+            # Try to get relation address from cache
+            rel_addr = self._keynodes[rel_idtf]
+            
+            # If cache is 0 or invalid, resolve it directly from the KB
+            # Use .value for ScAddr objects to avoid TypeError with int
+            rel_val = rel_addr.value if isinstance(rel_addr, ScAddr) else rel_addr
+            if not rel_val or rel_val == 0:
+                res = client.resolve_keynodes(ScIdtfResolveParams(idtf=rel_idtf, type=None))
+                if res and res[0].is_valid():
+                    rel_addr = res[0]
+                else:
+                    return 0
+            
+            for link in links:
+                if not link: continue
+                link_addr = link if isinstance(link, ScAddr) else ScAddr(link)
+                template = ScTemplate()
+                template.quintuple(
+                    (sc_type.VAR_NODE, "node"),
+                    sc_type.VAR_COMMON_ARC,
+                    link_addr,
+                    sc_type.VAR_PERM_POS_ARC,
+                    rel_addr
+                )
+                res = client.search_by_template(template)
+                if res and len(res) > 0:
+                    res_obj = res[0].get("node")
+                    return res_obj.value if res_obj else 0
+        except Exception as e:
+            logger.error(f"Error resolving node by idtf {idtf}: {e}")
+        return 0
+
+    def _ensure_keynode(self, key_idtf: str, sc_type_val=sc_type.CONST_NODE_NON_ROLE) -> ScAddr:
+        """Ensure a keynode exists in the KB; create it if not found."""
+        res = client.resolve_keynodes(ScIdtfResolveParams(idtf=key_idtf, type=None))
+        if res and res[0].is_valid():
+            return res[0]
+        
+        logger.info(f'Keynode {key_idtf} not found, creating it...')
+        construction = ScConstruction()
+        construction.generate_node(sc_type.CONST_NODE, 'kn_node')
+        construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent(key_idtf, ScLinkContentType.STRING), 'kn_link')
+        construction.generate_connector(sc_type.CONST_COMMON_ARC, 'kn_node', 'kn_link', 'kn_arc')
+        
+        # Try to link to nrel_main_idtf if it exists
+        try:
+            main_idtf = self._keynodes[KeynodeSysIdentifiers.nrel_main_idtf.value]
+            if main_idtf:
+                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, main_idtf, 'kn_arc')
+        except:
+            pass
+            
+        result = client.generate_elements(construction)
+        return result[construction.get_index('kn_node')]
+
+    def ensure_system_nodes(self):
+        """Guarantees that all critical system nodes are present in the KB."""
+        logger.info("Ensuring critical system nodes exist...")
+        critical_nodes = {
+            KeynodeSysIdentifiers.nrel_email.value: sc_type.CONST_NODE_NON_ROLE,
+            KeynodeSysIdentifiers.nrel_main_idtf.value: sc_type.CONST_NODE_NON_ROLE,
+            KeynodeSysIdentifiers.nrel_system_identifier.value: sc_type.CONST_NODE_NON_ROLE,
+            KeynodeSysIdentifiers.ui_user.value: sc_type.CONST_NODE_CLASS,
+            KeynodeSysIdentifiers.nrel_registered_user.value: sc_type.CONST_NODE_NON_ROLE,
+            KeynodeSysIdentifiers.nrel_authorised_user.value: sc_type.CONST_NODE_NON_ROLE,
+            KeynodeSysIdentifiers.ui_main_menu.value: sc_type.CONST_NODE,
+            KeynodeSysIdentifiers.nrel_decomposition.value: sc_type.CONST_NODE_NON_ROLE,
+        }
+        for idtf, type_val in critical_nodes.items():
+            self._ensure_keynode(idtf, type_val)
+
     def _get_arc_addr(self, src: ScAddr, rel: ScAddr, dst: ScAddr) -> int:
         """Find the address of an arc between src and dst with relation rel."""
         try:
@@ -41,25 +127,48 @@ class AuthService:
         """Get the sc_addr of a user by their email safely."""
         logger.debug(f'Get user sc_addr by email: {email}')
         try:
-            links = client.search_links_by_contents(email)
-            if not links or len(links) == 0:
+            links_results = client.search_links_by_contents(email)
+            if not links_results:
                 return 0
             
-            # Find the node that is connected to this email link via nrel_email
-            template = ScTemplate()
-            template.quintuple(
-                (sc_type.VAR_NODE, "user_node"),
-                sc_type.VAR_COMMON_ARC,
-                links[0][0],
-                sc_type.VAR_PERM_POS_ARC,
-                self._keynodes[KeynodeSysIdentifiers.nrel_email.value]
-            )
-            res = client.search_by_template(template)
+            # Flatten the list of lists if necessary
+            links = []
+            for item in links_results:
+                if isinstance(item, list):
+                    links.extend(item)
+                else:
+                    links.append(item)
             
-            if res and len(res) > 0:
-                return res[0][0].value
+            logger.info(f'Found links for email {email}: {links}')
+            
+            kn_email_addr = self._keynodes[KeynodeSysIdentifiers.nrel_email.value]
+            logger.info(f'nrel_email keynode addr: {kn_email_addr}')
+
+            # Iterate through ALL found links to find the one connected to a user node
+            for link_addr in links:
+                if not link_addr:
+                    continue
+                
+                # Ensure link_addr is an ScAddr object for the template
+                actual_link_addr = link_addr if isinstance(link_addr, ScAddr) else ScAddr(link_addr)
+                logger.info(f'Checking link_addr: {actual_link_addr}')
+                
+                template = ScTemplate()
+                template.quintuple(
+                    (sc_type.VAR_NODE, "user_node"),
+                    sc_type.VAR_COMMON_ARC,
+                    actual_link_addr,
+                    sc_type.VAR_PERM_POS_ARC,
+                    kn_email_addr
+                )
+                res = client.search_by_template(template)
+                logger.info(f'Search result for link {actual_link_addr}: {res}')
+                
+                if res and len(res) > 0:
+                    res_obj = res[0].get("user_node")
+                    return res_obj.value if res_obj else 0
         except Exception as e:
-            logger.error(f"Error getting user sc_addr by email {email}: {e}")
+            logger.error(f"Error getting user sc_addr by email {email}: {e}", exc_info=True)
             
         return 0
 
@@ -81,7 +190,7 @@ class AuthService:
             kn_main_idtf = self._keynodes[KeynodeSysIdentifiers.nrel_main_idtf.value]
             kn_lang_ru = self._keynodes[KeynodeSysIdentifiers.lang_ru.value]
             kn_email = self._keynodes[KeynodeSysIdentifiers.nrel_email.value]
-
+        
         construction = ScConstruction()
         
         # 1. Create node and assign class ui_user
@@ -108,11 +217,41 @@ class AuthService:
         result = client.generate_elements(construction)
         return result[construction.get_index('user_node')]
 
+    def _link_user_to_root(self, root_node: ScAddr, user_node: ScAddr) -> None:
+        """Links a user node to the root users list via nrel_decomposition if not already linked."""
+        try:
+            user_node_obj = user_node if isinstance(user_node, ScAddr) else ScAddr(user_node)
+            kn_decomp = self._keynodes[KeynodeSysIdentifiers.nrel_decomposition.value]
+            
+            if self._get_arc_addr(root_node, kn_decomp, user_node_obj) == 0:
+                construction = ScConstruction()
+                construction.generate_connector(sc_type.CONST_COMMON_ARC, root_node, user_node_obj, 'user_link')
+                construction.generate_connector(
+                    sc_type.CONST_PERM_POS_ARC, 
+                    kn_decomp, 
+                    'user_link'
+                )
+                result = client.generate_elements(construction)
+                logger.info(f'Linked user {user_node_obj} to root section. Result: {result}')
+            else:
+                logger.info(f'User {user_node_obj} already linked to root section.')
+        except Exception as e:
+            logger.error(f'Failed to link user {user_node} to root section: {e}')
+
     def register_user(self, email: str, username: str) -> ScAddr:
         logger.debug(f'Registering user {username} ({email}) in KB')
         user_node = self.create_kb_user(email, username)
         self.mark_user_registered(user_node)
+        
+        # Ensure the user is linked to the users root list immediately
+        root_node_addr = self._resolve_node_by_idtf(self.USERS_ROOT_NODE_IDTF, relation_key="nrel_system_identifier")
+        if root_node_addr != 0:
+            self._link_user_to_root(ScAddr(root_node_addr), user_node)
+        else:
+            logger.error(f"Could not find {self.USERS_ROOT_NODE_IDTF} to link new user {username}")
+            
         return user_node
+
 
     def mark_user_registered(self, user_node: ScAddr) -> None:
         logger.debug('Mark user as registered in kb')
@@ -246,35 +385,47 @@ class AuthService:
     def sync_users_from_db(self, users):
         logger.info(f'Starting sync of {len(users)} users from DB to KB...')
         
+        # 0. Ensure all critical system nodes exist before starting
+        try:
+            self.ensure_system_nodes()
+        except Exception as e:
+            logger.error(f"Critical error ensuring system nodes: {e}")
+            # We continue, but some operations might fail
+            
         # First, clean up corrupted state where users might be acting as roots
         self._cleanup_user_nodes(users)
         
         try:
             # 1. Resolve or Create the Section Class (Analogous to guide_section)
-            res_class = client.resolve_keynodes(ScIdtfResolveParams(idtf='user_section_class', type=None))
-            if res_class and res_class[0].is_valid():
-                section_class = res_class[0]
+            # Try robust resolution first
+            section_class_addr = self._resolve_node_by_idtf('user_section_class')
+            if section_class_addr != 0:
+                section_class = ScAddr(section_class_addr)
+                logger.info(f'Found existing user_section_class: {section_class}')
             else:
                 logger.info('user_section_class not found, creating it...')
                 construction = ScConstruction()
                 construction.generate_node(sc_type.CONST_NODE, 'class_node')
                 construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent('user_section_class', ScLinkContentType.STRING), 'class_link')
                 construction.generate_connector(sc_type.CONST_COMMON_ARC, 'class_node', 'class_link', 'class_arc')
-                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, self._keynodes[KeynodeSysIdentifiers.nrel_main_idtf.value], 'class_arc')
                 
-                # Assign base class sc_node_class (or a general class to make it a valid section)
-                # We use ui_user as a base if sc_node_class is not available
+                main_idtf = self._keynodes[KeynodeSysIdentifiers.nrel_main_idtf.value]
+                if main_idtf:
+                    construction.generate_connector(sc_type.CONST_PERM_POS_ARC, main_idtf, 'class_arc')
+                
+                # Assign base class ui_user as a base
                 kn_base_class = self._keynodes[KeynodeSysIdentifiers.ui_user.value]
-                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, kn_base_class, 'class_node')
+                if kn_base_class:
+                    construction.generate_connector(sc_type.CONST_PERM_POS_ARC, kn_base_class, 'class_node')
                 
                 result = client.generate_elements(construction)
                 section_class = result[construction.get_index('class_node')]
                 logger.info(f'Successfully created user_section_class: {section_class}')
 
             # 2. Resolve or Create User Section Root
-            res_section = client.resolve_keynodes(ScIdtfResolveParams(idtf=self.USERS_SECTION_NODE_IDTF, type=None))
-            if res_section and res_section[0].is_valid():
-                section_node = res_section[0]
+            section_node_addr = self._resolve_node_by_idtf(self.USERS_SECTION_NODE_IDTF)
+            if section_node_addr != 0:
+                section_node = ScAddr(section_node_addr)
             else:
                 logger.info(f'{self.USERS_SECTION_NODE_IDTF} node not found, creating it...')
                 construction = ScConstruction()
@@ -283,30 +434,38 @@ class AuthService:
                 # System IDTF
                 construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent(self.USERS_SECTION_NODE_IDTF, ScLinkContentType.STRING), 'sys_idtf')
                 construction.generate_connector(sc_type.CONST_COMMON_ARC, 'section_node', 'sys_idtf', 'arc_sys')
-                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, self._keynodes[KeynodeSysIdentifiers.nrel_system_identifier.value], 'arc_sys')
+                
+                sys_id_kn = self._keynodes[KeynodeSysIdentifiers.nrel_system_identifier.value]
+                if sys_id_kn:
+                    construction.generate_connector(sc_type.CONST_PERM_POS_ARC, sys_id_kn, 'arc_sys')
                 
                 # Main IDTF
                 construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent("Раздел пользователей", ScLinkContentType.STRING), 'main_idtf')
                 construction.generate_connector(sc_type.CONST_COMMON_ARC, 'section_node', 'main_idtf', 'arc_main')
-                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, self._keynodes[KeynodeSysIdentifiers.nrel_main_idtf.value], 'arc_main')
+                
+                main_id_kn = self._keynodes[KeynodeSysIdentifiers.nrel_main_idtf.value]
+                if main_id_kn:
+                    construction.generate_connector(sc_type.CONST_PERM_POS_ARC, main_id_kn, 'arc_main')
                 
                 # Assign to Section Class
-                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, section_class, 'section_node')
+                if section_class:
+                    construction.generate_connector(sc_type.CONST_PERM_POS_ARC, section_class, 'section_node')
                 
                 # Link Section to Main Menu using LOGICAL decomposition
                 kn_main_menu = self._keynodes[KeynodeSysIdentifiers.ui_main_menu.value]
                 kn_decomp = self._keynodes[KeynodeSysIdentifiers.nrel_decomposition.value]
-                construction.generate_connector(sc_type.CONST_COMMON_ARC, kn_main_menu, 'section_node', 'menu_arc')
-                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, kn_decomp, 'menu_arc')
+                if kn_main_menu and kn_decomp:
+                    construction.generate_connector(sc_type.CONST_COMMON_ARC, kn_main_menu, 'section_node', 'menu_arc')
+                    construction.generate_connector(sc_type.CONST_PERM_POS_ARC, kn_decomp, 'menu_arc')
                 
                 result = client.generate_elements(construction)
                 section_node = result[construction.get_index('section_node')]
                 logger.info(f'Successfully created {self.USERS_SECTION_NODE_IDTF} node: {section_node}')
 
             # 3. Resolve or Create Users Root (The List)
-            res_root = client.resolve_keynodes(ScIdtfResolveParams(idtf=self.USERS_ROOT_NODE_IDTF, type=None))
-            if res_root and res_root[0].is_valid():
-                root_node = res_root[0]
+            root_node_addr = self._resolve_node_by_idtf(self.USERS_ROOT_NODE_IDTF)
+            if root_node_addr != 0:
+                root_node = ScAddr(root_node_addr)
             else:
                 logger.info(f'{self.USERS_ROOT_NODE_IDTF} node not found, creating it...')
                 construction = ScConstruction()
@@ -315,20 +474,28 @@ class AuthService:
                 # System IDTF
                 construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent(self.USERS_ROOT_NODE_IDTF, ScLinkContentType.STRING), 'sys_idtf')
                 construction.generate_connector(sc_type.CONST_COMMON_ARC, 'root_node', 'sys_idtf', 'arc_sys')
-                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, self._keynodes[KeynodeSysIdentifiers.nrel_system_identifier.value], 'arc_sys')
+                
+                sys_id_kn = self._keynodes[KeynodeSysIdentifiers.nrel_system_identifier.value]
+                if sys_id_kn:
+                    construction.generate_connector(sc_type.CONST_PERM_POS_ARC, sys_id_kn, 'arc_sys')
                 
                 # Main IDTF
                 construction.generate_link(sc_type.CONST_NODE_LINK, ScLinkContent("Список пользователей", ScLinkContentType.STRING), 'main_idtf')
                 construction.generate_connector(sc_type.CONST_COMMON_ARC, 'root_node', 'main_idtf', 'arc_main')
-                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, self._keynodes[KeynodeSysIdentifiers.nrel_main_idtf.value], 'arc_main')
+                
+                main_id_kn = self._keynodes[KeynodeSysIdentifiers.nrel_main_idtf.value]
+                if main_id_kn:
+                    construction.generate_connector(sc_type.CONST_PERM_POS_ARC, main_id_kn, 'arc_main')
                 
                 # Assign to Section Class
-                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, section_class, 'root_node')
+                if section_class:
+                    construction.generate_connector(sc_type.CONST_PERM_POS_ARC, section_class, 'root_node')
                 
                 # Link List to Section via LOGICAL decomposition
                 kn_decomp = self._keynodes[KeynodeSysIdentifiers.nrel_decomposition.value]
-                construction.generate_connector(sc_type.CONST_COMMON_ARC, section_node, 'root_node', 'section_to_list_arc')
-                construction.generate_connector(sc_type.CONST_PERM_POS_ARC, kn_decomp, 'section_to_list_arc')
+                if section_node and kn_decomp:
+                    construction.generate_connector(sc_type.CONST_COMMON_ARC, section_node, 'root_node', 'section_to_list_arc')
+                    construction.generate_connector(sc_type.CONST_PERM_POS_ARC, kn_decomp, 'section_to_list_arc')
                 
                 result = client.generate_elements(construction)
                 root_node = result[construction.get_index('root_node')]
@@ -359,16 +526,22 @@ class AuthService:
                     continue
             
             try:
-                construction = ScConstruction()
                 addr_obj = ScAddr(user_addr) if isinstance(user_addr, int) else user_addr
-                construction.generate_connector(sc_type.CONST_COMMON_ARC, root_node, addr_obj, 'user_link')
-                construction.generate_connector(
-                    sc_type.CONST_PERM_POS_ARC, 
-                    self._keynodes[KeynodeSysIdentifiers.nrel_decomposition.value], 
-                    'user_link'
-                )
-                client.generate_elements(construction)
-                logger.debug(f'Linked user {username} to root section.')
+                
+                # Check if decomposition arc already exists to avoid duplicates
+                kn_decomp = self._keynodes[KeynodeSysIdentifiers.nrel_decomposition.value]
+                if self._get_arc_addr(root_node, kn_decomp, addr_obj) == 0:
+                    construction = ScConstruction()
+                    construction.generate_connector(sc_type.CONST_COMMON_ARC, root_node, addr_obj, 'user_link')
+                    construction.generate_connector(
+                        sc_type.CONST_PERM_POS_ARC, 
+                        kn_decomp, 
+                        'user_link'
+                    )
+                    client.generate_elements(construction)
+                    logger.debug(f'Linked user {username} to root section.')
+                else:
+                    logger.debug(f'User {username} already linked to root section.')
             except Exception as e:
                 logger.error(f'Failed to link user {username} to root section: {e}')
         

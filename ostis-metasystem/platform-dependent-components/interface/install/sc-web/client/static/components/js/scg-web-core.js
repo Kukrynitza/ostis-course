@@ -172,19 +172,46 @@ ScKeynodes.prototype.resolveKeynode = async function (sys_idtf, property) {
   if (!Array.isArray(sys_idtf)) {
     sys_idtf = [sys_idtf];
   }
-  let request = sys_idtf.map(x => {
-    return { id: x, type: sc.ScType.NodeConst }
-  });
-  let result = await this.scClient.resolveKeynodes(request);
-  sys_idtf.forEach(x => {
-    let addr = result[x];
-    if (addr.isValid()) {
-      console.log('Resolved keynode: ' + x + ' = ' + addr.value);
-      this[x] = addr.value;
-    } else {
-      throw "Can't resolve keynode " + x;
+  
+  const MAX_RETRIES = 3;
+  let attempts = 0;
+  let unresolved = [...sys_idtf];
+
+  while (unresolved.length > 0 && attempts < MAX_RETRIES) {
+    attempts++;
+    let request = unresolved.map(x => {
+      return { id: x, type: sc.ScType.NodeConst }
+    });
+    
+    try {
+      let result = await this.scClient.resolveKeynodes(request);
+      let stillUnresolved = [];
+      
+      unresolved.forEach(x => {
+        let addr = result[x];
+        if (addr && addr.isValid()) {
+          console.log(`[Keynodes] Resolved: ${x} = ${addr.value}`);
+          this[x] = addr.value;
+        } else {
+          stillUnresolved.push(x);
+        }
+      });
+      
+      unresolved = stillUnresolved;
+      if (unresolved.length > 0) {
+        console.warn(`[Keynodes] ${unresolved.length} keynodes not resolved in attempt ${attempts}. Retrying...`);
+        await new Promise(resolve => setTimeout(resolve, 500 * attempts));
+      }
+    } catch (e) {
+      console.error(`[Keynodes] Request failed on attempt ${attempts}:`, e);
+      await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
     }
-  });
+  }
+
+  if (unresolved.length > 0) {
+    console.error(`[Keynodes] CRITICAL: Failed to resolve keynodes after ${MAX_RETRIES} attempts: ${unresolved.join(', ')}`);
+    // We no longer throw, allowing the app to try and load, but marking failure in logs
+  }
 };
 
 function parseURL(url) {
