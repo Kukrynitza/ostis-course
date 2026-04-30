@@ -5,9 +5,8 @@ import {
   editDecompositionItem,
   getDecomposition,
 } from '@api/requests/decomposition';
-import { isAxiosError } from '@api/utils';
 import { useErrorToast } from '@hooks/useErrorToast';
-import { IDecompositionItem } from '@model/model';
+import { Decomposition, IDecompositionItem } from '@model/model';
 import { DecompositionProvider, useLanguage, useTranslate } from 'ostis-ui-lib';
 
 export interface IProps {
@@ -19,6 +18,34 @@ export const SidePanelWrapper: FC<IProps> = ({ children }) => {
 
   const lang = useLanguage();
   const translate = useTranslate();
+
+  const findCreatedSectionAddr = useCallback(
+    (tree: Decomposition | null, parentId: number, sectionName: string): number | null => {
+      if (!tree) return null;
+
+      const normalizedTarget = sectionName.trim().toLowerCase();
+
+      const findNodeById = (node: Decomposition, id: number): Decomposition | null => {
+        if (node[id]) return node[id].decomposition;
+        for (const entry of Object.values(node)) {
+          const nested = findNodeById(entry.decomposition, id);
+          if (nested) return nested;
+        }
+        return null;
+      };
+
+      const parentChildren = findNodeById(tree, parentId);
+      if (!parentChildren) return null;
+
+      const candidates = Object.entries(parentChildren)
+        .filter(([, value]) => value.idtf.trim().toLowerCase() === normalizedTarget)
+        .map(([key, value]) => ({ addr: Number(key), position: value.position }))
+        .sort((a, b) => b.position - a.position);
+
+      return candidates.length ? candidates[0].addr : null;
+    },
+    [],
+  );
 
   const getDecompositionCallBack = useCallback(async () => {
     const res = await getDecomposition(lang);
@@ -38,16 +65,19 @@ export const SidePanelWrapper: FC<IProps> = ({ children }) => {
 
   const addDecompositionItemCallBack = useCallback(
     async (id: string, data: IDecompositionItem): Promise<number | null> => {
-      const res = await addDecompositionItem(id, { ...data, lang });
+      const createdAddr = await addDecompositionItem(id, { ...data, lang });
 
-      if (isAxiosError(res)) {
+      if (!createdAddr) {
+        const refreshedTree = await getDecomposition(lang);
+        const recoveredAddr = findCreatedSectionAddr(refreshedTree, Number(id), data.sectionName);
+        if (recoveredAddr) return recoveredAddr;
         addError(translate({ ru: 'Не удалось добавить элемент', en: 'Element is not added' }));
         return null;
       }
 
-      return res.data.scAddr;
+      return createdAddr;
     },
-    [addError, translate, lang],
+    [addError, translate, lang, findCreatedSectionAddr],
   );
 
   const editDecompositionItemCallback = useCallback(
@@ -66,14 +96,12 @@ export const SidePanelWrapper: FC<IProps> = ({ children }) => {
 
   const deleteDecompositionItemCallback = useCallback(
     async (parentID: string, id: string): Promise<number | null> => {
-      const deleteRes = await deleteDecompositionItem(parentID, id);
-
-      if (isAxiosError(deleteRes)) {
+      const deletedAddr = await deleteDecompositionItem(parentID, id);
+      if (!deletedAddr) {
         addError(translate({ ru: 'Не удалось удалить элемент', en: 'Element is not deleted' }));
         return null;
       }
-
-      return deleteRes.data.sc_addr;
+      return deletedAddr;
     },
     [addError, translate],
   );

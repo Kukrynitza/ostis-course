@@ -1,9 +1,9 @@
 .scg {
   position: absolute;
   width: calc(100vw - 487px);
-  height: calc(100vh - 80px - 36px);
-  top: 116px;
+  top: 100px;
   right: 0;
+  bottom: 32px;
   z-index: 3;
 }
 

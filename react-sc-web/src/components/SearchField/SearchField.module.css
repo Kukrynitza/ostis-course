@@ -7,8 +7,16 @@
   border-bottom: none;
 }
 
+/* Непрозрачный фон выпадающего списка (раньше inherit давал «стекло») */
 :global(#selectDropdownContainer) {
-  background-color: inherit !important;
+  background-color: var(--color-white) !important;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 12%);
+}
+
+:global([data-theme='dark'] #selectDropdownContainer),
+:global(.dark-scn #selectDropdownContainer) {
+  background-color: var(--color-smoky-white, #2a2a2a) !important;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 35%);
 }
 
 .optionHighlighted {

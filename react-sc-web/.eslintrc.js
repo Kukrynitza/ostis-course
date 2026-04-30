@@ -36,12 +36,14 @@ module.exports = {
     'import/parsers': {
       '@typescript-eslint/parser': ['.ts', '.tsx'],
     },
+    // TypeScript: path aliases (@components/.../index). Webpack: ostis-ui-lib$ alias to vendor bundle.
     'import/resolver': {
+      typescript: {
+        alwaysTryTypes: true,
+        project: './tsconfig.json',
+      },
       webpack: {
         config: './webpack/webpack.config.js',
-      },
-      typescript: {
-        project: './tsconfig.json',
       },
     },
   },

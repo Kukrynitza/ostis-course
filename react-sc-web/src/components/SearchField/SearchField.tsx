@@ -1,9 +1,8 @@
 import { ChangeEvent, FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { client } from '@api';
+import { client, scUtils } from '@api';
 import { searchAddrById } from '@api/sc/search/search';
-import { scUtils } from '@api';
 import SearchIcon from '@assets/images/Search.svg';
-import { FEATURES } from '@constants/features';
+import { FEATURES } from '@constants';
 import { useScNavigation } from '@hooks/useScNavigation';
 import { useThemeContext } from '@themes/ThemeContext';
 import { debounce } from '@utils';
@@ -162,7 +161,11 @@ export const SearchField: FC<IProps> = ({ className }) => {
   );
 
   if (FEATURES.enableContextMenuOnSearch && searchInputAddr) {
-    return <ScTag addr={searchInputAddr} showMenu={true}>{searchField}</ScTag>;
+    return (
+      <ScTag addr={searchInputAddr} showMenu={true}>
+        {searchField}
+      </ScTag>
+    );
   }
 
   return searchField;

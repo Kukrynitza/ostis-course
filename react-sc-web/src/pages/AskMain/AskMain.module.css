@@ -1,11 +1,10 @@
 .wrapper {
   position: relative;
+  flex: 1;
+  min-width: 0;
   width: 100%;
   display: flex;
   height: calc(100vh - 160px);
   background-color: var(--color-beige);
-}
-
-:global(header) {
-  margin-left: -150px;
+  overflow-x: hidden;
 }

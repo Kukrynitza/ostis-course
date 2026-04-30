@@ -1,16 +1,15 @@
 import classNames from 'classnames';
+import { useDispatch } from 'react-redux';
 import { useMatch } from 'react-router';
-import { routes } from '@constants';
-import { FEATURES } from '@constants/features';
+import Delete from '@assets/images/delete.svg';
+import { FEATURES, routes } from '@constants';
 import { useScNavigation } from '@hooks/useScNavigation';
 import { IRequest, clearRequests, removeRequest } from '@store/requestHistorySlice';
-import { useDispatch } from 'react-redux';
-import { ScLangText, ScTag } from 'ostis-ui-lib';
+import { ScLangText, ScTag, useTranslate } from 'ostis-ui-lib';
 
 import styles from './HistoryPanel.module.css';
 
 import { Skeleton } from './Skeleton';
-import Delete from '@assets/images/delete.svg';
 
 interface IProps {
   isLoading: boolean;
@@ -20,6 +19,7 @@ interface IProps {
 export const HistoryPanel = (props: IProps) => {
   const match = useMatch(routes.ACTION);
   const dispatch = useDispatch();
+  const translate = useTranslate();
 
   const { goToActiveFormatAction } = useScNavigation();
 
@@ -41,8 +41,8 @@ export const HistoryPanel = (props: IProps) => {
       {!props.isLoading && (
         <div className={styles.historyPanelWrap}>
           {props.requests.length > 0 && (
-            <button className={styles.clearBtn} onClick={onClearAll}>
-              Очистить историю
+            <button type="button" className={styles.clearBtn} onClick={onClearAll}>
+              {translate({ ru: 'Очистить историю', en: 'Clear history' })}
             </button>
           )}
           {props.requests.map(({ action }, ind) => (
@@ -59,8 +59,14 @@ export const HistoryPanel = (props: IProps) => {
               >
                 <ScLangText addrOrSystemId={action} defaultText={String(action)} />
               </ScTag>
-              <button className={styles.deleteBtn} onClick={onDeleteClick(action)} title="Удалить">
-                <Delete width="14" height="14" />
+              <button
+                type="button"
+                className={styles.deleteBtn}
+                onClick={onDeleteClick(action)}
+                title="Удалить"
+                aria-label="Удалить из истории"
+              >
+                <Delete />
               </button>
             </div>
           ))}

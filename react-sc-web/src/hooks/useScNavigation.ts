@@ -27,6 +27,15 @@ export const useScNavigation = () => {
     [format, navigate],
   );
 
+  const goToScnCommand = useCallback(
+    (addr: string | number, command: string | number = DEFAULT_COMMAND_SYSTEM_ID) => {
+      navigate(
+        generatePath(routes.COMMAND, { addr: String(addr), commandAddr: String(command), format: 'scn' }),
+      );
+    },
+    [navigate],
+  );
+
   const goToActiveFormatAction = useCallback(
     (action: string) => {
       navigate(generatePath(routes.ACTION, { action, format }));
@@ -34,5 +43,18 @@ export const useScNavigation = () => {
     [format, navigate],
   );
 
-  return { goToActiveFormatCommand, goToActiveFormatAction, goToPrevHistoryItem };
+  const goToScnAction = useCallback(
+    (action: string) => {
+      navigate(generatePath(routes.ACTION, { action, format: 'scn' }));
+    },
+    [navigate],
+  );
+
+  return {
+    goToActiveFormatCommand,
+    goToScnCommand,
+    goToActiveFormatAction,
+    goToScnAction,
+    goToPrevHistoryItem,
+  };
 };

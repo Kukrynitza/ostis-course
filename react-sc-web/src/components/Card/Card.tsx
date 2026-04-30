@@ -1,8 +1,8 @@
 import React from 'react';
 import { ScAddr } from 'ts-sc-client';
 import GithubIcon from '@assets/images/GithubIcon.svg';
+import { FEATURES } from '@constants';
 import { ScTag, useTranslate } from 'ostis-ui-lib';
-import { FEATURES } from '@constants/features';
 import styles from './Card.module.css';
 import { CardComponentType } from './types';
 import { getCardLogo, getSubtitleClassName } from './utils';
@@ -89,7 +89,11 @@ export const Card: React.FC<ComponentCardProps> = ({
   );
 
   if (FEATURES.enableContextMenuOnLibrary) {
-    return <ScTag addr={component.value} showMenu={true}>{cardElement}</ScTag>;
+    return (
+      <ScTag addr={component.value} showMenu={true}>
+        {cardElement}
+      </ScTag>
+    );
   }
 
   return cardElement;

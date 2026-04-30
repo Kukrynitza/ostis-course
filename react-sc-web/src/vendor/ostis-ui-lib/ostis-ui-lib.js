@@ -9023,8 +9023,8 @@ var EditTextarea = function EditTextarea(_ref) {
 var Options_styled_templateObject, Options_styled_templateObject2;
 
 
-var Options_styled_Wrap = external_styled_components_default().div(Options_styled_templateObject || (Options_styled_templateObject = _taggedTemplateLiteral(["\n  position: absolute;\n  top: 100%;\n  right: 0;\n\n  min-width: 185px;\n\n  background: var(--color-white)fff;\n\n  border: 1px solid var(--color-border-grey);\n  box-shadow: 0px 4px 4px var(--color-card-shadow);\n  border-radius: 10px;\n\n  z-index: 2;\n"])));
-var StyledButtonWithIcon = external_styled_components_default()(ButtonWithIcon)(Options_styled_templateObject2 || (Options_styled_templateObject2 = _taggedTemplateLiteral(["\n  width: 100%;\n\n  padding: 8px 16px;\n\n  border-bottom: 1px solid rgba(0, 0, 0, 0.12);\n\n  font-size: 18px;\n  line-height: 20px;\n\n  text-align: left;\n  white-space: nowrap;\n\n  &:hover {\n    background: #ececec;\n  }\n\n  &:last-child {\n    border-bottom: none;\n  }\n"])));
+var Options_styled_Wrap = external_styled_components_default().div(Options_styled_templateObject || (Options_styled_templateObject = _taggedTemplateLiteral(["\n  position: absolute;\n  top: 100%;\n  right: 0;\n\n  min-width: 185px;\n\n  background: var(--color-white);\n\n  border: 1px solid var(--color-border-grey);\n  box-shadow: 0px 4px 4px var(--color-card-shadow);\n  border-radius: 10px;\n\n  z-index: 2;\n"])));
+var StyledButtonWithIcon = external_styled_components_default()(ButtonWithIcon)(Options_styled_templateObject2 || (Options_styled_templateObject2 = _taggedTemplateLiteral(["\n  width: 100%;\n\n  padding: 8px 16px;\n\n  border-bottom: 1px solid var(--color-border-grey);\n\n  font-size: 18px;\n  line-height: 20px;\n  color: var(--color-dark-grey);\n\n  text-align: left;\n  white-space: nowrap;\n\n  &:hover {\n    background: var(--color-decomposition-hover);\n  }\n\n  &:last-child {\n    border-bottom: none;\n  }\n"])));
 ;// CONCATENATED MODULE: ./src/components/DecompositionPanel/components/Options/Options.tsx
 
 
@@ -9048,12 +9048,6 @@ var Options = function Options(_ref) {
       children: translate({
         ru: 'Удалить',
         en: 'Delete'
-      })
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)(StyledButtonWithIcon, {
-      onClick: onAddClick,
-      children: translate({
-        ru: 'Новый подраздел',
-        en: 'New subsection'
       })
     })]
   });

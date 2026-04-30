@@ -1,0 +1,10 @@
+.wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: min(52vh, 480px);
+  /* Чуть выше геометрического центра — визуально «посередине» области контента */
+  padding: 36px 24px 58px;
+  box-sizing: border-box;
+}

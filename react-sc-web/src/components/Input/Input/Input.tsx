@@ -73,10 +73,19 @@ export const Input = forwardRef<HTMLInputElement, IProps>(
     };
 
     useEffect(() => {
-      innerRef.current?.setSelectionRange(
-        innerRef.current?.value.length,
-        innerRef.current?.value.length,
-      );
+      const id = requestAnimationFrame(() => {
+        const el = innerRef.current;
+        if (!el?.isConnected) return;
+        const selectableTypes = new Set(['text', 'search', 'url', 'tel', 'password']);
+        if (!selectableTypes.has(el.type)) return;
+        try {
+          const len = el.value.length;
+          el.setSelectionRange(len, len);
+        } catch {
+          // Firefox: detached node or unsupported state during type swap / Strict Mode
+        }
+      });
+      return () => cancelAnimationFrame(id);
     }, [inputType]);
 
     const isPassword = type === 'password';

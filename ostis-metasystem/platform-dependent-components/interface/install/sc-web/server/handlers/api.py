@@ -358,6 +358,7 @@ class User(base.BaseHandler):
 
 class KbSearch(base.BaseHandler):
     def post(self):
+        STRICT_KB_ONLY_MODE = True
         data = self.request.body
         if data:
             try:
@@ -505,7 +506,6 @@ class KbSearch(base.BaseHandler):
                 "nrel_definition",
                 "nrel_explanation",
                 "nrel_note",
-                "nrel_sc_text_translation",
             ]
             rels = []
             for relation_name in relation_names:
@@ -947,7 +947,7 @@ class KbSearch(base.BaseHandler):
                     rel for rel in relation_keynodes if rel.value != nrel_answer.value
                 ]
 
-            def get_relation_text(entity_addr, allow_tooltip: bool = True):
+            def get_relation_text(entity_addr, allow_tooltip: bool = False):
                 ANSWER_LINK = "_answer_link"
                 for relation_keynode in relation_keynodes:
                     answer_template = ScTemplate()
@@ -974,16 +974,6 @@ class KbSearch(base.BaseHandler):
                                 return answer_text
                     except Exception as e:
                         logger.warning(f"Failed to get link content: {e}")
-                if allow_tooltip:
-                    try:
-                        tooltip = logic.find_tooltip(entity_addr, used_lang)
-                        if not (tooltip and len(str(tooltip).strip()) > 8):
-                            lang_en = keynodes[KeynodeSysIdentifiers.lang_en.value]
-                            tooltip = logic.find_tooltip(entity_addr, lang_en)
-                        if tooltip and len(str(tooltip).strip()) > 8:
-                            return str(tooltip).strip()
-                    except Exception as e:
-                        logger.warning(f"find_tooltip failed: {e}")
                 return None
 
             def get_neighbor_nodes(entity_addr):
@@ -1153,6 +1143,19 @@ class KbSearch(base.BaseHandler):
                         )
                     )
                     return
+
+            if STRICT_KB_ONLY_MODE:
+                self.set_header("Content-Type", "application/json")
+                self.finish(
+                    json.dumps(
+                        {
+                            "success": True,
+                            "found": False,
+                            "error": "No direct KB definition found",
+                        }
+                    )
+                )
+                return
 
             if is_definition_query:
                 self.set_header("Content-Type", "application/json")
@@ -1478,6 +1481,23 @@ class KbSearch(base.BaseHandler):
                                 "success": True,
                                 "found": True,
                                 "answer": f"Понятие найдено в базе знаний: {str(focus_label).strip()}.",
+                                "low_quality": True,
+                            }
+                        )
+                    )
+                    return
+                try:
+                    sys_idtf = logic.get_system_identifier(el_focus)
+                except Exception:
+                    sys_idtf = ""
+                if sys_idtf:
+                    self.set_header("Content-Type", "application/json")
+                    self.finish(
+                        json.dumps(
+                            {
+                                "success": True,
+                                "found": True,
+                                "answer": f"Понятие найдено в базе знаний: {str(sys_idtf).strip()}.",
                                 "low_quality": True,
                             }
                         )

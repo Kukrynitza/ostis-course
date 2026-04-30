@@ -1,28 +1,24 @@
-import { FC, ReactNode, useEffect, useState } from 'react';
+import classNames from 'classnames';
+import { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
+import { scUtils } from '@api';
 import Logo from '@assets/images/Logo.svg';
 import { Language } from '@components/Language';
 import { ScgPage } from '@components/ScgPage';
 import { SidePanel } from '@components/SidePanel';
 import { SidePanelWrapper } from '@components/SidePanelWrapper';
 import { ThemeToggle } from '@components/ThemeToggle';
-import { FEATURES } from '@constants/features';
-import { scUtils } from '@api';
-
-import { routes } from '@constants';
+import { UserAccountMenu } from '@components/UserAccountMenu';
+import { FEATURES, routes } from '@constants';
 import { setActiveLink } from '@store/activeLinkSlice';
 import { ScTag } from 'ostis-ui-lib';
 import styles from './Layout.module.css';
 
-export interface IProps {
-  children?: ReactNode;
-}
-
-export const Layout: FC<IProps> = ({ children }) => {
+export const Layout: FC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const isAskAiPage = location.pathname === routes.ASK_AI;
+  const isAskAiPage = location.pathname.startsWith('/ask-ai');
   const [logoAddr, setLogoAddr] = useState<number | null>(null);
 
   useEffect(() => {
@@ -59,8 +55,14 @@ export const Layout: FC<IProps> = ({ children }) => {
           logoLink
         )}
       </div>
-      <header className={styles.header} style={{ marginLeft: isAskAiPage ? '-150px' : '0' }}>
+      <header
+        className={classNames(
+          styles.header,
+          isAskAiPage && styles.headerAskAiSticky,
+        )}
+      >
         <div className={styles.headerControls}>
+          <UserAccountMenu />
           <ThemeToggle />
           <Language />
         </div>
@@ -70,7 +72,7 @@ export const Layout: FC<IProps> = ({ children }) => {
       </SidePanelWrapper>
       <main className={styles.main}>
         {!isAskAiPage && <ScgPage />}
-        {children}
+        <Outlet />
       </main>
     </div>
   );

@@ -1,5 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 
+axios.defaults.withCredentials = true;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isAxiosError = <ErrorData = any>(
   data: unknown | AxiosError<ErrorData>,

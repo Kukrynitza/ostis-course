@@ -17,6 +17,7 @@ import admin.users as admin_users
 import db
 import handlers.api as api
 import handlers.auth as auth
+import handlers.local_auth as local_auth
 import logger_sc
 import secret
 from handlers.main import MainHandler
@@ -98,6 +99,10 @@ def init_app_rules():
 
         (r"/api/user/", api.User),
 
+        (r"/api/register", local_auth.RegisterHandler),
+        (r"/login", local_auth.LoginHandler),
+        (r"/logout", local_auth.LocalLogout),
+
         (r"/auth/google$", auth.GoogleOAuth2LoginHandler),
         (r"/auth/logout$", auth.LogOut),
 
@@ -159,6 +164,10 @@ def main(options):
     logger_sc.init()
 
     rules = init_app_rules()
+    logger.info(
+        "HTTP auth для React: POST /api/register, GET|POST /login, GET /logout "
+        "(перезапустите sc-web после обновления кода)."
+    )
     application = tornado.web.Application(
         handlers=rules,
         cookie_secret=secret.get_secret(),

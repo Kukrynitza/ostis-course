@@ -5,7 +5,7 @@ import time
 import uuid
 
 import tornado.options
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, text
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -28,6 +28,7 @@ class User(Base):
     avatar = Column(String(1024))
     key = Column(String(32), nullable=False, unique=True)
     role = Column(Integer)
+    password_hash = Column(String(255), nullable=True)
 
 
 class DataBase:
@@ -45,6 +46,11 @@ class DataBase:
 
     def init(self):
         Base.metadata.create_all(self.engine)
+        try:
+            with self.engine.begin() as conn:
+                conn.execute(text("ALTER TABLE user ADD COLUMN password_hash VARCHAR(255)"))
+        except Exception:
+            pass
 
         names = {
             self.RIGHTS_GUEST: 'guest',

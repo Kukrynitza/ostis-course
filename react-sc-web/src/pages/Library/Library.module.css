@@ -8,6 +8,11 @@
   display: flex;
 }
 
+.libraryLoadingHost {
+  flex: 1;
+  min-height: 280px;
+}
+
 .scrollableContent {
   flex: 1;
   overflow-y: auto;

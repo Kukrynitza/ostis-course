@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { getHistory } from '@api/requests/userHistory';
 import { scUtils } from '@api';
+import { getHistory } from '@api/requests/userHistory';
 import Clock from '@assets/images/Clock.svg';
 import Plus from '@assets/images/plus.svg';
 import Sections from '@assets/images/Sections.svg';
@@ -10,7 +10,7 @@ import { Accordion } from '@components/Accordion';
 import ErrorBoundary from '@components/ErrorBoundary/ErrorBoundary';
 import { HistoryPanel } from '@components/HistoryPanel';
 import { SearchField } from '@components/SearchField';
-import { FEATURES } from '@constants/features';
+import { FEATURES } from '@constants';
 import { useSelector } from '@hooks';
 import { selectUser } from '@store/commonSlice';
 import { selectRequests, setRequests } from '@store/requestHistorySlice';
@@ -36,6 +36,7 @@ export const SidePanel: FC<IProps> = ({ className }) => {
   const [historyAddr, setHistoryAddr] = useState<number | null>(null);
 
   const requests = useSelector(selectRequests);
+  const canManageSections = Boolean(user?.is_admin || user?.can_edit);
 
   useEffect(() => {
     const fetchAddrs = async () => {
@@ -43,7 +44,7 @@ export const SidePanel: FC<IProps> = ({ className }) => {
         const { uiStartScElement, uiSection, uiHistory } = await scUtils.searchKeynodes(
           'ui_start_sc_element',
           'ui_section',
-          'ui_history'
+          'ui_history',
         );
         if (uiSection?.value) setSectionAddr(uiSection.value);
         if (uiHistory?.value) setHistoryAddr(uiHistory.value);
@@ -108,7 +109,13 @@ export const SidePanel: FC<IProps> = ({ className }) => {
                     paragraph={translate({ ru: 'Ошибка', en: 'Error' })}
                     className={styles.errorBoundary}
                   >
-                    {<DecompositionPanel className="dark-decomposition" />}
+                    {
+                      <DecompositionPanel
+                        className="dark-decomposition"
+                        editable={canManageSections}
+                        deletable={canManageSections}
+                      />
+                    }
                   </ErrorBoundary>
                 </Accordion>
               </ScTag>
@@ -132,7 +139,13 @@ export const SidePanel: FC<IProps> = ({ className }) => {
                   paragraph={translate({ ru: 'Ошибка', en: 'Error' })}
                   className={styles.errorBoundary}
                 >
-                  {<DecompositionPanel className="dark-decomposition" />}
+                  {
+                    <DecompositionPanel
+                      className="dark-decomposition"
+                      editable={canManageSections}
+                      deletable={canManageSections}
+                    />
+                  }
                 </ErrorBoundary>
               </Accordion>
             )}
@@ -140,7 +153,10 @@ export const SidePanel: FC<IProps> = ({ className }) => {
           <div className={styles.decompositionAndHistoryPanels}>
             {FEATURES.enableContextMenuOnHistory && historyAddr ? (
               <ScTag addr={historyAddr} showMenu={true}>
-                <Accordion header={translate({ ru: 'История', en: 'History' })} leftIcon={<Clock />}>
+                <Accordion
+                  header={translate({ ru: 'История', en: 'History' })}
+                  leftIcon={<Clock />}
+                >
                   <ErrorBoundary
                     title={translate({
                       ru: 'Ошибка получения истории',

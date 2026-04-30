@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ScAddr } from 'ts-sc-client';
+import { scUtils } from '@api';
 import {
   searchSpecifications,
   searchComponentGit,
@@ -13,9 +14,9 @@ import SearchIcon from '@assets/images/Search.svg';
 import { Card } from '@components/Card/Card';
 import { CardComponentType } from '@components/Card/types';
 import { CardInfo } from '@components/CardInfo/CardInfo';
+import { CenteredSpinner } from '@components/CenteredSpinner';
 import { Input } from '@components/Input/Input/Input';
-import { FEATURES } from '@constants/features';
-import { scUtils } from '@api';
+import { FEATURES } from '@constants';
 import { langToKeynode, ScTag, useTranslate, useLanguage } from 'ostis-ui-lib';
 import styles from './Library.module.css';
 
@@ -43,12 +44,12 @@ const Library = () => {
 
   useEffect(() => {
     if (FEATURES.enableContextMenuOnLibrary) {
-      scUtils.searchKeynodes('ui_search_component', 'ui_filter').then(
-        ({ uiSearchComponent, uiFilter }) => {
+      scUtils
+        .searchKeynodes('ui_search_component', 'ui_filter')
+        .then(({ uiSearchComponent, uiFilter }) => {
           if (uiSearchComponent?.value) setSearchInputAddr(uiSearchComponent.value);
           if (uiFilter?.value) setFilterAddr(uiFilter.value);
-        }
-      );
+        });
     }
   }, []);
 
@@ -66,14 +67,23 @@ const Library = () => {
   };
 
   const fetchCards = async () => {
+    if (specifications.length === 0) {
+      setCards([]);
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
     try {
-      const newCards = await Promise.all(
-        specifications.map(async (specification) => {
-          return await fetchComponentCard(specification);
-        }),
-      );
-      setCards(newCards);
+      const acc: CardInterface[] = [];
+      const CHUNK = 6;
+      for (let i = 0; i < specifications.length; i += CHUNK) {
+        const slice = specifications.slice(i, i + CHUNK);
+        const batch = await Promise.all(
+          slice.map((specification) => fetchComponentCard(specification)),
+        );
+        acc.push(...batch);
+        setCards([...acc]);
+      }
     } catch (error) {
       setCards([]);
     } finally {
@@ -294,6 +304,11 @@ const Library = () => {
             </div>
           </div>
           <div className={styles.CardsContainer}>
+            {isLoading && cards.length === 0 && (
+              <div className={styles.libraryLoadingHost}>
+                <CenteredSpinner />
+              </div>
+            )}
             {!isLoading && filteredCards.length === 0 && (
               <div className={styles.emptyState}>
                 {translate({

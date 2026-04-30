@@ -4,9 +4,10 @@ import { useLocation } from 'react-router-dom';
 import { getDescriptionById } from '@api/requests/getDescription';
 import { AskInput } from '@components/AskInput';
 import { Notification } from '@components/Notification';
-import { SPINER_COLOR, getHintButtonHandler } from '@constants';
+import { CenteredSpinner } from '@components/CenteredSpinner';
+import { getHintButtonHandler } from '@constants';
 import { addInHistory, selectRequests } from '@store/requestDialogHistorySlice';
-import { useToast, useTranslate, Spinner, useLanguage } from 'ostis-ui-lib';
+import { useToast, useTranslate, useLanguage } from 'ostis-ui-lib';
 import styles from './AskAnswer.module.css';
 import { AskElement } from './AskElement';
 
@@ -137,12 +138,7 @@ export const AskAnswer = () => {
 
   if (!initialQuery && history.length === 0) return null;
 
-  if (isLoading)
-    return (
-      <div className={styles.spinnerWrapper}>
-        <Spinner appearance={SPINER_COLOR} />
-      </div>
-    );
+  if (isLoading) return <CenteredSpinner />;
 
   return (
     <div className={styles.pageWrapper}>

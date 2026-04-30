@@ -6,6 +6,7 @@ export const getUserByToken = () => {
   return request<IUserData>({
     method: 'GET',
     url: `${API_URL}/login`,
+    headers: { 'Content-Type': 'application/json' },
   });
 };
 
@@ -14,6 +15,7 @@ export const getUser = async (data: IInputValidation) => {
     method: 'POST',
     url: `${API_URL}/login`,
     data: JSON.stringify(data),
+    headers: { 'Content-Type': 'application/json' },
   });
 };
 

@@ -11,7 +11,7 @@ export const ScgPage = () => {
 
   const translate = useTranslate();
 
-  const scgMatch = location.pathname.match(/^\/q\/(\d+)\/scg$/);
+  const scgMatch = location.pathname.match(/^\/q\/(\d+)\/scg\/?$/i);
   const action = scgMatch ? Number(scgMatch[1]) : undefined;
 
   const pathArray = location.pathname.split('/');

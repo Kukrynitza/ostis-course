@@ -2,14 +2,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { generatePath, useMatch, useNavigate } from 'react-router';
 import { appendHistoryItem } from '@api/requests/userHistory';
 import { isAxiosError } from '@api/utils';
+import { CenteredSpinner } from '@components/CenteredSpinner';
 import { routes } from '@constants';
 import { useDispatch, useErrorToast, useSelector } from '@hooks';
 import { selectArgAddrs } from '@store';
 import { selectUserAddr } from '@store/commonSlice';
 import { addRequest } from '@store/requestHistorySlice';
-import { Spinner, useTranslate } from 'ostis-ui-lib';
-
-import styles from './Command.module.css';
+import { useTranslate } from 'ostis-ui-lib';
 
 import { debouncedExecuteCommand } from './utils';
 
@@ -33,15 +32,14 @@ const Command = () => {
     async (action: number) => {
       if (!userAddr) return;
       const addRes = await appendHistoryItem(action, userAddr);
-      if (isAxiosError(addRes))
-        addError(
-          translate({
-            ru: `Не удалось сохранить действие ${action} в историю`,
-            en: `It's failed to save action ${action} in history`,
-          }),
-        );
+      if (isAxiosError(addRes)) {
+        // Запись в локальную историю уже добавляется ниже (dispatch(addRequest)),
+        // а сервер иногда возвращает ошибку даже при фактическом сохранении.
+        // Не показываем ложное уведомление пользователю.
+        return;
+      }
     },
-    [addError, userAddr, translate],
+    [userAddr],
   );
 
   const executeCommand = useCallback(async () => {
@@ -77,7 +75,7 @@ const Command = () => {
     executeCommand();
   }, [executeCommand]);
 
-  if (isLoading) return <Spinner className={styles.spiner} appearance="#5896C0" />;
+  if (isLoading) return <CenteredSpinner />;
 
   return null;
 };

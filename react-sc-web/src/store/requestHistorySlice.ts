@@ -9,8 +9,8 @@ interface IInitialState {
 }
 
 const initialState: IInitialState = {
-  requests: localStorage.getItem('requestHistory') 
-    ? JSON.parse(localStorage.getItem('requestHistory') as string) 
+  requests: localStorage.getItem('requestHistory')
+    ? JSON.parse(localStorage.getItem('requestHistory') as string)
     : [],
 };
 
@@ -42,4 +42,5 @@ export const requestHistorySlice = createSlice({
 
 export const selectRequests = (state: IRootState) => state.requestHistory.requests;
 
-export const { setRequests, addRequest, removeRequest, clearRequests } = requestHistorySlice.actions;
+export const { setRequests, addRequest, removeRequest, clearRequests } =
+  requestHistorySlice.actions;

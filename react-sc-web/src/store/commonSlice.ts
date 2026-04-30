@@ -69,6 +69,11 @@ export const commonSlice = createSlice({
   reducers: {
     setUser(state, action: PayloadAction<IUserData | null>) {
       state.user.data = action.payload;
+      if (action.payload) {
+        localStorage.setItem('user', JSON.stringify(action.payload));
+      } else {
+        localStorage.removeItem('user');
+      }
     },
     setUserStatus(state, action: PayloadAction<IUserStatus>) {
       state.user.status = action.payload;
@@ -121,6 +126,7 @@ export const commonSlice = createSlice({
 });
 
 export const selectUser = (state: IRootState) => state.common.user.data;
+export const selectIsAuthenticated = (state: IRootState) => Boolean(state.common.user.data);
 export const selectUserAddr = createSelector(selectUser, (user) => user?.sc_addr);
 export const selectUserStatus = (state: IRootState) => state.common.user.status;
 export const selectFormat = (state: IRootState) => state.common.format || 'scn';

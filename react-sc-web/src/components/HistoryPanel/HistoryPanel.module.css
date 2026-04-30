@@ -6,7 +6,9 @@
 }
 
 .historyBtn {
-  margin-bottom: 12px;
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
   padding: 8px 10px;
   font-family: 'Roboto';
   font-style: normal;
@@ -14,9 +16,10 @@
   font-size: 20px;
   line-height: 23px;
   cursor: pointer;
-  color: var(--color-text-primary, #333);
+  color: var(--color-dark-grey);
   background: none;
   border-radius: 8px;
+  text-shadow: 0 0 0 transparent;
 }
 
 .historyBtn:hover {
@@ -28,13 +31,15 @@
 }
 
 .historyItem {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 32px;
+  column-gap: 6px;
   align-items: center;
-  justify-content: space-between;
   margin-bottom: 12px;
   padding: 8px 10px;
   border-radius: 8px;
   cursor: pointer;
+  overflow: visible;
 }
 
 .historyItem:hover {
@@ -42,17 +47,22 @@
 }
 
 .deleteBtn {
-  opacity: 0;
-  padding: 4px;
+  justify-self: end;
+  align-self: center;
+  opacity: 0.72;
+  width: 32px;
+  height: 32px;
+  padding: 0;
   background: none;
   border: none;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  transition: opacity ease 0.2s;
-  margin-left: 8px;
+  flex-shrink: 0;
+  overflow: visible;
+  transition: opacity ease 0.2s, background-color 0.2s ease, color 0.2s ease;
   color: var(--color-dull-grey);
 }
 
@@ -61,35 +71,49 @@
   color: var(--color-dark-grey);
 }
 
+.deleteBtn :global(svg) {
+  width: 16px;
+  height: 16px;
+  display: block;
+  transform: translateY(-4px);
+  overflow: visible;
+}
+
+.deleteBtn :global(path) {
+  stroke: currentColor;
+}
+
 .historyItem:hover .deleteBtn {
   opacity: 1;
 }
 
 .clearBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 16px;
+  align-self: flex-start;
+  padding: 8px 12px;
   margin-bottom: 12px;
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 500;
-  font-size: 14px;
-  line-height: 16px;
-  color: var(--color-text-primary, #333);
-  background: var(--color-button-bg, #fff);
-  border: 1px solid var(--color-button-border, #d9d9d9);
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--color-dark-grey);
+  background: var(--color-soft-grey);
+  border: 1px solid var(--color-border-grey);
   border-radius: 8px;
   cursor: pointer;
-  transition: all ease 0.2s;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.12s ease;
 }
 
 .clearBtn:hover {
-  color: var(--color-error, #d9534f);
-  border-color: var(--color-error, #d9534f);
-  background: var(--color-button-bg, #fff);
+  background: var(--color-decomposition-hover);
+  border-color: var(--color-dull-grey);
 }
 
 .clearBtn:active {
-  background: var(--color-soft-grey, #f5f5f5);
+  transform: translateY(1px);
+  background: var(--color-soft-grey);
 }

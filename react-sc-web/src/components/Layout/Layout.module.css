@@ -1,7 +1,7 @@
 .root {
   position: relative;
   display: grid;
-  grid-template-columns: 463px 1fr;
+  grid-template-columns: minmax(0, 463px) 1fr;
   grid-template-rows: 80px 1fr;
   grid-template-areas:
     'logo  header'
@@ -13,10 +13,22 @@
 .header {
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   grid-area: header;
-  width: 100%;
+  justify-self: end;
+  width: max-content;
+  max-width: 100%;
+  box-sizing: border-box;
   padding: 0 24px 0 0;
+}
+
+/* Ask AI: вертикаль как у .header (строка грида 80px + align-items: center); липкая шапка */
+.headerAskAiSticky {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  justify-self: end;
+  background: var(--color-white);
 }
 
 .sideBar {
@@ -47,8 +59,11 @@
   padding: 0 32px 10px 32px;
 }
 
+/* min-width: 0 — иначе широкий контент раздувает колонку 1fr; горизонтальную прокрутку даём только обёртке Ask AI, без overflow-x на main (нет «прыжка» ширины/скроллбара) */
 .main {
+  position: relative;
   display: flex;
+  min-width: 0;
   padding-top: 36px;
   padding-left: 24px;
   grid-area: scn;
@@ -56,6 +71,6 @@
 
 @media (max-width: 1365px) {
   .root {
-    grid-template-columns: 350px 1fr;
+    grid-template-columns: minmax(0, 25%) 1fr;
   }
 }

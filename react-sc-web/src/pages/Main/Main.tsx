@@ -1,7 +1,8 @@
+import { useEffect } from 'react';
 import { generatePath, Outlet, useLocation, useMatch, useNavigate } from 'react-router';
 import { routes } from '@constants';
-import { useDispatch } from '@hooks/redux';
-import { setFormat } from '@store/commonSlice';
+import { useDispatch, useSelector } from '@hooks/redux';
+import { selectFormat, setFormat } from '@store/commonSlice';
 import { SwitchScgScn, TScLanguageTab } from 'ostis-ui-lib';
 
 import styles from './Main.module.css';
@@ -14,6 +15,17 @@ const Main = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+  const formatInStore = useSelector(selectFormat);
+
+  const urlFormat = actionMatch?.params.format ?? commandMatch?.params.format;
+
+  useEffect(() => {
+    if (urlFormat === 'scg' || urlFormat === 'scn') {
+      if (urlFormat !== formatInStore) {
+        dispatch(setFormat(urlFormat));
+      }
+    }
+  }, [urlFormat, formatInStore, dispatch]);
 
   const activeTab = location.pathname.includes('scg') ? 'scg' : 'scn';
   const switchTooltip =
@@ -25,6 +37,12 @@ const Main = () => {
     location.pathname === routes.LIBRARY ||
     location.pathname === libraryPath ||
     location.pathname.startsWith(`${libraryPath}/`);
+
+  const guidePath = routes.GUIDE.endsWith('/') ? routes.GUIDE.slice(0, -1) : routes.GUIDE;
+  const isGuideRoute =
+    location.pathname === routes.GUIDE ||
+    location.pathname === guidePath ||
+    location.pathname.startsWith(`${guidePath}/`);
 
   const onChange = (newActiveTab: TScLanguageTab) => {
     dispatch(setFormat(newActiveTab));
@@ -51,7 +69,7 @@ const Main = () => {
 
   return (
     <div className={styles.wrapper}>
-      {!isLibraryRoute && (
+      {!isLibraryRoute && !isGuideRoute && (
         <div className={styles.switch} title={switchTooltip} aria-label={switchTooltip}>
           <SwitchScgScn tab={activeTab} onTabClick={onChange} />
         </div>

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { scUtils } from '@api';
-import { FEATURES } from '@constants/features';
+import { FEATURES } from '@constants';
 import { TLanguage, ScTag, useLanguageContext } from 'ostis-ui-lib';
 
 import styles from './language.module.css';
@@ -13,12 +13,12 @@ export const Language = () => {
 
   useEffect(() => {
     if (FEATURES.enableContextMenuOnLanguage) {
-      scUtils.searchKeynodes('ui_english_language', 'ui_russian_language').then(
-        ({ uiEnglishLanguage, uiRussianLanguage }) => {
+      scUtils
+        .searchKeynodes('ui_english_language', 'ui_russian_language')
+        .then(({ uiEnglishLanguage, uiRussianLanguage }) => {
           if (uiEnglishLanguage?.value) setEnAddr(uiEnglishLanguage.value);
           if (uiRussianLanguage?.value) setRuAddr(uiRussianLanguage.value);
-        },
-      );
+        });
     }
   }, []);
 

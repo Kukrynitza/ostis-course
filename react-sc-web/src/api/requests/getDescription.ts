@@ -4,106 +4,17 @@ import { TLanguage } from 'ostis-ui-lib';
 
 import { doCommand } from './command';
 
-const USE_MOCK_ANSWERS = false;
-
-const MOCK_ANSWERS: Record<string, string> = {
-  синглтон:
-    'Синглтон - это множество, содержащее ровно один элемент. В теории множеств синглтон определяется как множество {x}, где x - некоторый объект.',
-  'что такое синглтон':
-    'Синглтон - это множество, содержащее ровно один элемент. В теории множеств синглтон определяется как множество {x}, где x - некоторый объект.',
-  ims: 'IMS (Intelligent Management System) - интеллектуальная система управления, основанная на технологии OSTIS.',
-  'что такое ims':
-    'IMS (Intelligent Management System) - интеллектуальная система управления, основанная на технологии OSTIS.',
-  'что такое имс':
-    'IMS (Intelligent Management System) - интеллектуальная система управления, основанная на технологии OSTIS.',
-  граф: 'Граф - это математическая структура, состоящая из вершин (узлов) и рёбер (связей) между ними.',
-  'что такое граф':
-    'Граф - это математическая структура, состоящая из вершин (узлов) и рёбер (связей) между ними.',
-  остис:
-    'OSTIS (Open Semantic Technology for Intelligent Systems) - это технология построения интеллектуальных систем с открытой семантикой.',
-  'что такое остис':
-    'OSTIS (Open Semantic Technology for Intelligent Systems) - это технология построения интеллектуальных систем с открытой семантикой.',
-  ostis:
-    'OSTIS (Open Semantic Technology for Intelligent Systems) - это технология построения интеллектуальных систем с открытой семантикой.',
-  'что такое ostis':
-    'OSTIS (Open Semantic Technology for Intelligent Systems) - это технология построения интеллектуальных систем с открытой семантикой.',
-  'sc-машина':
-    'SC-машина (Semantic Computer Machine) - это программный комплекс для работы с базой знаний на основе семантических сетей.',
-  пересечение:
-    'Пересечение множеств - это множество, содержащее все элементы, которые принадлежат одновременно всем рассматриваемым множествам. Обозначается символом ∩.',
-  'что такое пересечение':
-    'Пересечение множеств - это множество, содержащее все элементы, которые принадлежат одновременно всем рассматриваемым множествам. Обозначается символом ∩.',
-  объединение:
-    'Объединение множеств - это множество, содержащее все элементы, которые принадлежат хотя бы одному из рассматриваемых множеств. Обозначается символом ∪.',
-  'что такое объединение':
-    'Объединение множеств - это множество, содержащее все элементы, которые принадлежат хотя бы одному из рассматриваемых множеств. Обозначается символом ∪.',
-  метасистема:
-    'Метасистема OSTIS - это инструментальная среда для разработки и сопровождения интеллектуальных систем, основанных на принципах семантического представления знаний.',
-  'что такое метасистема':
-    'Метасистема OSTIS - это инструментальная среда для разработки и сопровождения интеллектуальных систем, основанных на принципах семантического представления знаний.',
-  'метасистема остис':
-    'Метасистема OSTIS - это инструментальная среда для разработки и сопровождения интеллектуальных систем, основанных на принципах семантического представления знаний.',
-  'предметная область':
-    'Предметная область - это совокупность сущностей, процессов, свойств и связей между ними, которая рассматривается в рамках конкретной задачи или системы.',
-  'что такое предметная область':
-    'Предметная область - это совокупность сущностей, процессов, свойств и связей между ними, которая рассматривается в рамках конкретной задачи или системы.',
-  'sc-класс':
-    'SC-класс - это семантическая структура в SC-коде, представляющая множество элементов с общими свойствами. Определение sc-класса формулирует общее свойство, присущее всем его элементам.',
-  множество:
-    'Множество - это фундаментальное понятие математики, обозначающее совокупность объектов, объединённых по какому-либо признаку. Элементы множества могут быть любыми объектами.',
-  'что такое множество':
-    'Множество - это фундаментальное понятие математики, обозначающее совокупность объектов, объединённых по какому-либо признаку. Элементы множества могут быть любыми объектами.',
-  'семантическая окрестность':
-    'Семантическая окрестность sc-элемента — это совокупность связанных с ним элементов базы знаний, достаточная для восстановления его смысла в контексте предметной области (в т.ч. для навигации и запросов в Метасистеме OSTIS).',
-  'что такое семантическая окрестность':
-    'Семантическая окрестность sc-элемента — это совокупность связанных с ним элементов базы знаний, достаточная для восстановления его смысла в контексте предметной области (в т.ч. для навигации и запросов в Метасистеме OSTIS).',
-  семантика:
-    'Семантическая окрестность sc-элемента — это совокупность связанных с ним элементов базы знаний, достаточная для восстановления его смысла в контексте предметной области (в т.ч. для навигации и запросов в Метасистеме OSTIS).',
-  'что такое семантика':
-    'Семантическая окрестность sc-элемента — это совокупность связанных с ним элементов базы знаний, достаточная для восстановления его смысла в контексте предметной области (в т.ч. для навигации и запросов в Метасистеме OSTIS).',
-  'семантическая сеть':
-    'Семантическая сеть — это способ представления знаний в виде графа: вершины соответствуют сущностям (понятиям, объектам), а дуги — отношениям между ними.',
-  'что такое семантическая сеть':
-    'Семантическая сеть — это способ представления знаний в виде графа: вершины соответствуют сущностям (понятиям, объектам), а дуги — отношениям между ними.',
-  'sc-элемент':
-    'Sc-элемент — базовая единица SC-памяти (узел, дуга или связь), участвующая в представлении знаний и построении семантических конструкций.',
-  'что такое sc-элемент':
-    'Sc-элемент — базовая единица SC-памяти (узел, дуга или связь), участвующая в представлении знаний и построении семантических конструкций.',
-  'sc элемент':
-    'Sc-элемент — базовая единица SC-памяти (узел, дуга или связь), участвующая в представлении знаний и построении семантических конструкций.',
-  'что такое sc элемент':
-    'Sc-элемент — базовая единица SC-памяти (узел, дуга или связь), участвующая в представлении знаний и построении семантических конструкций.',
-  'sc-память':
-    'Sc-память — это семантическая память OSTIS, где знания хранятся в виде sc-элементов (узлов, дуг и связей) и отношений между ними.',
-  'что такое sc-память':
-    'Sc-память — это семантическая память OSTIS, где знания хранятся в виде sc-элементов (узлов, дуг и связей) и отношений между ними.',
-  'semantic code':
-    'Semantic code (SC-код) — язык и форма представления знаний в OSTIS на основе sc-элементов и их связей.',
-  'what is semantic code':
-    'Semantic code (SC-code) is the OSTIS knowledge representation form based on sc-elements and semantic relations between them.',
-  'what is singleton': 'A singleton is a set that contains exactly one element.',
-  'what is ims':
-    'IMS (Intelligent Management System) is an intelligent management system based on OSTIS technology.',
-  'what is a graph':
-    'A graph is a mathematical structure consisting of vertices (nodes) and edges (connections) between them.',
-  'what is ostis':
-    'OSTIS (Open Semantic Technology for Intelligent Systems) is a technology for building intelligent systems with open semantics.',
-};
-
-const AVAILABLE_QUESTIONS_RU = [
-  'что такое ostis',
-  'что такое ims',
-  'что такое декомпозиция',
+/** Примеры для подсказок при отсутствии ответа — держать в соответствии с реальной БЗ (см. scripts/kb-concept-count-instructions.txt). */
+const SUGGESTED_EXAMPLE_QUERIES_RU = [
+  'что такое граф',
   'что такое sc-память',
-  'что такое библиотека компонентов',
-  'что такое семантическая окрестность',
+  'что такое декомпозиция',
 ];
 
-const AVAILABLE_QUESTIONS_EN = [
-  'what is singleton',
+const SUGGESTED_EXAMPLE_QUERIES_EN = [
   'what is a graph',
-  'what is ims',
-  'what is ostis',
+  'what is sc-memory',
+  'what is decomposition',
 ];
 
 type KBAnswer = { answer: string; lowQuality: boolean };
@@ -117,9 +28,14 @@ const QUERY_ALIASES: Record<string, string[]> = {
   'что такое ims': ['что такое имс'],
   'что такое имс': ['что такое ims'],
   'что такое декомпозиция': ['декомпозиция'],
+  'what is decomposition': ['декомпозиция', 'decomposition'],
   'что такое система': ['система'],
   'что такое граф': ['граф'],
-  'что такое синглтон': ['синглтон'],
+  'что такое семантическая окрестность': [
+    'семантическая окрестность',
+    'семантическая окрестность sc-элемента',
+  ],
+  'what is semantic neighborhood': ['semantic neighborhood'],
   'что такое внешний язык': ['внешний язык', 'external language'],
   'что такое external language': ['что такое внешний язык', 'external language'],
   'что такое дискретная математика': ['дискретная математика', 'что такое дикретная математика'],
@@ -134,6 +50,8 @@ const QUERY_ALIASES: Record<string, string[]> = {
   'что такое sc элемент': ['что такое sc-элемент', 'sc element', 'sc_element'],
   'sc-память': ['sc memory', 'sc-memory'],
   'что такое sc-память': ['sc-память', 'sc memory', 'sc-memory'],
+  'what is sc-memory': ['sc memory', 'sc-memory', 'sc-память'],
+  'what is sc memory': ['sc memory', 'sc-memory', 'sc-память'],
   'semantic code': ['sc code', 'sc-code', 'semantic cod'],
   'what is semantic code': ['semantic code', 'sc code', 'sc-code'],
   'что такое semantic code': ['что такое sc-код', 'sc-код', 'semantic code'],
@@ -381,18 +299,60 @@ const searchNodeByIdentifier = async (
   return result[0].get(nodeAlias);
 };
 
+/** Дополнительные строки для поиска ссылок в БЗ (варианты дефиса, регистр, EN). */
+const expandIdentifierLookupVariants = (candidates: string[]): string[] => {
+  const out = new Set<string>();
+  for (const raw of candidates) {
+    const n = normalizeQuery(raw);
+    const t = raw.trim();
+    if (n.length > 1) out.add(n);
+    if (t.length > 1) out.add(t);
+
+    if (/sc[-\s‑]?память/i.test(n) || /sc[-\s‑]?память/i.test(t)) {
+      [
+        'sc-память',
+        'sc‑память',
+        'sc память',
+        'SC-память',
+        'Sc-память',
+        'sc memory',
+        'sc-memory',
+        'SC memory',
+      ].forEach((s) => out.add(s));
+    }
+    if (n.includes('декомпозиц')) {
+      ['декомпозиция', 'что такое декомпозиция', 'nrel_decomposition'].forEach((s) => out.add(s));
+    }
+    if (/семантическ\w*\s+окрестност/i.test(n) || /семантическ\w*\s+окрестност/i.test(t)) {
+      [
+        'семантическая окрестность',
+        'семантическая окрестность sc-элемента',
+        'семантическая окрестность sc элемента',
+        'семантическая окрестность sc-элемент',
+        'что такое семантическая окрестность',
+        'semantic neighborhood',
+        'semantic neighborhood of sc-element',
+        'semantic_neighborhood',
+      ].forEach((s) => out.add(s));
+    }
+  }
+  return [...out].filter((s) => s.length > 1);
+};
+
 const resolveAddrByText = async (text: string): Promise<ScAddr | null> => {
   const normalized = normalizeQuery(text);
   if (!normalized) return null;
 
-  const candidates = Array.from(
-    new Set([
-      normalized,
-      text.trim(),
-      normalized.replace(/^что такое\s+/i, ''),
-      normalized.replace(/^what is\s+/i, ''),
-    ]),
-  ).filter((value) => value.length > 1);
+  const candidates = expandIdentifierLookupVariants(
+    Array.from(
+      new Set([
+        normalized,
+        text.trim(),
+        normalized.replace(/^что такое\s+/i, ''),
+        normalized.replace(/^what is\s+/i, ''),
+      ]),
+    ).filter((value) => value.length > 1),
+  );
 
   const { nrelMainIdtf, nrelSystemIdentifier } = await scUtils.searchKeynodes(
     'nrel_system_identifier',
@@ -531,17 +491,6 @@ async function searchKB(query: string, lang: TLanguage): Promise<KBAnswer | null
   return null;
 }
 
-function getMockAnswer(query: string): string | null {
-  const normalizedQuery = normalizeQuery(query);
-
-  for (const [key, answer] of Object.entries(MOCK_ANSWERS)) {
-    if (normalizedQuery.includes(key)) {
-      return answer;
-    }
-  }
-  return null;
-}
-
 export const getDescriptionById = async (id: string, lang: TLanguage): Promise<string | null> => {
   const idResolved = lang === 'ru' ? fixCommonQueryTyposRu(id) : id;
   const intent = detectIntent(idResolved, lang);
@@ -567,12 +516,17 @@ export const getDescriptionById = async (id: string, lang: TLanguage): Promise<s
   }
 
   if (intent === 'definition') {
+    const summaryFirst = await tryResolveFromScSummary(definitionCandidates, lang);
+    if (summaryFirst) return summaryFirst;
+
     const answer = await searchKbWithPriority(definitionCandidates, lang);
     if (answer && answer.quality !== 'weak') {
       return postProcessKbAnswer(answer.answer, lang);
     }
-    const summaryAnswer = await tryResolveFromScSummary(definitionCandidates, lang);
-    if (summaryAnswer) return summaryAnswer;
+    if (answer?.quality === 'weak') {
+      const weakText = postProcessKbAnswer(answer.answer, lang);
+      if (weakText.length >= 48) return weakText;
+    }
   } else {
     const answerFromGeneral = await searchKbWithPriority(generalCandidates, lang);
     if (answerFromGeneral && answerFromGeneral.quality !== 'weak') {
@@ -589,28 +543,16 @@ export const getDescriptionById = async (id: string, lang: TLanguage): Promise<s
     if (summaryAnswer) return summaryAnswer;
   }
 
-  if (USE_MOCK_ANSWERS) {
-    const mockAnswer = getMockAnswer(idResolved);
-    if (mockAnswer) {
-      return mockAnswer;
-    }
-  }
-  const availableQuestions = lang === 'ru' ? AVAILABLE_QUESTIONS_RU : AVAILABLE_QUESTIONS_EN;
-  const suggestions = availableQuestions
-    .slice(0, 5)
-    .map((k) => `"${k}"`)
-    .join(', ');
-
   if (lang === 'ru') {
     if (intent === 'action') {
-      return `Не удалось выполнить запрос как действие. Попробуйте формулировку в формате "что такое ...", например: ${suggestions}.`;
+      return 'Не удалось выполнить запрос как действие.';
     }
     if (intent === 'navigation') {
-      return `Навигационный запрос не дал результата. Переформулируйте его как определение ("что такое ..."). Примеры: ${suggestions}.`;
+      return 'Навигационный запрос не дал результата.';
     }
-    return `По этому запросу в базе знаний пока нет уверенного определения. Попробуйте уточнить формулировку или один из проверенных примеров: ${suggestions}.`;
+    return 'В базе знаний не найдено определения по этому запросу.';
   } else {
-    return `I couldn't find a reliable answer in the knowledge base. Try a more specific "what is ..." query, for example: ${suggestions}.`;
+    return 'No matching definition was found in the knowledge base.';
   }
 };
 
@@ -626,8 +568,8 @@ export const getWhatIsGraph = async () => {
   return getDescriptionById('что такое граф', 'ru');
 };
 
-export const getWhatIsSingleton = async () => {
-  return getDescriptionById('что такое синглтон', 'ru');
+export const getWhatIsSemanticNeighborhood = async () => {
+  return getDescriptionById('что такое семантическая окрестность', 'ru');
 };
 
 export const getWhatIsSetTheory = async () => {
