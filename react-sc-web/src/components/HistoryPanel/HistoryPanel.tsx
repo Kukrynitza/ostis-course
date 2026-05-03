@@ -59,7 +59,7 @@ export const HistoryPanel = (props: IProps) => {
                 <ScLangText addrOrSystemId={action} defaultText={String(action)} />
               </ScTag>
               <button className={styles.deleteBtn} onClick={onDeleteClick(action)} title="Удалить">
-                <Delete width="14" height="14" />
+                <Delete width="22" height="22" />
               </button>
             </div>
           ))}
