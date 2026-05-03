@@ -6,7 +6,6 @@
 }
 
 .historyBtn {
-  margin-bottom: 12px;
   padding: 8px 10px;
   font-family: 'Roboto';
   font-style: normal;
@@ -14,7 +13,7 @@
   font-size: 20px;
   line-height: 23px;
   cursor: pointer;
-  color: var(--color-text-primary, #333);
+  color: var(--color-text-primary);
   background: none;
   border-radius: 8px;
 }
@@ -52,12 +51,12 @@
   justify-content: center;
   border-radius: 8px;
   transition: opacity ease 0.2s;
-  margin-left: 8px;
+  margin-left: 18px;
   color: var(--color-dull-grey);
 }
 
 .deleteBtn:hover {
-  background: var(--color-soft-grey, rgba(0, 0, 0, 0.1));
+  background: var(--color-error-message);
   color: var(--color-dark-grey);
 }
 
@@ -76,20 +75,19 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
-  color: var(--color-text-primary, #333);
-  background: var(--color-button-bg, #fff);
-  border: 1px solid var(--color-button-border, #d9d9d9);
+  color: var(--color-text-primary);
+  background: var(--color-dark-blue);
+  border: 1px solid var(--color-button-border);
   border-radius: 8px;
   cursor: pointer;
   transition: all ease 0.2s;
 }
 
 .clearBtn:hover {
-  color: var(--color-error, #d9534f);
-  border-color: var(--color-error, #d9534f);
-  background: var(--color-button-bg, #fff);
+  border-color: var(--color-button-hover-bg);
+  background: var(--color-navy-blue);
 }
 
 .clearBtn:active {
-  background: var(--color-soft-grey, #f5f5f5);
+  background: var(--color-navy-blue);
 }
