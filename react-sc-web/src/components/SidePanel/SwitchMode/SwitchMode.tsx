@@ -91,7 +91,7 @@ export const SwitchMode = () => {
     <div className={styles.switchModeButtonsWrapper}>
       <Link
         to={routes.MAIN}
-        className={`${styles.switchModeButton} ${isDark ? styles.switchModeButtonDark : ''}`}
+        className={styles.switchModeButton}
         onClick={() => handlePageClick(routes.ACTION)}
         title="SCn/SCg режим"
         aria-label="Переключить на режим SCn/SCg"
@@ -111,7 +111,7 @@ export const SwitchMode = () => {
       ) : (
         <Link
           to={routes.LIBRARY}
-          className={`${styles.switchModeButton} ${isDark ? styles.switchModeButtonDark : ''}`}
+          className={styles.switchModeButton}
           onClick={() => handlePageClick(routes.LIBRARY)}
           title="Библиотека компонентов"
           aria-label="Переключить на библиотеку компонентов"
@@ -128,7 +128,7 @@ export const SwitchMode = () => {
       </Link>
       <Link
         to={routes.ASK_AI}
-        className={`${styles.switchModeButton} ${isDark ? styles.switchModeButtonDark : ''}`}
+        className={styles.switchModeButton}
         onClick={() => handlePageClick(routes.ASK_AI)}
         title="Диалоговый помощник AskAI"
         aria-label="Переключить на AskAI"
