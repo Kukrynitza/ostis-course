@@ -83,9 +83,9 @@ def init_app_rules():
         (r"/static/(.*)", NoCacheStaticHandler, {"path": tornado.options.options.static_path}),
 
         # auth
-        (r"/login", auth.LoginHandler),
+        (r"/api/login", auth.LoginHandler),
         (r"/api/register", auth.RegisterHandler),
-        (r"/logout", auth.LogOutHandler),
+        (r"/api/logout", auth.LogOutHandler),
         (r"/api/user", auth.MeHandler),
 
         (r"/auth/google$", auth.GoogleOAuth2LoginHandler),
@@ -102,7 +102,7 @@ def init_app_rules():
         (r"/api/languages/set/", api.LanguageSet),
 
         (r"/api/info/tooltip/", api.InfoTooltip),
-
+        (r"/api/kb/search/", api.KbSearch),
         (r"/api/user/", api.User),
 
         (r"/admin$", admin.MainHandler),
@@ -169,7 +169,7 @@ def main(options):
     application = tornado.web.Application(
         handlers=rules,
         cookie_secret=secret.get_secret(),
-        login_url="/login",
+        login_url="/api/login",
         template_path=tornado.options.options.templates_path,
         xsrf_cookies=False,
         gzip=True,

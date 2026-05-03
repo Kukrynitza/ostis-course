@@ -1,5 +1,4 @@
 import { request } from '@api';
-import { API_URL } from '@constants';
 import { objectToFormData } from '@utils';
 
 interface IDoCommandResult {
@@ -17,7 +16,7 @@ export const doCommand = (cmdAddr: number, ...args: number[]) => {
 
   return request<IDoCommandResult>({
     method: 'POST',
-    url: `${API_URL}/api/cmd/do/`,
+    url: '/api/cmd/do/',
     data: objectToFormData({
       cmd: cmdAddr,
       ...argsObj,

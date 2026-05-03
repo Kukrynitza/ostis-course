@@ -1,5 +1,4 @@
 import { request } from '@api/utils';
-import { API_URL } from '@constants';
 import { IUserData } from '@model/model';
 
 export interface ILoginParams {
@@ -17,7 +16,7 @@ export interface IRegisterParams {
 export const login = async (params: ILoginParams): Promise<IUserData> => {
   const response = await request<IUserData>({
     method: 'POST',
-    url: `${API_URL}/login`,
+    url: '/api/login',
     data: JSON.stringify(params),
   });
 
@@ -31,7 +30,7 @@ export const login = async (params: ILoginParams): Promise<IUserData> => {
 export const register = async (params: IRegisterParams): Promise<IUserData> => {
   const response = await request<IUserData>({
     method: 'POST',
-    url: `${API_URL}/api/register`,
+    url: '/api/register',
     data: JSON.stringify(params),
   });
 
@@ -50,14 +49,14 @@ export const loginWithGoogle = async (): Promise<IUserData> => {
 export const logout = async (): Promise<void> => {
   await request({
     method: 'GET',
-    url: `${API_URL}/logout`,
+    url: '/api/logout',
   });
 };
 
 export const checkSession = async (): Promise<IUserData | null> => {
   const response = await request<IUserData>({
     method: 'GET',
-    url: `${API_URL}/login`,
+    url: '/api/login',
   });
 
   if ('data' in response) {

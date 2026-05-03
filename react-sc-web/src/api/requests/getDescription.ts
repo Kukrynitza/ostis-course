@@ -1,5 +1,5 @@
 import { ScAddr, ScTemplate, ScType } from 'ts-sc-client';
-import { client, isAxiosError, scUtils } from '@api';
+import { client, isAxiosError, scUtils, request } from '@api';
 import { TLanguage } from 'ostis-ui-lib';
 
 import { doCommand } from './command';
@@ -512,14 +512,19 @@ const tryResolveFromScSummary = async (
 
 async function searchKB(query: string, lang: TLanguage): Promise<KBAnswer | null> {
   try {
-    const response = await fetch('/api/kb/search/', {
+    const response = await request<{
+      success: boolean;
+      found: boolean;
+      answer: string;
+      low_quality: boolean | string;
+    }>({
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query, lang }),
+      url: '/api/kb/search/',
+      data: { query, lang },
     });
 
-    if (response.ok) {
-      const data = await response.json();
+    if (!isAxiosError(response) && response.status === 200) {
+      const data = response.data;
       if (data.success && data.found && data.answer) {
         const isLowQuality = data.low_quality === true || data.low_quality === 'true';
         return { answer: data.answer, lowQuality: isLowQuality };
@@ -568,18 +573,18 @@ export const getDescriptionById = async (id: string, lang: TLanguage): Promise<s
 
   if (intent === 'definition') {
     const answer = await searchKbWithPriority(definitionCandidates, lang);
-    if (answer && answer.quality !== 'weak') {
+    if (answer) {
       return postProcessKbAnswer(answer.answer, lang);
     }
     const summaryAnswer = await tryResolveFromScSummary(definitionCandidates, lang);
     if (summaryAnswer) return summaryAnswer;
   } else {
     const answerFromGeneral = await searchKbWithPriority(generalCandidates, lang);
-    if (answerFromGeneral && answerFromGeneral.quality !== 'weak') {
+    if (answerFromGeneral) {
       return postProcessKbAnswer(answerFromGeneral.answer, lang);
     }
     const answerFromDefinitions = await searchKbWithPriority(definitionCandidates, lang);
-    if (answerFromDefinitions && answerFromDefinitions.quality !== 'weak') {
+    if (answerFromDefinitions) {
       return postProcessKbAnswer(answerFromDefinitions.answer, lang);
     }
     const summaryAnswer = await tryResolveFromScSummary(

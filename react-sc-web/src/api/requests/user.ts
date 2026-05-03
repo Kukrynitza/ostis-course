@@ -1,18 +1,17 @@
 import { isAxiosError, request } from '@api';
-import { API_URL } from '@constants';
 import { IUser } from '@model/user';
 
 export const getUsersList = () => {
   return request<IUser[]>({
     method: 'GET',
-    url: `${API_URL}/api/users`,
+    url: '/api/users',
   });
 };
 
 export const postNewUser = async (user: IUser) => {
   const res = await request<{ sc_addr: number }>({
     method: 'POST',
-    url: `${API_URL}/api/users`,
+    url: '/api/users',
     data: JSON.stringify({
       canEdit: `${user.canEdit}`,
       login: user.login,
@@ -34,14 +33,14 @@ export const postNewUser = async (user: IUser) => {
 export const deleteUser = async (scAddr: number) => {
   return request({
     method: 'DELETE',
-    url: `${API_URL}/api/users/${scAddr}`,
+    url: `/api/users/${scAddr}`,
   });
 };
 
 export const putUser = async (user: IUser) => {
   return request({
     method: 'PUT',
-    url: `${API_URL}/api/users/${user.sc_addr}`,
+    url: `/api/users/${user.sc_addr}`,
     data: JSON.stringify({
       role: user.role,
       canEdit: `${user.canEdit}`,

@@ -7,7 +7,6 @@ import {
   ScType,
 } from 'ts-sc-client';
 import { client, isAxiosError, request, scUtils } from '@api';
-import { API_URL } from '@constants';
 import { Decomposition } from '@model/model';
 import { langToKeynode, snakeToCamelCase, TLanguage } from 'ostis-ui-lib';
 
@@ -90,7 +89,7 @@ export const addDecompositionItem = async (parentID: string, data: IDecompositio
 
   return request<{ scAddr: number }>({
     method: 'POST',
-    url: `${API_URL}/api/sections/${parentID}/subsections`,
+    url: `/api/sections/${parentID}/subsections`,
     data: { ...data, lang: foundLang.value },
   });
 };
@@ -98,7 +97,7 @@ export const addDecompositionItem = async (parentID: string, data: IDecompositio
 export const deleteDecompositionItem = (parentID: string, id: string) => {
   return request<{ sc_addr: number }>({
     method: 'DELETE',
-    url: `${API_URL}/api/sections/${parentID}/subsections/${id}`,
+    url: `/api/sections/${parentID}/subsections/${id}`,
   });
 };
 
