@@ -1,10 +1,13 @@
-export const debounce = <F extends (...args: any[]) => any>(func: F, wait: number) => {
+export const debounce = <Args extends unknown[], ReturnValue>(
+  func: (...args: Args) => ReturnValue,
+  wait: number,
+) => {
   let timerId: NodeJS.Timeout;
 
   const clear = () => {
     clearTimeout(timerId);
   };
-  const debounced = (...args: Parameters<F>) => {
+  const debounced = (...args: Args) => {
     clearTimeout(timerId);
     timerId = setTimeout(() => func(...args), wait);
   };
@@ -12,11 +15,14 @@ export const debounce = <F extends (...args: any[]) => any>(func: F, wait: numbe
   return [debounced, clear] as const;
 };
 
-export const debounceWithReturn = <F extends (...args: any[]) => any>(func: F, wait: number) => {
+export const debounceWithReturn = <Args extends unknown[], ReturnValue>(
+  func: (...args: Args) => ReturnValue,
+  wait: number,
+) => {
   let timerId: NodeJS.Timeout;
 
-  return (...args: Parameters<F>) => {
-    return new Promise<ReturnType<F>>((resolve) => {
+  return (...args: Args) => {
+    return new Promise<ReturnValue>((resolve) => {
       clearTimeout(timerId);
       timerId = setTimeout(() => {
         resolve(func(...args));

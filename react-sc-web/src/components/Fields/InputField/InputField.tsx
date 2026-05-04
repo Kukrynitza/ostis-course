@@ -12,5 +12,4 @@ export const InputField = forwardRef<HTMLInputElement, IProps & IFieldProps>((pr
   );
 });
 
-
 InputField.displayName = 'InputField';

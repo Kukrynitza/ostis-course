@@ -22,6 +22,10 @@ export const SearchField: FC<IProps> = ({ className }) => {
   const { goToActiveFormatCommand } = useScNavigation();
 
   const translate = useTranslate();
+  const searchTooltip = translate({
+    ru: 'Поиск sc-элементов по текстовым фрагментам',
+    en: 'Search for sc-elements by text fragments',
+  });
 
   const findOptions = useCallback(async (searchValue: string) => {
     if (!searchValue) return setOptions(null);
@@ -69,6 +73,8 @@ export const SearchField: FC<IProps> = ({ className }) => {
       mode="search"
       value=""
       placeholder={translate({ ru: 'Поиск...', en: 'Search...' })}
+      title={searchTooltip}
+      aria-label={searchTooltip}
       isLoading={isLoading}
       onInputChange={onInputChange}
       onChange={onChange}
@@ -76,7 +82,7 @@ export const SearchField: FC<IProps> = ({ className }) => {
       iconsLeft={<SearchIcon />}
     >
       {(options || []).map((option) => (
-        <Option key={option} value={option} className={styles.option}>
+        <Option key={option} value={option} className={styles.option} title={option}>
           {option}
         </Option>
       ))}

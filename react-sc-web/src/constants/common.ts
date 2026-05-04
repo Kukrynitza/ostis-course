@@ -1,7 +1,7 @@
 import { generatePath } from 'react-router-dom';
 import { routes } from '@constants';
 
-const defaultApiUrl = 'http://localhost:8000';
+const defaultApiUrl = '';
 const defaultScUrl = 'ws://localhost:8090/ws_json';
 
 export const SC_URL = process.env.SC_URL ? process.env.SC_URL : defaultScUrl;

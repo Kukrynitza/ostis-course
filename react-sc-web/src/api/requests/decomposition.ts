@@ -88,7 +88,7 @@ export const getDecomposition = async (lang: TLanguage): Promise<Decomposition |
 export const addDecompositionItem = async (parentID: string, data: IDecompositionItem) => {
   const foundLang = await getLanguage(data.lang);
 
-  return request<Record<string, any>>({
+  return request<{ scAddr: number }>({
     method: 'POST',
     url: `${API_URL}/api/sections/${parentID}/subsections`,
     data: { ...data, lang: foundLang.value },
@@ -96,7 +96,7 @@ export const addDecompositionItem = async (parentID: string, data: IDecompositio
 };
 
 export const deleteDecompositionItem = (parentID: string, id: string) => {
-  return request({
+  return request<{ sc_addr: number }>({
     method: 'DELETE',
     url: `${API_URL}/api/sections/${parentID}/subsections/${id}`,
   });

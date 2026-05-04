@@ -1,16 +1,16 @@
 import { request } from '@api';
 import { API_URL } from '@constants';
-import { ICorrectUser, IInputValidation } from '@model/model';
+import { ICorrectUser, IInputValidation, IUserData } from '@model/model';
 
 export const getUserByToken = () => {
-  return request({
+  return request<IUserData>({
     method: 'GET',
     url: `${API_URL}/login`,
   });
 };
 
 export const getUser = async (data: IInputValidation) => {
-  return request<Record<string, any>>({
+  return request<IUserData>({
     method: 'POST',
     url: `${API_URL}/login`,
     data: JSON.stringify(data),

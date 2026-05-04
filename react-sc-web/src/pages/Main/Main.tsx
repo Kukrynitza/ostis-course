@@ -16,6 +16,15 @@ const Main = () => {
   const dispatch = useDispatch();
 
   const activeTab = location.pathname.includes('scg') ? 'scg' : 'scn';
+  const switchTooltip =
+    activeTab === 'scg'
+      ? 'Текущий режим SCg-код. Нажмите, чтобы переключиться на SCn-код'
+      : 'Текущий режим SCn-код. Нажмите, чтобы переключиться на SCg-код';
+  const libraryPath = routes.LIBRARY.endsWith('/') ? routes.LIBRARY.slice(0, -1) : routes.LIBRARY;
+  const isLibraryRoute =
+    location.pathname === routes.LIBRARY ||
+    location.pathname === libraryPath ||
+    location.pathname.startsWith(`${libraryPath}/`);
 
   const onChange = (newActiveTab: TScLanguageTab) => {
     dispatch(setFormat(newActiveTab));
@@ -42,9 +51,11 @@ const Main = () => {
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.switch}>
-        <SwitchScgScn tab={activeTab} onTabClick={onChange} />
-      </div>
+      {!isLibraryRoute && (
+        <div className={styles.switch} title={switchTooltip} aria-label={switchTooltip}>
+          <SwitchScgScn tab={activeTab} onTabClick={onChange} />
+        </div>
+      )}
       <Outlet />
     </div>
   );

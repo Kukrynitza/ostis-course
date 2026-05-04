@@ -54,39 +54,34 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
 
   const fetchComponent = useCallback(
     async (component: ScAddr) => {
-      try {
-        const [
-          mainIdentifier,
-          type,
-          git,
-          explanation,
-          note,
-          installationMethod,
-          dependencies,
-          authors,
-        ] = await Promise.all([
-          searchComponentMainIdentifier(component, langToKeynode[lang]),
-          searchComponentType(component),
-          searchComponentGit(component),
-          searchComponentExplanation(component),
-          searchComponentNote(component),
-          searchComponentInstallationMethod(component),
-          searchComponentDependencies(component),
-          searchComponentAuthor(component),
-        ]);
+      const [
+        mainIdentifier,
+        type,
+        git,
+        explanation,
+        note,
+        installationMethod,
+        dependencies,
+        authors,
+      ] = await Promise.all([
+        searchComponentMainIdentifier(component, langToKeynode[lang]),
+        searchComponentType(component),
+        searchComponentGit(component),
+        searchComponentExplanation(component),
+        searchComponentNote(component),
+        searchComponentInstallationMethod(component),
+        searchComponentDependencies(component),
+        searchComponentAuthor(component),
+      ]);
 
-        setName(mainIdentifier ? (mainIdentifier as string) : '...');
-        setType(type);
-        setInstallMethod(installationMethod as InstallMethodType);
-        setGithub(git ? (git as string) : '#');
-        setExplanation(explanation ? (explanation as string) : '...');
-        setNote(note ? (note as string) : '...');
-        setDependencies(dependencies);
-        setAuthor(authors ? authors.join(', ') : '...');
-      } catch (error) {
-        console.error('Error fetching component specification:', error);
-        throw error;
-      }
+      setName(mainIdentifier ? (mainIdentifier as string) : '...');
+      setType(type);
+      setInstallMethod(installationMethod as InstallMethodType);
+      setGithub(git ? (git as string) : '#');
+      setExplanation(explanation ? (explanation as string) : '...');
+      setNote(note ? (note as string) : '...');
+      setDependencies(dependencies);
+      setAuthor(authors ? authors.join(', ') : '...');
     },
     [lang],
   );
@@ -101,7 +96,7 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
   return (
     <div
       className={styles.container}
-      onClick={(event) => {
+      onClick={() => {
         setShowComponent(undefined);
       }}
     >
@@ -113,7 +108,13 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
               <div className={styles.title}>{name}</div>
               <div className={styles.tool}>
                 <div className={subtitleClassName}>{type}</div>
-                <button className={styles.closeButton} onClick={() => setShowComponent(undefined)}>
+                <button
+                  className={styles.closeButton}
+                  onClick={() => setShowComponent(undefined)}
+                  type="button"
+                  title="Закрыть карточку компонента"
+                  aria-label="Закрыть карточку компонента"
+                >
                   <CloseIcon className={styles.closeIcon} />
                 </button>
               </div>
@@ -134,8 +135,10 @@ export const CardInfo: React.FC<CardInfoProps> = ({ scAddr, setShowComponent }) 
               <div className={styles.blockName}>Зависимости компонента</div>
               {Array.from(dependencies.entries()).map(([scAddr, value]) => (
                 <div
+                  key={scAddr.value}
                   className={styles.componentDependencies}
                   onClick={() => setShowComponent(scAddr)}
+                  title={`Открыть зависимость: ${value}`}
                 >
                   {value}
                 </div>

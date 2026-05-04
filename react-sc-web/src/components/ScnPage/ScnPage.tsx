@@ -14,7 +14,17 @@ export const ScnPage = () => {
   if (!action) return null;
 
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={styles.wrapper}
+      title={translate({
+        ru: 'Область отображения результата в формате SCn-кода',
+        en: 'Result view area in SCn format',
+      })}
+      aria-label={translate({
+        ru: 'Область отображения SCn-кода',
+        en: 'SCn code view area',
+      })}
+    >
       <ErrorBoundary
         title={translate({
           ru: 'Ошибка загрузки компонента SCn-кода',
